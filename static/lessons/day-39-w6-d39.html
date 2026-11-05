@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 14: tabletop: a stolen laptop · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 14: tabletop: a stolen laptop</h1>
+<p class="eyebrow">Day 39 · Week 6 · Advanced · about 120 min</p>
+<p>You will run a paper incident for “an employee’s laptop was stolen”, minute by minute: what the admin sees, decides and does in your tailnet and identity provider.</p>
+<p><strong>By the end, you can:</strong> Walk through a stolen-laptop incident and name the containment, session-revocation and communication steps it requires.</p>
+<h2>Why it matters to a designer</h2>
+<p>Tabletops are how security teams rehearse. Running one as a designer shows you the real sequence of screens and decisions under stress, and which are slow or missing. This is a strong interview story about designing for high-stakes moments.</p>
+<h2>Key ideas</h2>
+<ul><li>A tabletop exercise is an incident practised on paper or in a meeting, with no real harm.</li><li>Scenario: Friday 18:00, Jordan reports their laptop stolen from a car. It was signed in to the tailnet and the identity provider, with access to production.</li><li>Minute by minute: who is told, how the admin finds the device, how they remove it from the tailnet, end sessions in the identity provider, rotate any secrets on it, and check logs for use after the theft.</li><li>Decisions under uncertainty: Was the disk encrypted? Did anyone use the device after 18:00? Should Jordan’s whole account be suspended, or only the device?</li><li>Afterwards, write a blameless review: what went well, what was slow, and which screen or feature would have helped.</li><li>Notice the designer’s questions: Can the admin find the device by owner name? Is “remove device” clearly different from “suspend user”? Does the log show activity after a given time?</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>tabletop exercise</strong></td><td>A practised incident on paper, used to rehearse a response.</td></tr><tr><td><strong>revoke</strong></td><td>To cancel access or a credential so it stops working.</td></tr><tr><td><strong>session termination</strong></td><td>Ending a signed-in session so the user must sign in again.</td></tr><tr><td><strong>rotate a secret</strong></td><td>Replace a key or password with a new one, so the old one stops working.</td></tr><tr><td><strong>blameless review</strong></td><td>A review that looks for causes in systems and process, not individual blame.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Skim one CISA tabletop package to see how a scenario is structured. &mdash; <a href="https://www.cisa.gov/resources-tools/services/cisa-tabletop-exercise-packages">CISA Tabletop Exercise Packages</a> (CISA)</p><span class="step__min">10 min</span></div><div class="step"><p>Read PagerDuty’s guidance on roles during an incident. &mdash; <a href="https://response.pagerduty.com/">PagerDuty Incident Response Documentation</a> (PagerDuty)</p><span class="step__min">15 min</span></div><div class="step"><p>Write the scenario and a minute-by-minute timeline from 18:00 to 19:00, with each decision and the screen used.</p><span class="step__min">35 min</span></div><div class="step"><p>Perform the containment steps for real in your test tailnet and Keycloak (remove a device, end sessions, disable a user) and time each.</p><span class="step__min">30 min</span></div><div class="step"><p>Write the blameless review: three things that were slow or unclear, and a design idea for each.</p><span class="step__min">30 min</span></div>
+<h2>Skip or skim</h2><p>Skip legal and HR steps, but note where they would happen.</p>
+<h2>Check yourself</h2><ul><li>What are the first three things an admin should do when a laptop is stolen?</li><li>Which screen or decision was slowest in your tabletop, and what would fix it?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Typically: remove or disable the device in the tailnet, end the user’s sessions and reset credentials in the identity provider, and check logs for any use after the theft. Then rotate secrets stored on the device.</li><li>A good answer names a specific moment, such as finding the device by owner or telling device removal apart from user suspension, and a concrete design change with its benefit.</li></ul>
+<p><a href="../../index.html#lesson/39">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

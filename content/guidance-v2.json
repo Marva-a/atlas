@@ -1,0 +1,873 @@
+{
+ "schema": "identity-lab-coach.guidance.v1",
+ "createdOn": "2026-11-04",
+ "note": "Curriculum version 5: reading tips for the new resources, and the new day for each existing resource.",
+ "resources": {
+  "c5-nng-persona": {
+   "level": "foundation",
+   "howToUse": "Read it for the purpose of personas; you will make a quick people map, not posters."
+  },
+  "c5-okta-baw": {
+   "level": "core",
+   "howToUse": "Skim the headline findings; note who decides and who sets things up."
+  },
+  "c5-nng-heuristics": {
+   "level": "foundation",
+   "howToUse": "Read all ten once; keep the list open while you do the teardown."
+  },
+  "c5-nng-heuristic-eval": {
+   "level": "core",
+   "howToUse": "Use the method, but keep it small: one task, three findings."
+  },
+  "c5-mdn-internet": {
+   "level": "foundation",
+   "howToUse": "Start here. Read it through once and look at every picture."
+  },
+  "c5-mdn-ip": {
+   "level": "foundation",
+   "howToUse": "Read it, then find your own laptop’s address."
+  },
+  "c5-mdn-port": {
+   "level": "foundation",
+   "howToUse": "Two minutes. Note ports 22, 80 and 443."
+  },
+  "c5-mdn-dns": {
+   "level": "foundation",
+   "howToUse": "Read it before you try a DNS lookup yourself."
+  },
+  "c5-mdn-tls": {
+   "level": "core",
+   "howToUse": "Read the first sections; skip the cipher details."
+  },
+  "c5-ts-how": {
+   "level": "foundation",
+   "howToUse": "Read it through; redraw the hub-and-spoke versus mesh pictures yourself."
+  },
+  "c5-ts-nat": {
+   "level": "deep",
+   "howToUse": "Read the opening sections and look at the diagrams; skim the rest."
+  },
+  "c5-ts-what": {
+   "level": "foundation",
+   "howToUse": "Read it before you install anything."
+  },
+  "c5-ts-tailnet": {
+   "level": "foundation",
+   "howToUse": "Read it, then look for each idea in your admin console."
+  },
+  "c5-ts-magicdns": {
+   "level": "core",
+   "howToUse": "Turn it on while you read."
+  },
+  "c5-ts-sharing": {
+   "level": "core",
+   "howToUse": "Read it, then share one device and remove the share."
+  },
+  "c5-ts-cli": {
+   "level": "deep",
+   "howToUse": "Optional. Skim the command list to see how technical users work."
+  },
+  "c5-cf-warp": {
+   "level": "core",
+   "howToUse": "Read the overview and note the first-run steps."
+  },
+  "c5-zerotier-start": {
+   "level": "core",
+   "howToUse": "List the steps and the words it uses."
+  },
+  "c5-nng-onboarding": {
+   "level": "foundation",
+   "howToUse": "Read it before you redesign the onboarding."
+  },
+  "c5-ms-iam": {
+   "level": "foundation",
+   "howToUse": "Read it once for the big picture; do not try to remember every product name."
+  },
+  "c5-docker-desktop": {
+   "level": "foundation",
+   "howToUse": "Download and install it today so Day 3 starts with the exercise, not an install."
+  },
+  "c5-okta-authn-authz": {
+   "level": "foundation",
+   "howToUse": "Read it first today."
+  },
+  "c5-ms-authn": {
+   "level": "foundation",
+   "howToUse": "Read it and note each method you have used yourself."
+  },
+  "c5-nist-mfa": {
+   "level": "foundation",
+   "howToUse": "Short; read it all."
+  },
+  "c5-cisa-mfa": {
+   "level": "foundation",
+   "howToUse": "Notice the words it uses; they are a model for product copy."
+  },
+  "c5-nng-passwords": {
+   "level": "core",
+   "howToUse": "Read it as a designer: where do security rules make people’s lives harder?"
+  },
+  "c5-owasp-tm": {
+   "level": "core",
+   "howToUse": "Skim it after the Manifesto; it repeats the same ideas in other words."
+  },
+  "c5-ms-phishing": {
+   "level": "foundation",
+   "howToUse": "Read it, then think of the last suspicious email you received."
+  },
+  "c5-ts-zt": {
+   "level": "foundation",
+   "howToUse": "Read it first today; it is the plainest version."
+  },
+  "c5-ts-grants": {
+   "level": "core",
+   "howToUse": "Read the first examples carefully; skim the advanced capabilities."
+  },
+  "c5-ts-policy-syntax": {
+   "level": "deep",
+   "howToUse": "Use it as a reference: look up groups, tagOwners and tests when you need them."
+  },
+  "c5-twingate-how": {
+   "level": "core",
+   "howToUse": "Read it and draw its model next to Tailscale’s."
+  },
+  "c5-nng-interviews": {
+   "level": "foundation",
+   "howToUse": "Read it before your first conversation."
+  },
+  "c5-nng-problem": {
+   "level": "foundation",
+   "howToUse": "Use its structure for your case study 1 problem statement."
+  },
+  "c5-okta-scim": {
+   "level": "foundation",
+   "howToUse": "Read the overview and the provisioning diagram."
+  },
+  "c5-scim-cloud": {
+   "level": "foundation",
+   "howToUse": "Two minutes: just the overview."
+  },
+  "c5-entra-provisioning": {
+   "level": "core",
+   "howToUse": "Read it as the admin you will design for in Exercise 10."
+  },
+  "c5-keycloak-oidc": {
+   "level": "core",
+   "howToUse": "Read the overview and the endpoints section; skip the adapter details."
+  },
+  "c5-nng-wizards": {
+   "level": "core",
+   "howToUse": "Read it before you redesign the SSO setup flow."
+  },
+  "c5-docker-container": {
+   "level": "foundation",
+   "howToUse": "Start here today."
+  },
+  "c5-k8s-overview": {
+   "level": "foundation",
+   "howToUse": "Read the overview and the “why you need Kubernetes” section."
+  },
+  "c5-k8s-pods": {
+   "level": "foundation",
+   "howToUse": "Read the first section only."
+  },
+  "c5-k8s-namespaces": {
+   "level": "foundation",
+   "howToUse": "Read the first section."
+  },
+  "c5-k8s-labels": {
+   "level": "core",
+   "howToUse": "Read it with network policies in mind."
+  },
+  "c5-k8s-service": {
+   "level": "core",
+   "howToUse": "Read the introduction and the first example."
+  },
+  "c5-k8s-netpol": {
+   "level": "core",
+   "howToUse": "Read up to and including the default policies section."
+  },
+  "c5-calico-about": {
+   "level": "foundation",
+   "howToUse": "Read it to understand Tigera’s main product."
+  },
+  "c5-kind": {
+   "level": "core",
+   "howToUse": "Follow the install and create-cluster steps only."
+  },
+  "c5-calico-kind": {
+   "level": "core",
+   "howToUse": "Follow it exactly; copy each command carefully."
+  },
+  "c5-calico-k8s-policy": {
+   "level": "core",
+   "howToUse": "Work through the examples in your cluster."
+  },
+  "c5-calico-default-deny": {
+   "level": "core",
+   "howToUse": "Read it before you break your app on purpose."
+  },
+  "c5-calico-policy": {
+   "level": "deep",
+   "howToUse": "Optional: skim to see what Calico adds, such as ordering and global policies."
+  },
+  "c5-calico-recommend": {
+   "level": "core",
+   "howToUse": "Read it closely and screenshot any diagrams; this is your competitor and inspiration."
+  },
+  "c5-calico-staged": {
+   "level": "core",
+   "howToUse": "Read it closely; staged enforcement is part of case study 2."
+  },
+  "c5-cilium-hubble": {
+   "level": "core",
+   "howToUse": "Look at the screenshots and the service map idea."
+  },
+  "c5-cilium-policy": {
+   "level": "deep",
+   "howToUse": "Optional: skim the overview for your teardown."
+  },
+  "c5-nng-journey": {
+   "level": "foundation",
+   "howToUse": "Use it for the journey in your problem statement."
+  },
+  "c5-ts-flowlogs": {
+   "level": "core",
+   "howToUse": "Read what a flow log contains and what it does not."
+  },
+  "c5-ts-auditlog": {
+   "level": "core",
+   "howToUse": "Compare it with flow logs: changes versus traffic."
+  },
+  "c5-calico-flowlogs": {
+   "level": "core",
+   "howToUse": "Read it, then use it in Exercise 13."
+  },
+  "c5-pd-alert-fatigue": {
+   "level": "foundation",
+   "howToUse": "Read it and note the causes; they are design problems."
+  },
+  "c5-mitre": {
+   "level": "foundation",
+   "howToUse": "Look at the matrix and open two techniques; do not try to read it all."
+  },
+  "c5-pd-response": {
+   "level": "core",
+   "howToUse": "Read the “before”, “during” and “after” overviews and the roles."
+  },
+  "c5-cisa-ttx": {
+   "level": "core",
+   "howToUse": "Skim one package to see how a tabletop is structured."
+  },
+  "c5-nng-data-tables": {
+   "level": "core",
+   "howToUse": "Read it before you design the triage view."
+  },
+  "c5-nng-dashboards": {
+   "level": "core",
+   "howToUse": "Use it for the summary part of your triage view."
+  },
+  "c5-nng-notifications": {
+   "level": "foundation",
+   "howToUse": "Read it and decide what deserves an interruption."
+  },
+  "c5-ts-roles": {
+   "level": "foundation",
+   "howToUse": "Read it and list what each role can and cannot do."
+  },
+  "c5-entra-reviews": {
+   "level": "core",
+   "howToUse": "Read the overview and when to use reviews."
+  },
+  "c5-entra-pim": {
+   "level": "core",
+   "howToUse": "Read what it does and the reasons to use it."
+  },
+  "c5-ts-jit": {
+   "level": "core",
+   "howToUse": "Read it and compare with Microsoft PIM."
+  },
+  "c5-aicpa-soc": {
+   "level": "foundation",
+   "howToUse": "Skim what SOC 2 covers; you do not need the details."
+  },
+  "c5-vanta-soc2": {
+   "level": "foundation",
+   "howToUse": "Read the first sections: what it is, who asks for it, Type 1 versus Type 2."
+  },
+  "c5-opa": {
+   "level": "core",
+   "howToUse": "Read the introduction and look at one example policy."
+  },
+  "c5-ts-gitops": {
+   "level": "core",
+   "howToUse": "Read the overview first."
+  },
+  "c5-ts-gitops-github": {
+   "level": "core",
+   "howToUse": "Follow it for your test tailnet."
+  },
+  "c5-nng-progressive": {
+   "level": "core",
+   "howToUse": "Read it before you sketch concepts."
+  },
+  "c5-nng-complex-apps": {
+   "level": "core",
+   "howToUse": "Use it as a checklist for your concepts."
+  },
+  "c5-nng-usability-testing": {
+   "level": "foundation",
+   "howToUse": "Read it before you test with two people."
+  },
+  "c5-owasp-nhi": {
+   "level": "core",
+   "howToUse": "Read the list and the short description of each."
+  },
+  "c5-k8s-serviceaccounts": {
+   "level": "core",
+   "howToUse": "Read the introduction and the use cases."
+  },
+  "c5-gh-secret-scanning": {
+   "level": "core",
+   "howToUse": "Read it as a design example of warning people about leaked secrets."
+  },
+  "c5-gcp-wif": {
+   "level": "deep",
+   "howToUse": "Optional: read the overview to see the “no keys” pattern in a real cloud."
+  },
+  "c5-owasp-llm01": {
+   "level": "core",
+   "howToUse": "Read the description and the example scenarios."
+  },
+  "c5-nng-confirmation": {
+   "level": "foundation",
+   "howToUse": "Read it before the security UX review."
+  },
+  "c5-nng-errors": {
+   "level": "foundation",
+   "howToUse": "Use it to judge error and warning messages."
+  },
+  "c5-ts-careers": {
+   "level": "core",
+   "howToUse": "Open any design or product role and list its skills."
+  },
+  "c5-tigera-careers": {
+   "level": "core",
+   "howToUse": "Open any design or product role and list its skills."
+  },
+  "c5-nng-portfolio": {
+   "level": "foundation",
+   "howToUse": "Read it before polishing your case studies."
+  },
+  "c5-nng-critiques": {
+   "level": "core",
+   "howToUse": "Read it before your practice retrospective."
+  }
+ },
+ "suggestedDayChanges": [
+  {
+   "id": "w1-tailscale-quickstart",
+   "planDays": [
+    10
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w2-oauthcom",
+   "planDays": [
+    22,
+    24
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w2-rfc7636",
+   "planDays": [
+    24
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w2-rfc9700",
+   "planDays": [
+    22
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w2-oidc",
+   "planDays": [
+    22
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w2-ps-oauth",
+   "planDays": [
+    24
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-okta-saml",
+   "planDays": [
+    23
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-rfc7644",
+   "planDays": [
+    23
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-rfc7643",
+   "planDays": [
+    26
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-workos-sso",
+   "planDays": [
+    26
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-tailscale-sso",
+   "planDays": [
+    18
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-idpro",
+   "planDays": [
+    16
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w3-cedar",
+   "planDays": [
+    16
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-passkeys",
+   "planDays": [
+    25
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-webauthn",
+   "planDays": [
+    25
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-nist63b",
+   "planDays": [
+    25
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-wcag338",
+   "planDays": [
+    25
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-wcag339",
+   "planDays": [
+    25
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-fido-ux",
+   "planDays": [
+    25,
+    26
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w4-threatdragon",
+   "planDays": [
+    39
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-nist207",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-ts-acls",
+   "planDays": [
+    16,
+    17
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-ts-tags",
+   "planDays": [
+    17
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-ts-posture",
+   "planDays": [
+    18
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-zt",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-ztna",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-beyondcorp",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-nist1800-35",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cisa-ztmm",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-ms-zt",
+   "planDays": [
+    15
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-one",
+   "planDays": [
+    20
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-entra-gsa",
+   "planDays": [
+    20
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-messer-netplus",
+   "planDays": [
+    8,
+    9
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-dns",
+   "planDays": [
+    8
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-tls",
+   "planDays": [
+    9
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-wireguard",
+   "planDays": [
+    10
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-wireshark",
+   "planDays": [
+    11
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w5-cf-mtls",
+   "planDays": [
+    30
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-aws-shared",
+   "planDays": [
+    29
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-aws-vpc",
+   "planDays": [
+    29
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-aws-sg",
+   "planDays": [
+    29,
+    30
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-aws-flowlogs",
+   "planDays": [
+    36,
+    38
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-attack",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-nist61",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-owasp-top10",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-owasp-api",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-ps-ac",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w7-juice",
+   "planDays": [
+    37
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-aws-best",
+   "planDays": [
+    43
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-access-analyzer",
+   "planDays": [
+    43
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-entra-ca",
+   "planDays": [
+    43
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-sc300",
+   "planDays": [
+    44
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-aws-sts",
+   "planDays": [
+    50
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-gitleaks",
+   "planDays": [
+    50
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w6-spiffe",
+   "planDays": [
+    50
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-llm",
+   "planDays": [
+    51
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-agentic",
+   "planDays": [
+    51
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-mcp-auth",
+   "planDays": [
+    51
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-nist-airmf",
+   "planDays": [
+    51
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-entra-agent-id",
+   "planDays": [
+    51
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-garak",
+   "planDays": [
+    52
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-cisa-sbd",
+   "planDays": [
+    52
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w8-postings",
+   "planDays": [
+    55
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-keycloak-docker",
+   "planDays": [
+    3
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-messer-iam",
+   "planDays": [
+    2
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-tmm",
+   "planDays": [
+    4
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-shostack",
+   "planDays": [
+    4
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-keycloak-admin",
+   "planDays": [
+    3,
+    4
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-nist-csf",
+   "planDays": [
+    4
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-okta-admin",
+   "planDays": [
+    5
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  },
+  {
+   "id": "w1-1password-admin",
+   "planDays": [
+    5
+   ],
+   "reason": "The curriculum was redesigned (version 5): this is the day its topic is now taught."
+  }
+ ]
+}

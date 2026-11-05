@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who you are and what you may do: sign-in basics · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Who you are and what you may do: sign-in basics</h1>
+<p class="eyebrow">Day 2 · Week 1 · Basics · about 120 min</p>
+<p>Authentication proves who you are, authorization decides what you may do, and accounting records what happened.</p>
+<p><strong>By the end, you can:</strong> Distinguish authentication, authorization and accounting, and identify the factor type (knowledge, possession or inherence) behind a given sign-in method.</p>
+<h2>Why it matters to a designer</h2>
+<p>Sign-in is the part of security every user touches. Designers in this field design sign-in, recovery, MFA prompts and “you don’t have access” pages, and each one is a balance between safety and getting people to their work.</p>
+<h2>Key ideas</h2>
+<ul><li>Authentication (AuthN) answers “who are you?”. Example: typing your password and approving a prompt on your phone.</li><li>Authorization (AuthZ) answers “what may you do?”. Example: you can view the shared budget sheet but not edit it.</li><li>Accounting answers “what happened?” by recording activity, like the sheet’s history showing who changed cell B4 and when. A security audit log is related but broader: it can record security-relevant events, such as sign-ins or permission changes, without being the same thing as AAA’s resource-usage accounting.</li><li>There are three kinds of proof, called factors: something you know (a password), something you have (your phone, a security key) and something you are (a fingerprint). MFA means using two or more kinds.</li><li>A credential is your proof (a password, a passkey). A session is the time you stay signed in after proving it. A token is the digital ticket an app carries to show you already signed in, like a cinema wristband that lets you back in without buying a new ticket.</li><li>Passkeys replace passwords with a key stored on your device and unlocked with your face, fingerprint or PIN. They cannot be phished the way passwords can. You will design for them in Week 4.</li><li>Design tension: every extra check adds safety and friction. Good products ask for more proof only when the risk is higher, for example a new device or a sensitive action.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>authentication (AuthN)</strong></td><td>Proving who you are.</td></tr><tr><td><strong>authorization (AuthZ)</strong></td><td>Deciding what you are allowed to do.</td></tr><tr><td><strong>accounting</strong></td><td>Recording what happened, so it can be checked later.</td></tr><tr><td><strong>factor</strong></td><td>A kind of proof: something you know, have or are.</td></tr><tr><td><strong>MFA</strong></td><td>Multi-factor authentication: using two or more kinds of proof.</td></tr><tr><td><strong>credential</strong></td><td>The proof you use to sign in, such as a password or a passkey.</td></tr><tr><td><strong>session</strong></td><td>The period you stay signed in after proving who you are.</td></tr><tr><td><strong>token</strong></td><td>A digital ticket an app uses to show you already signed in.</td></tr><tr><td><strong>passkey</strong></td><td>A sign-in key stored on your device, unlocked by fingerprint, face or PIN; it replaces a password.</td></tr><tr><td><strong>audit log</strong></td><td>A record of security-relevant events, such as sign-ins or permission changes; related to AAA accounting but broader.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read authentication versus authorization. &mdash; <a href="https://www.okta.com/identity-101/authentication-vs-authorization/">Authentication vs. Authorization</a> (Okta)</p><span class="step__min">10 min</span></div><div class="step"><p>Read about the ways people authenticate. &mdash; <a href="https://www.microsoft.com/en-us/security/business/security-101/what-is-authentication">What is authentication?</a> (Microsoft Security)</p><span class="step__min">15 min</span></div><div class="step"><p>Read NIST’s short explanation of MFA, then CISA’s public version. Notice how plainly CISA writes. &mdash; <a href="https://www.nist.gov/itl/applied-cybersecurity/tig/back-basics-multi-factor-authentication">Back to basics: Multi-factor authentication (MFA)</a> (NIST)</p><span class="step__min">15 min</span></div><div class="step"><p>Watch the identity and access management videos (section 4.6) for a second explanation; 45 minutes is enough. &mdash; <a href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/">Professor Messer SY0-701 course index: section 4.6 Identity and Access Management</a> (Professor Messer)</p><span class="step__min">45 min</span></div><div class="step"><p>Read about password creation as a usability problem. &mdash; <a href="https://www.nngroup.com/articles/password-creation/">Password Creation: 3 Ways To Make It Easier</a> (Nielsen Norman Group)</p><span class="step__min">10 min</span></div><div class="step"><p>Audit three sign-ins you use (a bank, your email, a streaming app): which factors, how long the session lasts, how you recover a lost password, and one moment of friction in each.</p><span class="step__min">25 min</span></div>
+<h2>Skip or skim</h2><p>Skip how tokens are built (JWT, OAuth flows) and the cryptography of passkeys. They come in Week 4.</p>
+<h2>Check yourself</h2><ul><li>Explain authentication, authorization and accounting with one example from your own life.</li><li>What is the difference between a credential, a session and a token?</li><li>Why do good products not ask for MFA on every single action?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>For example, at work: you sign in with a password and a phone prompt (authentication), you can open the design drive but not payroll (authorization), and the drive records who opened which file (accounting).</li><li>The credential is the proof you give (a password or passkey). The session is how long you stay signed in afterwards. The token is the ticket the app carries during that session to show you already proved who you are.</li><li>Each check adds friction, and people find ways around rules that slow them down. Asking for more proof only when risk is higher (a new device, a payment, an admin change) keeps both safety and speed.</li></ul>
+<p><a href="../../index.html#lesson/2">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

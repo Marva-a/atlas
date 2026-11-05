@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data exposure, retrieval boundaries and memory · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Data exposure, retrieval boundaries and memory</h1>
+<p class="eyebrow">Pathway: AI Security · Lesson 3 · Advanced · about 90 min</p>
+<p>AI systems leak data when retrieval ignores who is asking, when sensitive information flows into answers, logs or memory, or when poisoned content enters the knowledge base, so access control must follow the data into every AI step.</p>
+<p><strong>By the end, you can:</strong> Explain permission-aware retrieval, name three ways an AI product can disclose sensitive data, describe memory and knowledge-base poisoning, and design a retrieval experience that respects existing permissions.</p>
+<h2>Why it matters to a designer</h2>
+<p>Enterprise AI search and assistants are among the fastest-growing security products, and their biggest failure is showing someone a document they should never have seen. Designers decide what sources are connected, what answers cite, what is remembered and what admins can see and control.</p>
+<h2>Key ideas</h2>
+<ul><li>Permission-aware retrieval: when an assistant searches company documents, it must only retrieve what the asking user may already open, checked at query time. Copying documents into a shared index without their permissions is the classic failure.</li><li>Over-shared data becomes over-exposed. AI search makes every existing permission mistake visible: a salary sheet shared with &#x27;everyone&#x27; was hard to find before; now anyone can ask for it. Cleaning up permissions often has to come before an AI launch.</li><li>Sensitive information disclosure can come from: retrieved documents, other users&#x27; conversations or memory leaking across sessions, the system prompt itself, or data the model learned during training or fine-tuning.</li><li>Vector stores and embeddings hold a numeric form of your documents. They need the same access control, tenant separation and deletion as the original data; deleting a file must also remove it from the index.</li><li>Poisoning: if anyone can add content to the knowledge base (a wiki, a shared drive, a support ticket), an attacker can plant false or malicious content that the assistant later retrieves and repeats or acts on.</li><li>Memory makes this persistent: an injected instruction or false fact saved to an agent&#x27;s long-term memory can affect future sessions. Users should be able to see, edit and delete what an assistant remembers.</li><li>Design levers: citations that show which source an answer used and who can see it; admin controls over connected sources; clear retention for chats and memory; and redaction of sensitive fields before they reach the model or logs.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>permission-aware retrieval</strong></td><td>Retrieval that only returns content the asking user is already allowed to access.</td></tr><tr><td><strong>vector store</strong></td><td>A database of embeddings used to find documents similar to a question.</td></tr><tr><td><strong>embedding</strong></td><td>A list of numbers that represents the meaning of a piece of text, used for search.</td></tr><tr><td><strong>sensitive information disclosure</strong></td><td>When an AI system reveals data it should not, such as personal, confidential or secret information.</td></tr><tr><td><strong>data poisoning</strong></td><td>Planting false or malicious content in data that a model or retrieval system will use.</td></tr><tr><td><strong>memory poisoning</strong></td><td>Getting false facts or instructions saved into an agent&#x27;s long-term memory.</td></tr><tr><td><strong>tenant isolation</strong></td><td>Keeping one customer&#x27;s data completely separate from another&#x27;s.</td></tr><tr><td><strong>redaction</strong></td><td>Removing or masking sensitive parts of data before it is shown, stored or sent.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read OWASP LLM02, Sensitive Information Disclosure, including its example scenarios. &mdash; <a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">LLM02:2025 Sensitive Information Disclosure</a> (OWASP Gen AI Security Project)</p><span class="step__min">15 min</span></div><div class="step"><p>Read OWASP LLM08, Vector and Embedding Weaknesses, focusing on access control and poisoning. &mdash; <a href="https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/">LLM08:2025 Vector and Embedding Weaknesses</a> (OWASP Gen AI Security Project)</p><span class="step__min">15 min</span></div><div class="step"><p>In the OWASP agentic list, find the entry on memory and context poisoning and read it. &mdash; <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications for 2026</a> (OWASP GenAI Security Project)</p><span class="step__min">15 min</span></div><div class="step"><p>Design an answer card for an enterprise AI search tool. Show the answer, its sources, whether each source is visible to the user, and how to report a source they should not be seeing.</p><span class="step__min">25 min</span></div><div class="step"><p>Design a &#x27;What this assistant remembers about you&#x27; screen: what is shown, how a user edits or deletes an item, and how long items are kept.</p><span class="step__min">15 min</span></div><div class="step"><p>Add today&#x27;s words to your glossary.</p><span class="step__min">5 min</span></div>
+<h2>Skip or skim</h2><p>Skip the mathematics of embeddings and vector search algorithms, and attacks that extract training data from models. Concentrate on access control, disclosure paths, poisoning and the controls users and admins need.</p>
+<h2>Check yourself</h2><ul><li>Why can launching an AI search tool expose data that was already technically shared but rarely found?</li><li>What does permission-aware retrieval check, and when?</li><li>How could an attacker poison an assistant that answers questions from a company wiki?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Because AI search removes the obscurity that hid permission mistakes. A file shared with everyone by accident used to stay buried; now anyone can ask a question that surfaces it. Fixing over-sharing has to be part of the launch.</li><li>It checks that the user asking the question is allowed to open each document before the document is retrieved or used in the answer, at the time of the query, using the source system&#x27;s current permissions rather than a copy made earlier.</li><li>By editing or adding a wiki page with false information or hidden instructions. When someone later asks a related question, the assistant retrieves the page and repeats the false answer or follows the instruction. Controls include limiting which sources are trusted, showing citations and reviewing changes to key pages.</li></ul>
+<p><a href="../../index.html#path/ai-security/3">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

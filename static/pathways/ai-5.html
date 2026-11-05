@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply chain, output handling, monitoring and incident response · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Supply chain, output handling, monitoring and incident response</h1>
+<p class="eyebrow">Pathway: AI Security · Lesson 5 · Advanced · about 90 min</p>
+<p>AI products depend on models, datasets, plugins and tool servers from others, pass model output into other systems, and need logs, testing and an incident plan built for agents that act on their own.</p>
+<p><strong>By the end, you can:</strong> Name the parts of an AI supply chain and one risk for each, explain why model output must be treated as untrusted input, and describe what an audit trail and incident response plan for an agent must include.</p>
+<h2>Why it matters to a designer</h2>
+<p>When an agent does something wrong, admins need to answer quickly: what did it read, what did it decide, what did it do, on whose authority, and how do we stop and undo it? Those answers depend on audit trails, kill switches and review screens that someone has to design.</p>
+<h2>Key ideas</h2>
+<ul><li>AI supply chain: base models, fine-tuned models, training and evaluation datasets, prompt templates, plugins, MCP servers and other agents. Any of them can be compromised, malicious or simply changed without notice. Keep an inventory and know which versions are in use.</li><li>Treat tool servers like software dependencies: verify who publishes them, pin versions, review changes to tool descriptions (a changed description can carry an injected instruction) and remove ones you do not use.</li><li>Improper output handling: model output is untrusted input to whatever comes next. Output shown in a web page can carry script; output used in a database query, shell command or API call can carry injection. The receiving system must validate it, exactly as for user input on Day 11.</li><li>Audit trails for agents should record: the user and the agent identity, the goal, what was retrieved, each tool call with its inputs and results, approvals and who gave them, and the final outcome. Without this, an incident cannot be investigated (Week 6).</li><li>Testing: red teaming tries to make the system misbehave on purpose, and automated scanners such as garak probe models for known weaknesses. Test the whole application, including tools and retrieval, not only the model.</li><li>Incident response for agents follows the usual phases (Week 6) with additions: a way to pause or disable an agent instantly, revoke its tokens, see every action it took in a time window and reverse what can be reversed.</li><li>Monitor for unusual agent behaviour, such as a sudden burst of tool calls, new destinations for data or access to sources it rarely uses, much as you would for a human account.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>AI supply chain</strong></td><td>The models, data, prompts, plugins and tool servers an AI product depends on.</td></tr><tr><td><strong>improper output handling</strong></td><td>Passing model output to other systems without validating it.</td></tr><tr><td><strong>audit trail</strong></td><td>A complete record of who or what did what, when, and on whose authority.</td></tr><tr><td><strong>red teaming</strong></td><td>Deliberately trying to make a system fail or misbehave, to find weaknesses first.</td></tr><tr><td><strong>kill switch</strong></td><td>A control that stops an agent or feature immediately.</td></tr><tr><td><strong>model card</strong></td><td>A document describing a model&#x27;s purpose, data, limits and known risks.</td></tr><tr><td><strong>tool poisoning</strong></td><td>Hiding malicious instructions in a tool&#x27;s description or results so an agent follows them.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>In the OWASP LLM Top 10, read the entries on supply chain and on improper output handling. &mdash; <a href="https://genai.owasp.org/home/resources/owasp-genai-llm-top-10-2026/">OWASP GenAI LLM Top 10 2026</a> (OWASP GenAI Security Project)</p><span class="step__min">20 min</span></div><div class="step"><p>Read garak&#x27;s README to see how teams scan models for known weaknesses. You do not need to run it. &mdash; <a href="https://github.com/NVIDIA/garak">garak: the LLM vulnerability scanner</a> (NVIDIA (GitHub))</p><span class="step__min">15 min</span></div><div class="step"><p>Design an &#x27;agent activity&#x27; timeline for an admin investigating one agent run: what each row shows (identity, goal, retrieval, tool calls, approvals, outcome) and what filters help.</p><span class="step__min">25 min</span></div><div class="step"><p>Write a one-page incident playbook for &#x27;our sales agent emailed customer data to an outside address&#x27;: detect, contain (pause, revoke), investigate (the timeline), recover and learn. Mark which steps need interface support.</p><span class="step__min">25 min</span></div><div class="step"><p>Add today&#x27;s words to your glossary.</p><span class="step__min">5 min</span></div>
+<h2>Skip or skim</h2><p>Skip model provenance standards, signing tools and the details of running scanners. Know what can go wrong in the chain and what investigators and admins need to see.</p>
+<h2>Check yourself</h2><ul><li>Name three parts of an AI product&#x27;s supply chain and one risk for each.</li><li>Why must a system that receives model output validate it?</li><li>What should an admin be able to do in the first five minutes after discovering an agent is misbehaving?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>For example: a base model (it may behave differently after an update), an MCP tool server (its publisher could add a malicious instruction to a tool description), and a dataset used for fine-tuning (it could be poisoned).</li><li>Because the model&#x27;s output may contain anything an attacker managed to inject, such as script, a database command or an unexpected address. Treating it as trusted lets an injection in the model become an attack on the next system.</li><li>Pause or disable the agent, revoke its tokens and connections, see every action it took in the relevant time window with inputs and results, and know who granted its access, so they can contain the problem before investigating fully.</li></ul>
+<p><a href="../../index.html#path/ai-security/5">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

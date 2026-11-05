@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 12: break and fix a network policy · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 12: break and fix a network policy</h1>
+<p class="eyebrow">Day 32 · Week 5 · Part of the Network and Kubernetes Security pathway · Intermediate · about 120 min</p>
+<p>You will turn on default deny, watch your app break, then write policies to fix it, noting exactly how you found the cause.</p>
+<p><strong>By the end, you can:</strong> Change a network policy, observe the resulting connectivity break, and explain why it happened.</p>
+<h2>Why it matters to a designer</h2>
+<p>This is the core pain of case study 2: default deny is safe but scary, because a missing rule silently breaks an app. Living through it once gives you the evidence and empathy to design a better way.</p>
+<h2>Key ideas</h2>
+<ul><li>A default-deny policy selects every pod in a namespace and allows nothing. After applying it, your app will stop working. That is the point.</li><li>Breakage is often silent: requests time out, with no message that says “blocked by policy”. Finding the cause takes time and experience.</li><li>Fix it one connection at a time: web to orders, orders to the database, and DNS (pods must still reach the cluster’s DNS service, a common forgotten rule).</li><li>Test after each policy: does the app work, and is anything still allowed that should not be?</li><li>Write down how you found each cause. Your debugging path is research data for a tool that could make it faster.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>default deny</strong></td><td>A policy that blocks all traffic not explicitly allowed.</td></tr><tr><td><strong>timeout</strong></td><td>When a request waits for a reply that never comes.</td></tr><tr><td><strong>allow rule</strong></td><td>A policy rule that lets specific traffic through.</td></tr><tr><td><strong>debugging</strong></td><td>Finding and fixing the cause of a problem.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read about default deny before you apply it. &mdash; <a href="https://docs.tigera.io/calico/latest/network-policy/get-started/kubernetes-default-deny">Enable a default deny policy for Kubernetes pods</a> (Calico Documentation)</p><span class="step__min">15 min</span></div><div class="step"><p>Work through the Kubernetes network policy examples in your cluster. &mdash; <a href="https://docs.tigera.io/calico/latest/network-policy/get-started/kubernetes-policy/kubernetes-network-policy">Get started with Kubernetes network policy</a> (Calico Documentation)</p><span class="step__min">25 min</span></div><div class="step"><p>Apply default deny to your app’s namespace. Record what breaks and what you see. &mdash; <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Network Policies</a> (Kubernetes Docs)</p><span class="step__min">15 min</span></div><div class="step"><p>Fix it policy by policy, including DNS. Test after each one.</p><span class="step__min">40 min</span></div><div class="step"><p>Write it up: what broke, how you found each cause, how long it took, and what a tool could show to make it faster.</p><span class="step__min">25 min</span></div>
+<h2>Skip or skim</h2><p>Skip Calico’s global and tiered policies unless you finish early; the optional reference covers them.</p>
+<h2>Check yourself</h2><ul><li>Why is default deny both safe and scary?</li><li>What rule is commonly forgotten after default deny, and why?</li><li>How did you find the cause of each break, and what would have made it faster?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Safe because nothing can talk unless allowed, so an attacker cannot move freely. Scary because any missing rule breaks the app, often with no clear message.</li><li>Allowing DNS. Pods need to look up service names through the cluster’s DNS, so without that rule almost everything fails, even with the right app rules.</li><li>A good answer describes the real path (for example checking pods, guessing, reading logs, testing with a tool) and proposes something concrete, such as showing denied connections next to the policy that blocked them.</li></ul>
+<p><a href="../../index.html#lesson/32">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

@@ -1,0 +1,820 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 2 lessons: networking basics for product designers, and Tailscale exercises 3–5. Security foundations are folded into the days that rely on them; \"retired\" lists the separate Foundations lessons this replaces, with where each answer moves.",
+ "lessons": [
+  {
+   "id": "w2-d8",
+   "week": 2,
+   "day": 8,
+   "date": "2026-11-09",
+   "title": "The internet and the apps on it: addresses, ports, DNS, clients, servers and APIs",
+   "inOneSentence": "Every device has an address, every service listens at a numbered door and DNS turns names into addresses; on top of that, clients send requests to servers and APIs, and attacks happen where data crosses a trust boundary.",
+   "youCanNow": "Explain what an IP address, a port and DNS each do, name the three private IPv4 ranges, read an HTTP request and its status code, and draw a data-flow diagram that marks trust boundaries and where identity is checked.",
+   "whyItMattersToADesigner": "Network security products show these words everywhere: in rules, logs and error messages. You must read 100.101.102.103:443 and know what it means, and picture the requests behind every screen: OAuth redirects (Week 4), pod traffic (Week 5) and agent tool calls (Day 51) all assume it. With both, you can follow engineers' diagrams in design reviews.",
+   "keyIdeas": [
+    "A network is devices that can send messages to each other. The internet is many networks connected by routers, like local roads joined by highways.",
+    "An IP address is a device’s address on a network, like a street address. Example: 192.168.1.20 for a laptop at home.",
+    "A port is a numbered door on that device for one service. Example: a web server listens on port 443; SSH (remote terminal) on port 22. Ports belong to a transport: TCP is reliable and ordered (web traffic); UDP is fast and connectionless (calls, video, WireGuard).",
+    "DNS turns names into addresses: when you type example.com, your computer asks DNS “what is the address for this name?” and then connects to that address.",
+    "Private addresses work only inside a home or office network. There are three private IPv4 ranges: 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16. Public addresses work on the internet.",
+    "Client and server: a client (a browser, a phone app, an agent) asks; a server answers. The interface you design is usually a client; the rules that really protect data run on servers. Never rely on the client alone to enforce security.",
+    "HTTP is the language of the web: a request has a method (GET to read, POST to create, PUT or PATCH to change, DELETE), a path such as /invoices/42, headers (including cookies or tokens that say who you are) and sometimes a body. The response has a status code: 200 OK, 401 not signed in, 403 signed in but not allowed, 404 not found.",
+    "An API is a set of requests one program offers to another. Most modern apps are a thin client over APIs, so whatever the API allows, a determined user can do, even if no button exists for it.",
+    "A session or token travels with each request so the server knows who is asking: a cookie in a browser, or an access token in an Authorization header. Whoever holds the token can act as you, which is why token theft matters.",
+    "A trust boundary is where data or control passes between parts with different levels of trust: from the internet to your server, from your app to a third-party API, from a user's text into an AI model. Most attacks happen at these crossings, so that is where input must be checked.",
+    "A data-flow diagram (DFD) shows processes, data stores, external parties and the flows between them, with trust boundaries drawn as dashed lines. It is the usual starting picture for threat modelling.",
+    "In a product, an “allow 10.0.0.5 on port 5432” rule means: let traffic reach the database on that server. Designers make these rules readable by showing names and purposes alongside numbers."
+   ],
+   "words": [
+    {
+     "term": "IP address",
+     "meaning": "The address of a device on a network."
+    },
+    {
+     "term": "port",
+     "meaning": "A numbered door for one service on a device, for example 443 for HTTPS."
+    },
+    {
+     "term": "DNS",
+     "meaning": "The system that turns names (example.com) into IP addresses."
+    },
+    {
+     "term": "router",
+     "meaning": "A device that passes messages between networks."
+    },
+    {
+     "term": "private address",
+     "meaning": "An address that works only inside a local network, such as 192.168.1.20."
+    },
+    {
+     "term": "packet",
+     "meaning": "A small piece of a message sent across a network."
+    },
+    {
+     "term": "client",
+     "meaning": "The program that asks for something: a browser, a mobile app, a command-line tool or an agent."
+    },
+    {
+     "term": "server",
+     "meaning": "The program that receives requests and sends responses, and where the real rules should be enforced."
+    },
+    {
+     "term": "HTTP request",
+     "meaning": "A message from client to server with a method, a path, headers and sometimes a body."
+    },
+    {
+     "term": "status code",
+     "meaning": "A number in the response saying what happened, such as 200, 401, 403 or 404."
+    },
+    {
+     "term": "API",
+     "meaning": "Application programming interface: the requests one program offers to another."
+    },
+    {
+     "term": "REST",
+     "meaning": "A common style for web APIs where resources have addresses and are read or changed with HTTP methods."
+    },
+    {
+     "term": "TCP and UDP",
+     "meaning": "Two ways of carrying data: TCP is reliable and ordered; UDP is faster and does not guarantee delivery."
+    },
+    {
+     "term": "trust boundary",
+     "meaning": "A point where data or control passes between parts with different levels of trust."
+    },
+    {
+     "term": "data-flow diagram",
+     "meaning": "A diagram of processes, data stores, external parties and data flows, used in threat modelling."
+    },
+    {
+     "term": "attack surface",
+     "meaning": "All the places an attacker could try to get in or interact with a system."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read how the internet works and look at every picture.",
+     "minutes": 20,
+     "resourceId": "c5-mdn-internet"
+    },
+    {
+     "text": "Read the IP address glossary entry, then find your laptop’s address in its network settings.",
+     "minutes": 15,
+     "resourceId": "c5-mdn-ip"
+    },
+    {
+     "text": "Read the port glossary entry and write down what ports 22, 80 and 443 are for.",
+     "minutes": 10,
+     "resourceId": "c5-mdn-port"
+    },
+    {
+     "text": "Read the DNS glossary entry.",
+     "minutes": 10,
+     "resourceId": "c5-mdn-dns"
+    },
+    {
+     "text": "Watch the DNS part of the networking video course for a second explanation.",
+     "minutes": 25,
+     "resourceId": "w5-messer-netplus"
+    },
+    {
+     "text": "Read MDN's client-server overview.",
+     "minutes": 15,
+     "resourceId": "p-mdn-client-server"
+    },
+    {
+     "text": "Read MDN's overview of HTTP, up to and including HTTP messages.",
+     "minutes": 20,
+     "resourceId": "p-mdn-http"
+    },
+    {
+     "text": "Draw one picture: your phone opening a website. Label the name, the DNS lookup, the address, the port, the router, and the HTTP request and response.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "In your browser, open the developer tools Network tab and load any site you are signed in to. Find one request: note its method, path, status code and whether a cookie or Authorization header is sent. Do not copy real token values into your notes.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Draw a data-flow diagram for 'invite a teammate' in a SaaS tool: the browser, the app server, the user database, the email service and the invited person. Mark trust boundaries as dashed lines.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "On your diagram, circle where identity is checked, and mark one place data could leak and one place it could be tampered with.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Add the new words to your glossary in your own words.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip subnet maths, IPv6 details, routing protocols, HTTP/2 and HTTP/3 internals and the OSI model. You need the vocabulary, the request-response picture and trust boundaries, not the engineering.",
+   "checkYourself": [
+    "In plain words, what is the difference between an IP address and a port?",
+    "What happens, step by step, when you type a website name into a browser?",
+    "A rule says “allow 10.0.0.5:5432”. How could a design make it easier to understand?",
+    "What is the difference between a 401 and a 403 response, and what should each one look like to the user?",
+    "Why is hiding a button in the interface not enough to stop a user from doing something?",
+    "Name three trust boundaries in an app that lets users upload files and share them with outside guests."
+   ],
+   "lookFor": [
+    "The IP address is which device (the street address); the port is which service on that device (the door number). One server can have many services, each on its own port.",
+    "The computer asks DNS for the address of that name, gets an IP address back, connects to that address on port 443 for HTTPS, and the server sends the page back in packets.",
+    "Show a name and purpose next to the numbers (for example “orders database, Postgres”), show who added the rule and why, and link to the device.",
+    "401 means the server does not know who you are (not signed in or the session expired), so the user should be asked to sign in again. 403 means the server knows who you are but you are not allowed, so the user should see that access is denied and, ideally, how to request it.",
+    "Because the interface is only a client. The user can send the same request to the API directly, with a script or the browser's tools. The server must check permission on every request.",
+    "For example: the internet to the upload service (an untrusted file arrives), the app to the file storage service, the app to the email service that sends the share link, and internal users to external guests who open the link."
+   ],
+   "plannedMinutes": 210,
+   "level": "basics"
+  },
+  {
+   "id": "w2-d9",
+   "week": 2,
+   "day": 9,
+   "date": "2026-11-10",
+   "title": "Protecting traffic and data: TLS, firewalls, VPNs, encryption, hashing and privacy",
+   "inOneSentence": "TLS keeps traffic private, firewalls decide what may pass, NAT lets devices share an address and a VPN creates a private path; stored data needs its own protection, passwords are hashed, keys are the real secret, and privacy asks a different question from security.",
+   "youCanNow": "Explain what TLS does and does not guarantee, how a firewall, NAT and a VPN each work and why a VPN alone does not grant app-level access, how encryption at rest differs from hashing, and give one example of something secure but not private.",
+   "whyItMattersToADesigner": "Products like Tailscale exist because traditional VPNs and firewalls are hard to set up and easy to get wrong; if you understand them, you can explain the product's value in one sentence. Designers also decide what a screen shows, what an export contains and how long logs are kept, so knowing how data is protected lets you push for collecting less, showing less and deleting on time.",
+   "keyIdeas": [
+    "TLS is the lock icon: it encrypts traffic between your browser and a site (confidentiality) and detects tampering (integrity). When certificate validation succeeds, it also proves you are talking to the real server, not an impostor. HTTPS is HTTP sent inside TLS.",
+    "A firewall is a guard that checks each connection against rules: who may come in, to which port. Example: “only the office may reach port 22”.",
+    "NAT lets many devices in a home share one public address. Good for saving addresses, but it makes it hard for two devices behind different routers to reach each other directly. NAT is not a security boundary; a firewall is.",
+    "A traditional VPN connects your device to a central gateway, like a single front door into the office network. Everything goes through the hub, even traffic between two people at home. Being on the VPN is not the same as being authorized: the VPN gets you to the network, and a separate check still decides what you may reach.",
+    "A mesh VPN like Tailscale connects devices directly to each other (built on WireGuard), with a coordination server that hands out keys and rules. It feels like all your devices are on one private network.",
+    "For users, the classic VPN pain is: slow, “am I connected?”, and once you are in, you can reach far too much. Zero trust products answer that last problem, which you will study next week.",
+    "Beyond the network: TLS is encryption in transit. Encryption at rest protects stored data (disks, databases, backups) if the storage is stolen. You usually need both, and neither protects data from someone with legitimate access who misuses it.",
+    "Encryption is reversible with the right key. Hashing is one-way: you cannot get the input back. Passwords are stored as slow, salted hashes so even the company cannot read them; at sign-in, the typed password is hashed and compared. So 'we will email you your password' is a red flag.",
+    "Keys are the real secret. Strong encryption with a key stored next to the data is weak. Key management covers where keys live, who can use them, rotation and revocation. Cloud key management services and hardware security modules exist for this.",
+    "Secrets include API keys, tokens and certificates. Treat them like keys: least privilege, short lifetimes, rotation, never in code or screenshots. Day 50 goes deeper.",
+    "Data minimisation: the safest data is data you never collected or already deleted. Retention rules say how long each kind of data is kept; deletion must include backups and copies within a stated time.",
+    "Privacy is about appropriate use of personal data: what is collected, why, who sees it and whether people understand and agree. A system can be secure and still violate privacy, for example by securely storing far more data than it needs and using it for an unexpected purpose."
+   ],
+   "words": [
+    {
+     "term": "TLS",
+     "meaning": "Encryption that keeps traffic between two computers private; HTTPS uses it."
+    },
+    {
+     "term": "firewall",
+     "meaning": "Software or a device that allows or blocks connections based on rules."
+    },
+    {
+     "term": "NAT",
+     "meaning": "Network address translation: many devices sharing one public address."
+    },
+    {
+     "term": "VPN",
+     "meaning": "Virtual private network: a private, encrypted path across a public network."
+    },
+    {
+     "term": "hub-and-spoke",
+     "meaning": "A design where all traffic goes through one central point."
+    },
+    {
+     "term": "mesh",
+     "meaning": "A design where devices connect directly to each other."
+    },
+    {
+     "term": "WireGuard",
+     "meaning": "A modern, simple VPN protocol that Tailscale is built on."
+    },
+    {
+     "term": "encryption at rest",
+     "meaning": "Protecting stored data so it is unreadable if the storage is taken."
+    },
+    {
+     "term": "hashing",
+     "meaning": "A one-way transformation of data; used for passwords so the original cannot be recovered."
+    },
+    {
+     "term": "salt",
+     "meaning": "Random data added to each password before hashing, so identical passwords produce different hashes."
+    },
+    {
+     "term": "key management",
+     "meaning": "How encryption keys are created, stored, used, rotated and revoked."
+    },
+    {
+     "term": "data minimisation",
+     "meaning": "Collecting and keeping only the data that is needed for a clear purpose."
+    },
+    {
+     "term": "retention",
+     "meaning": "How long a kind of data is kept before it must be deleted."
+    },
+    {
+     "term": "privacy",
+     "meaning": "Appropriate collection and use of personal data, with transparency and choice for the people it describes."
+    },
+    {
+     "term": "personal data",
+     "meaning": "Information that identifies a person or can be linked to them."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the TLS overview, up to the cipher details.",
+     "minutes": 15,
+     "resourceId": "c5-mdn-tls"
+    },
+    {
+     "text": "Read How Tailscale works and redraw the hub-and-spoke and mesh pictures in your notebook.",
+     "minutes": 35,
+     "resourceId": "c5-ts-how"
+    },
+    {
+     "text": "Look at the diagrams in How NAT traversal works and read the opening sections.",
+     "minutes": 25,
+     "resourceId": "c5-ts-nat"
+    },
+    {
+     "text": "Watch the firewall and VPN parts of the networking video course.",
+     "minutes": 25,
+     "resourceId": "w5-messer-netplus"
+    },
+    {
+     "text": "Write a one-sentence answer to: “Why would a company replace its VPN with Tailscale?” Then a second version for an employee.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Read the introduction of OWASP's password storage cheat sheet and its section on hashing versus encryption.",
+     "minutes": 20,
+     "resourceId": "p-owasp-password-storage"
+    },
+    {
+     "text": "Read the NIST Privacy Framework overview page, looking for how privacy risk differs from security risk.",
+     "minutes": 15,
+     "resourceId": "p-nist-privacy"
+    },
+    {
+     "text": "Choose one product you use. From its privacy policy or help pages, find: what is encrypted at rest, how long one kind of data (for example messages or recordings) is kept, and how deletion works.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Redesign one data-heavy screen or export (an audit log export, a user list, an AI chat history) to show less: mask, summarise or drop fields, and add a retention note. Explain what risk each change reduces.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Add today's words to your glossary.",
+     "minutes": 5,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip cryptography details (ciphers, key exchange maths, key lengths), the deeper parts of NAT traversal and the detail of specific privacy laws. Understand the pictures, what each protection does and does not cover, and the user pain.",
+   "checkYourself": [
+    "What does TLS protect, and what does it not protect?",
+    "Why is NAT a problem for connecting two devices directly?",
+    "How does a mesh VPN differ from a traditional VPN, in one sentence a customer would understand?",
+    "A laptop with an encrypted disk is stolen while it is switched off. What does encryption at rest protect, and what would it not protect against?",
+    "Why are passwords hashed instead of encrypted?",
+    "Give an example of a system that is secure but not respectful of privacy."
+   ],
+   "lookFor": [
+    "It protects traffic in transit from being read or changed by someone in the middle. It does not protect you from a malicious site, a stolen password or a compromised device.",
+    "Each device sits behind a router that shares one public address and blocks unexpected incoming connections, so neither device has an address the other can simply call.",
+    "A traditional VPN sends everyone through one central door into the whole network; a mesh connects your devices directly to each other, so it is faster and each connection can be limited by rules.",
+    "It protects the data on the disk from being read by the thief, because they do not have the key. It does not protect against someone who has the unlocked laptop, a logged-in user misusing data, or data already synced to other places.",
+    "Because the service never needs to read a password back, only to check it. A one-way, salted, slow hash lets it check a typed password without storing anything that could be turned back into the password if the database leaks.",
+    "For example: a well-protected analytics system that keeps every user's location history forever and uses it for advertising nobody was told about. It may be hard to break into, but it collects and uses more personal data than needed, without clear consent."
+   ],
+   "plannedMinutes": 200,
+   "level": "basics"
+  },
+  {
+   "id": "w2-d10",
+   "week": 2,
+   "day": 10,
+   "date": "2026-11-11",
+   "title": "Exercise 3: connect two devices with Tailscale",
+   "inOneSentence": "You will set up a small private network between your laptop and your phone and record, as a designer, every moment of the first run.",
+   "youCanNow": "Connect two devices with Tailscale and reach one from the other, and explain why reachability between tailnet devices depends on policy rather than being automatic.",
+   "whyItMattersToADesigner": "Onboarding is where networking products win or lose users: if two devices do not connect in the first few minutes, many people give up. Designers at companies like Tailscale study these “it works” moments closely, and you will redesign this flow on Day 12.",
+   "keyIdeas": [
+    "A tailnet is your own private network: the people and devices you add to it can be reached, and no one outside it can reach in. “Can be reached” is not automatic for every pair, though: an access policy (Week 3) decides which devices on the tailnet may actually reach which others.",
+    "Sign-in uses an identity provider (Google, Microsoft, GitHub). This is identity-based networking: your account, not your location, decides which network you join.",
+    "Each device gets a stable address starting with 100. that works wherever the device is: home, a café, a phone network.",
+    "The “aha” moment is reaching one device from another (for example opening a page served on your laptop from your phone) without touching a router or firewall.",
+    "Watch for friction: words you did not understand, permissions your phone asked for, waiting with no feedback, and anything that made you unsure whether it worked."
+   ],
+   "words": [
+    {
+     "term": "tailnet",
+     "meaning": "Your private Tailscale network of users and devices."
+    },
+    {
+     "term": "identity provider",
+     "meaning": "The service that signs you in, such as Google or Microsoft."
+    },
+    {
+     "term": "client",
+     "meaning": "The app installed on each device."
+    },
+    {
+     "term": "coordination server",
+     "meaning": "The service that shares keys and rules between devices; your traffic does not go through it."
+    },
+    {
+     "term": "time to value",
+     "meaning": "How long a new user takes to reach the first useful result."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read “What is Tailscale?” before installing anything.",
+     "minutes": 10,
+     "resourceId": "c5-ts-what"
+    },
+    {
+     "text": "Read “What is a tailnet?”",
+     "minutes": 10,
+     "resourceId": "c5-ts-tailnet"
+    },
+    {
+     "text": "Follow the quickstart on your laptop and phone. Screenshot every screen, including permission prompts and errors.",
+     "minutes": 40,
+     "resourceId": "w1-tailscale-quickstart"
+    },
+    {
+     "text": "Test the connection: ping your laptop from your phone, or open a small page served from your laptop.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Annotate your screenshots: mark every hesitation, unclear word and wait. Time the whole run from sign-up to the first connection.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Write three insights about first-time users of networking products.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not set up exit nodes, subnet routers or access rules yet. One clean first run, carefully recorded, is the goal.",
+   "checkYourself": [
+    "In your own words, what is a tailnet?",
+    "Why is signing in with Google or Microsoft part of a networking product?",
+    "What was your “it works” moment, and how long did it take?"
+   ],
+   "lookFor": [
+    "A private network made only of the people and devices you add. They can reach each other from anywhere, and nothing outside it can.",
+    "Because access is based on who you are, not where you are. Your identity decides which network you join, and later, rules decide what you may reach.",
+    "A good answer names the moment (for example, reaching the laptop from the phone) and the time, and notes what nearly stopped you before that."
+   ],
+   "plannedMinutes": 120,
+   "level": "basics"
+  },
+  {
+   "id": "w2-d11",
+   "week": 2,
+   "day": 11,
+   "date": "2026-11-12",
+   "title": "Exercise 4: map your tailnet, sharing, and when access control fails",
+   "inOneSentence": "You will look at your network the way an admin does (users, devices, names and who can reach what), then at what happens when an app checks who you are but not what you may reach.",
+   "youCanNow": "Read a Tailscale device inventory, explain what MagicDNS and sharing each do, find a usability gap in removing access, explain broken access control and BOLA with an example, and tell an authentication failure from an authorization failure.",
+   "whyItMattersToADesigner": "Admins think in inventories: what is on my network, who owns it, and is anything there that should not be? Sharing, roles, exports and impersonation are also where authorization most often fails after a perfectly good sign-in. Designers who see both make the picture clear at 3 devices or 3,000, and spot risky sharing flows before they are built.",
+   "keyIdeas": [
+    "The admin console lists machines (devices) and users. Each machine has an owner, an address, a name, an operating system and a “last seen” time.",
+    "MagicDNS gives every device a name, so people type “laptop” instead of 100.101.102.103. Names are easier for humans and safer in rules.",
+    "Sharing gives one device to someone outside your tailnet, without giving them the whole network. Example: sharing a home server with a friend.",
+    "Removing access matters as much as giving it: look at how easy it is to un-share a device or remove a user, and what the product tells you when you do.",
+    "Technical users often use the command line instead of the console. A good product keeps both views consistent.",
+    "Sharing is an authorization decision. Authentication says who you are; authorization says what you may do (Day 2). Most serious app flaws are authorization failures that happen after a perfectly good sign-in.",
+    "Broken object level authorization (BOLA, also called IDOR): you open /invoices/1041, change it to /invoices/1042 and see another customer's invoice, because the server checked that you were signed in but not that the invoice was yours.",
+    "OWASP's web Top 10 has put broken access control first in its recent editions. Other entries include security misconfiguration, cryptographic failures, injection, insecure design, authentication failures, software supply-chain failures, and logging and alerting failures.",
+    "Injection: the app treats user input as instructions. Classic example: text typed into a search box is run as part of a database query. Prompt injection in AI products (Day 51 and the AI Security pathway) is a close cousin.",
+    "Insecure design is a flaw in the idea, not the code: a password reset that emails the new password, or an export that includes every customer's data. These are cheapest to fix in design.",
+    "Design levers: every object has a clear owner and sharing rule; permission checks are described per action, not per screen; admin impersonation is visible and logged; bulk actions and exports have their own permissions.",
+    "Error messages leak too: 'no account with that email' tells an attacker which emails exist. A neutral message ('if an account exists, we sent a link') protects users with little cost."
+   ],
+   "words": [
+    {
+     "term": "machine",
+     "meaning": "A device in your tailnet: laptop, phone, server."
+    },
+    {
+     "term": "MagicDNS",
+     "meaning": "Tailscale’s feature that gives every device a readable name."
+    },
+    {
+     "term": "sharing",
+     "meaning": "Giving one device to someone outside your tailnet."
+    },
+    {
+     "term": "last seen",
+     "meaning": "When the device last connected; useful for finding old devices."
+    },
+    {
+     "term": "inventory",
+     "meaning": "A full list of what is on the network and who owns it."
+    },
+    {
+     "term": "CLI",
+     "meaning": "Command-line interface: controlling a product by typing commands."
+    },
+    {
+     "term": "broken access control",
+     "meaning": "When users can act outside their permissions, such as viewing or changing data that is not theirs."
+    },
+    {
+     "term": "BOLA",
+     "meaning": "Broken object level authorization: an API returns an object without checking that the caller may see it. Also called IDOR."
+    },
+    {
+     "term": "injection",
+     "meaning": "When untrusted input is treated as instructions, such as text run as part of a database query."
+    },
+    {
+     "term": "insecure design",
+     "meaning": "A security flaw in how a feature was designed, not in how it was coded."
+    },
+    {
+     "term": "OWASP Top 10",
+     "meaning": "A widely used list of the most critical web application security risks, updated every few years."
+    },
+    {
+     "term": "account enumeration",
+     "meaning": "Finding out which accounts exist from differences in a system's responses."
+    },
+    {
+     "term": "impersonation",
+     "meaning": "An admin or support feature that lets staff act as a user; risky if not visible, limited and logged."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about MagicDNS, then turn it on and reach a device by name.",
+     "minutes": 15,
+     "resourceId": "c5-ts-magicdns"
+    },
+    {
+     "text": "Read about sharing. Share one device with a second account you own, then remove the share.",
+     "minutes": 25,
+     "resourceId": "c5-ts-sharing"
+    },
+    {
+     "text": "Explore every page of the admin console. List what an admin can see about each device and user.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Draw your tailnet: users, devices, names, and arrows for who can reach what.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Skim the CLI page to see how technical users do the same things.",
+     "minutes": 10,
+     "resourceId": "c5-ts-cli"
+    },
+    {
+     "text": "Write down one question an admin with 500 devices would struggle to answer in this console.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Read the OWASP Top 10 introduction and the broken access control entry. Skim the titles of the others.",
+     "minutes": 25,
+     "resourceId": "w7-owasp-top10"
+    },
+    {
+     "text": "Read the OWASP API Top 10 entry on broken object level authorization, including its example attack scenarios.",
+     "minutes": 15,
+     "resourceId": "p-owasp-bola"
+    },
+    {
+     "text": "Optional, hands-on: open OWASP Juice Shop's project page and read how the deliberately insecure shop is used for practice. Only test it on your own machine.",
+     "minutes": 10,
+     "resourceId": "w7-juice"
+    },
+    {
+     "text": "Pick a sharing feature: Tailscale sharing, or a document, project or dashboard. Write a permission table: rows are roles (owner, editor, viewer, guest, admin), columns are actions (view, edit, share, export, delete). Mark one cell where a mistake would cause a breach.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Rewrite two error or confirmation messages from a sign-in or reset flow so they do not reveal whether an account exists.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Add today's words to your glossary.",
+     "minutes": 5,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip packet capture, advanced CLI flags, code-level fixes and penetration-testing tutorials. Today is about the admin's mental picture and recognising authorization patterns.",
+   "checkYourself": [
+    "Why are device names safer than IP addresses in rules and lists?",
+    "How is sharing a device different from adding someone to your tailnet?",
+    "What would an admin with 500 devices need that you did not need with 2?",
+    "A user is signed in and changes a number in the address bar to see another company's report. Is that an authentication or an authorization failure? Why?",
+    "Name two design decisions in a sharing feature that could lead to broken access control.",
+    "Why is a message like 'No account found for this email' a security problem?"
+   ],
+   "lookFor": [
+    "People read and remember names, so mistakes are easier to spot, and names can stay the same when addresses change.",
+    "Sharing gives access to one device only; adding someone to the tailnet makes them a member whose access is set by your rules. Sharing is narrower and easier to revoke.",
+    "Search, filters (by owner, tag, last seen), bulk actions, clear signs of old or unknown devices, and a way to see who can reach what without reading every rule.",
+    "Authorization. The server knew who the user was (authentication worked) but did not check that this report belonged to their company. This is broken object level authorization (BOLA or IDOR).",
+    "For example: link sharing that defaults to 'anyone with the link'; guests who can re-share; an export that ignores row-level permissions; admins who can impersonate users without it being shown or logged; roles that are checked per screen instead of per action.",
+    "It lets an attacker find out which email addresses have accounts (account enumeration), which helps targeted phishing and password guessing. A neutral message gives the same answer either way."
+   ],
+   "plannedMinutes": 210,
+   "level": "basics"
+  },
+  {
+   "id": "w2-d12",
+   "week": 2,
+   "day": 12,
+   "date": "2026-11-13",
+   "title": "Exercise 5: redesign a networking product onboarding",
+   "inOneSentence": "Using your Day 10 notes, you will redesign the first-run flow so that a new user reaches their first working connection faster and with more confidence.",
+   "youCanNow": "Redesign a flawed networking-product onboarding flow and justify the change against a usability principle.",
+   "whyItMattersToADesigner": "Networking products are invisible when they work and confusing when they do not. The onboarding has to explain an invisible thing, guide two devices at once and handle failures clearly. This is a typical first design task for a new designer at a company like Tailscale.",
+   "keyIdeas": [
+    "Design for the “it works” moment: show clear progress (“laptop connected, now add a second device”) and celebrate the first connection.",
+    "Networking failures have causes users cannot see. A good error says what happened, what it means and one next step. Example: “Your phone has no internet connection. Connect to Wi‑Fi and try again.”",
+    "Onboarding spans devices: the user starts on a laptop and continues on a phone. Use a QR code or a link to make the jump easy.",
+    "Help in context usually beats a long tutorial: show the explanation at the moment it is needed.",
+    "Compare competitors: list how two other products handle the same first run, and borrow what works."
+   ],
+   "words": [
+    {
+     "term": "onboarding",
+     "meaning": "The first experience that takes a new user to their first success."
+    },
+    {
+     "term": "activation",
+     "meaning": "The moment a new user gets real value; here, two devices connected."
+    },
+    {
+     "term": "empty state",
+     "meaning": "What a screen shows before there is any data."
+    },
+    {
+     "term": "recoverable error",
+     "meaning": "An error that tells the user how to fix it and lets them continue."
+    },
+    {
+     "term": "contextual help",
+     "meaning": "Short help shown in the place and moment it is needed."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about onboarding tutorials and contextual help.",
+     "minutes": 10,
+     "resourceId": "c5-nng-onboarding"
+    },
+    {
+     "text": "Look at the Cloudflare One Client first-run steps and note the words it uses.",
+     "minutes": 15,
+     "resourceId": "c5-cf-warp"
+    },
+    {
+     "text": "Look at ZeroTier’s first-run steps.",
+     "minutes": 10,
+     "resourceId": "c5-zerotier-start"
+    },
+    {
+     "text": "Map the current flow from your Day 10 screenshots, step by step, and mark the three worst moments.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Sketch a redesigned flow in Figma: the progress, the cross-device jump, the first-connection moment, and two error states.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Write why for each change, linked to a moment from your notes.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not polish visuals. Rough frames with clear reasoning are what this exercise is about.",
+   "checkYourself": [
+    "What is the activation moment for a mesh VPN, and how does your design make it obvious?",
+    "Write one error message for a common connection failure, in plain words."
+   ],
+   "lookFor": [
+    "Two of the user’s devices reaching each other. A good design shows progress towards it, confirms it clearly when it happens, and suggests the next useful step.",
+    "A good message says what happened, what it means and one action, without blame or jargon. For example: “Your laptop is signed out. Sign in again to reconnect.”"
+   ],
+   "plannedMinutes": 120,
+   "level": "basics"
+  },
+  {
+   "id": "w2-d13",
+   "week": 2,
+   "day": 13,
+   "date": "2026-11-14",
+   "title": "Onboarding teardown and threat model: write it up and share",
+   "inOneSentence": "You will turn this week's work into a short teardown with before and after, plus a one-page threat model of the same flow, so others can see how you think about usability and security together.",
+   "youCanNow": "Write and share an evidence-based teardown of a networking product's onboarding with a one-page threat model of the same flow: a data-flow diagram, STRIDE threats at its trust boundaries, ranked risks and three security requirements expressed as design changes.",
+   "whyItMattersToADesigner": "Hiring managers in this domain look for designers who can explain technical products simply and back decisions with evidence. A short teardown shows that; a short, honest threat model of the same flow shows you can reason about systems, risk and users together, which very few design portfolios do.",
+   "keyIdeas": [
+    "Structure: the product and the user, the task, what happened (with screenshots and time), the three main problems, your redesign, and what you would test next.",
+    "Use the user’s words for problems (“I didn’t know if it worked”) and the right terms for the solution (activation, contextual help).",
+    "Be fair to the product: say what it does well. Many readers will work there.",
+    "Explain one technical idea simply (for example, why devices behind NAT are hard to connect) to show you understand the domain.",
+    "Then the threat model. On Day 4 you modelled a sign-in in miniature; now model the flow you tore down (signing up, adding a device, sharing it) with the four questions: What are we working on? What can go wrong? What are we going to do about it? Did we do a good job?",
+    "Start with the picture: a data-flow diagram like the one from Day 8, with trust boundaries drawn. Threats cluster at the boundaries.",
+    "Use STRIDE (Day 4) per boundary: spoofing (pretending to be someone), tampering (changing data), repudiation (denying an action), information disclosure (leaks), denial of service (outages) and elevation of privilege (gaining more access).",
+    "Rank as on Day 4's risk lesson: likelihood and impact, roughly. Pick the top three; a short list that gets acted on beats a long list that does not.",
+    "Respond as on Day 6: layered controls, secure defaults and testable requirements. Note at least one control that is a design change.",
+    "Label your work honestly: a self-initiated model of a product you do not work on is still valuable, as long as you say what you assumed and could not verify.",
+    "Look back at the week: which words are now easy, and which still feel vague? Add the vague ones to your glossary."
+   ],
+   "words": [
+    {
+     "term": "before and after",
+     "meaning": "Showing the current design next to your proposed one, with reasons."
+    },
+    {
+     "term": "write-up",
+     "meaning": "A short written case of what you did, why, and what you learned."
+    },
+    {
+     "term": "next test",
+     "meaning": "What you would check with real users to see if your design works."
+    },
+    {
+     "term": "repudiation",
+     "meaning": "Being able to deny having done something because there is no reliable record."
+    },
+    {
+     "term": "elevation of privilege",
+     "meaning": "Gaining more access than you were given."
+    },
+    {
+     "term": "abuse case",
+     "meaning": "A description of how someone could misuse a feature, written like a user story for an attacker."
+    },
+    {
+     "term": "assumption",
+     "meaning": "Something a threat model takes as true but has not verified; it should be written down."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Write the teardown, 500–800 words, using the structure above.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Place your before and after frames and annotated screenshots in the write-up.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Read OWASP's short threat modelling page to refresh the process.",
+     "minutes": 10,
+     "resourceId": "c5-owasp-tm"
+    },
+    {
+     "text": "Draw the data-flow diagram of the onboarding flow you tore down (signing up, adding a device, sharing it) with its trust boundaries, by hand or in OWASP Threat Dragon.",
+     "minutes": 25,
+     "resourceId": "w4-threatdragon"
+    },
+    {
+     "text": "At each trust boundary, list STRIDE threats. Aim for at least eight in total, and write two as abuse cases ('As someone whose share was removed, I want to keep reaching the device so that...').",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Rank the threats by likelihood and impact and pick the top three. For each, propose layered controls and write one security requirement as a design change (a default, a confirmation, an expiry, a visible log).",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Write the one-page threat model and add it to the teardown as a security section: scope, diagram, top risks, requirements and assumptions.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Ask one person, ideally an engineer, to read it and tell you which part of the teardown or the threat model was unclear.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Post a short version, or save it in your portfolio folder.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Update your glossary and your people map with anything you learned this week.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not turn it into a full case study, and skip attack trees and formal threat-modelling tools. Short and clear beats long and complete: a reader should get the teardown and the threat model in ten minutes.",
+   "checkYourself": [
+    "What is the one problem from your teardown you would fix first, and why?",
+    "Explain in two sentences, for a non-technical friend, what Tailscale does.",
+    "Where on your diagram did most threats appear, and why?",
+    "Which of your top three risks did you choose to reduce with a design change, and what was the change?",
+    "What assumptions did your threat model make that you would need to verify with the product's engineers?"
+   ],
+   "lookFor": [
+    "A good answer picks the problem that most delays or blocks activation and backs it with evidence from your own run, such as the time lost or the moment of doubt.",
+    "For example: “It connects your devices into your own private network, so they can reach each other securely from anywhere. You sign in with your work account, and the company decides who can reach what.”",
+    "Usually at trust boundaries: where the contractor's browser reaches the app, where invitations go out by email, and where the app grants access to project data. That is where untrusted input and identity checks meet.",
+    "For example: contractor access expires by default after the project end date, with a reminder to the admin. It reduces the risk of a stale external account (Day 4) keeping access after the work ends.",
+    "For example: that invitation links expire, that removing a user ends their active sessions, that exports respect project permissions, or that admin actions are logged. Listing them shows honesty and gives engineers concrete questions."
+   ],
+   "plannedMinutes": 230,
+   "level": "basics"
+  }
+ ],
+ "retired": [
+  {
+   "id": "sf-3",
+   "into": "w2-d8",
+   "answers": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "sf-6",
+   "into": "w2-d9",
+   "answers": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "sf-5",
+   "into": "w2-d11",
+   "answers": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "sf-7",
+   "into": "w2-d13",
+   "answers": [
+    2,
+    3,
+    4
+   ]
+  }
+ ]
+}

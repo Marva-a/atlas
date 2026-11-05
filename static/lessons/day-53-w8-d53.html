@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case study 2: concepts, flows and prototype · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Case study 2: concepts, flows and prototype</h1>
+<p class="eyebrow">Day 53 · Week 8 · Part of the Network and Kubernetes Security pathway · Advanced · about 120 min</p>
+<p>You will design a flow that takes a platform engineer from observed traffic to a recommended policy, staged and previewed before it is enforced.</p>
+<p><strong>By the end, you can:</strong> Develop a concept, user flow and prototype for a network-policy recommendation experience.</p>
+<h2>Why it matters to a designer</h2>
+<p>This is the core of your second case study and the most technical design in the course. It shows you can design for engineers on a hard, real problem at a company like Tigera, combining traffic visualisation, recommendations and safe rollout.</p>
+<h2>Key ideas</h2>
+<ul><li>Start from your problem statement, journey and Exercise 12 notes. The fear to design against: “If I enforce this, what breaks?”</li><li>Three concepts to compare: (1) a traffic map where you select connections to allow, (2) recommendations listed by namespace with confidence, (3) a staged-policy timeline showing what would have been blocked.</li><li>Show the policy both as plain language and as YAML, because engineers will want to check and copy the real thing.</li><li>Staged rollout: apply in “would block” mode, watch for a few days, review what would have been blocked, then enforce, with an easy way back.</li><li>Include hard states: a recommendation based on too little traffic, traffic that is suspicious and should not be allowed, and a policy that conflicts with an existing one.</li><li>Build a clickable prototype of the main flow.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>recommendation confidence</strong></td><td>How sure a system is about a suggestion, often based on how much data it saw.</td></tr><tr><td><strong>staged rollout</strong></td><td>Applying a change gradually or in a report-only mode before full effect.</td></tr><tr><td><strong>blast radius</strong></td><td>How much could be affected if something goes wrong.</td></tr><tr><td><strong>YAML view</strong></td><td>Showing the real configuration text next to a visual view.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Re-read Calico policy recommendations and staged policies with your concepts in mind. &mdash; <a href="https://docs.tigera.io/calico-cloud/network-policy/recommendations/policy-recommendations">Enable policy recommendations</a> (Calico Documentation)</p><span class="step__min">15 min</span></div><div class="step"><p>Re-read staged policies: what is shown before enforcing. &mdash; <a href="https://docs.tigera.io/calico/latest/network-policy/staged-network-policies">Stage, preview impacts, and enforce policy</a> (Calico Documentation)</p><span class="step__min">10 min</span></div><div class="step"><p>Re-read progressive disclosure, thinking of plain language first and YAML on demand. &mdash; <a href="https://www.nngroup.com/articles/progressive-disclosure/">Progressive Disclosure</a> (Nielsen Norman Group)</p><span class="step__min">5 min</span></div><div class="step"><p>Sketch three concepts and compare them against your problem statement and metrics.</p><span class="step__min">30 min</span></div><div class="step"><p>Design the main flow in Figma: observe, recommend, stage, review, enforce, with the hard states.</p><span class="step__min">45 min</span></div><div class="step"><p>Link the frames into a clickable prototype for testing tomorrow.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Do not design the whole Calico product. One flow, from traffic to enforced policy, done well.</p>
+<h2>Check yourself</h2><ul><li>How does your design reduce the fear of breaking apps?</li><li>Why show both plain language and YAML?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>For example by staging policies before enforcing, showing exactly what would have been blocked, flagging low-confidence recommendations, and making rollback easy.</li><li>Plain language helps everyone understand the effect quickly; YAML lets engineers check the exact rule, review it in git and trust that nothing is hidden.</li></ul>
+<p><a href="../../index.html#lesson/53">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

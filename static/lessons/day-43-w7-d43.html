@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Least privilege, roles, reviews and audit · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Least privilege, roles, reviews and audit</h1>
+<p class="eyebrow">Day 43 · Week 7 · Advanced · about 120 min</p>
+<p>Least privilege means each person and system has only the access it needs, for only as long as it needs it, and governance is how a company keeps it that way over time.</p>
+<p><strong>By the end, you can:</strong> Explain least privilege and just-in-time access, and state that &#x27;explicit deny wins&#x27; is a rule of the specific policy engine in use, not a universal law.</p>
+<h2>Why it matters to a designer</h2>
+<p>Enterprise customers buy security products to prove control: who has admin rights, who approved them, when they were last checked. Designing roles, temporary access and access reviews is a senior-level problem that touches admins, managers, auditors and the buyer.</p>
+<h2>Key ideas</h2>
+<ul><li>You met least privilege on Day 4 and policies in Week 3. Now you design the systems that keep access small over months and years.</li><li>Admin roles split power: not every IT person should be able to delete the whole tailnet. Example roles: owner, admin, network admin, IT admin, billing, auditor (read-only).</li><li>Just-in-time (JIT) access: instead of permanent admin rights, people request access for a reason and a time (two hours for an incident), it is approved, and it expires on its own.</li><li>Access reviews: every quarter, managers confirm who should keep which access. Badly designed reviews turn into “approve all”, which is called rubber-stamping.</li><li>In cloud IAM, an identity-based policy is attached to a person or role (“what can I do?”); a resource-based policy is attached to a resource (“who can use me?”). An explicit deny always wins over any allow.</li><li>Audit logs prove it all: who granted what, who approved it and when it ended. Auditors ask for this evidence.</li><li>Break-glass accounts are emergency admin accounts kept locked away for when normal sign-in fails. They must be rare, alarmed and reviewed.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>least privilege</strong></td><td>Only the access needed, only for as long as needed.</td></tr><tr><td><strong>admin role</strong></td><td>A named set of admin powers, such as network admin or auditor.</td></tr><tr><td><strong>just-in-time access</strong></td><td>Temporary access requested for a reason and removed automatically.</td></tr><tr><td><strong>access review</strong></td><td>A regular check of who should keep which access.</td></tr><tr><td><strong>rubber-stamping</strong></td><td>Approving everything in a review without really checking.</td></tr><tr><td><strong>resource-based policy</strong></td><td>A policy attached to a resource that says who may use it.</td></tr><tr><td><strong>explicit deny</strong></td><td>A rule that blocks access and overrides any allow, in the policy engines Atlas covers — this precedence is a product/engine design choice, not a universal rule of every authorization system.</td></tr><tr><td><strong>break-glass account</strong></td><td>An emergency admin account used only when normal access fails.</td></tr><tr><td><strong>separation of duties</strong></td><td>No single person can complete a sensitive action alone.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read Tailscale user roles and list what each role can do. &mdash; <a href="https://tailscale.com/kb/1138/user-roles">User roles</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read Microsoft’s access reviews overview. &mdash; <a href="https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview">What are access reviews?</a> (Microsoft Learn)</p><span class="step__min">10 min</span></div><div class="step"><p>Read what Privileged Identity Management does. &mdash; <a href="https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure">What is Privileged Identity Management?</a> (Microsoft Learn)</p><span class="step__min">10 min</span></div><div class="step"><p>Read Tailscale just-in-time access and compare it with PIM. &mdash; <a href="https://tailscale.com/kb/1443/just-in-time-access">Just-in-time access</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read the AWS IAM best practices on least privilege and temporary credentials. &mdash; <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">Security best practices in IAM</a> (AWS)</p><span class="step__min">20 min</span></div><div class="step"><p>Skim IAM Access Analyzer to see how a tool finds unused or too-broad access. &mdash; <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html">Using IAM Access Analyzer</a> (AWS)</p><span class="step__min">10 min</span></div><div class="step"><p>Design on paper the review screen a manager sees for 12 people: what helps them decide well instead of approving everything?</p><span class="step__min">35 min</span></div><div class="step"><p>Write three principles for designing least-privilege features.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Skip writing real IAM policies. Understand the patterns and the people involved.</p>
+<h2>Check yourself</h2><ul><li>What is just-in-time access, and why is it better than permanent admin rights?</li><li>Why do access reviews often fail, and what could design do about it?</li><li>How does an explicit deny interact with allows?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Access is requested for a reason and a limited time, approved, and removed automatically. If an account is stolen, it usually has no standing admin rights to abuse, and every use is recorded.</li><li>Reviewers face long lists with little context, so they approve everything. Design can help with context (last used, risk level), smart defaults (suggest removing unused access) and smaller, focused reviews.</li><li>An explicit deny always wins. Even if another policy allows the action, the deny blocks it.</li></ul>
+<p><a href="../../index.html#lesson/43">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

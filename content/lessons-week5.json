@@ -1,0 +1,531 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 5 lessons: containers and Kubernetes security. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w5-d29",
+   "week": 5,
+   "day": 29,
+   "date": "2026-11-30",
+   "title": "Containers and Kubernetes in plain words",
+   "level": "intermediate",
+   "inOneSentence": "A container packs an app with everything it needs so it runs the same anywhere, and Kubernetes is the system that runs many containers across many machines and keeps them healthy.",
+   "youCanNow": "Explain the relationship between containers, Pods, nodes, namespaces and Services in Kubernetes.",
+   "whyItMattersToADesigner": "Tigera, and many security companies, sell to platform engineers who run Kubernetes. You cannot design for them without their basic vocabulary: pods, nodes, namespaces and services. Today you learn it with everyday pictures, plus the cloud basics around it.",
+   "keyIdeas": [
+    "You already ran a container on Day 3: Keycloak in Docker. A container is like a lunchbox: the app and everything it needs, packed so it works the same on any table.",
+    "Kubernetes is like a restaurant kitchen manager: it decides which cook (machine) prepares which dish (container), replaces a cook who goes home sick, and adds cooks when it gets busy.",
+    "A node is one machine. A pod is the smallest unit Kubernetes runs, usually one container. A cluster is all the nodes together. A namespace is a separate area of the cluster, for example one per team.",
+    "Most clusters run in a cloud (AWS, Google Cloud, Azure). In the shared responsibility model, the cloud secures the buildings and hardware; you secure your accounts, settings, data and who can reach what.",
+    "In AWS, a VPC is your private network in the cloud, a subnet is a section of it (public if it has a route to the internet), and a security group is a firewall around a server.",
+    "Many small services talking to each other inside a cluster is called east-west traffic. Traffic coming in from users outside is north-south. Most attacks spread east-west after getting in."
+   ],
+   "words": [
+    {
+     "term": "container",
+     "meaning": "An app packaged with everything it needs, so it runs the same anywhere."
+    },
+    {
+     "term": "image",
+     "meaning": "The saved template a container is started from."
+    },
+    {
+     "term": "Kubernetes",
+     "meaning": "A system that runs and manages many containers across many machines."
+    },
+    {
+     "term": "node",
+     "meaning": "One machine in a Kubernetes cluster."
+    },
+    {
+     "term": "pod",
+     "meaning": "The smallest unit Kubernetes runs, usually one container."
+    },
+    {
+     "term": "cluster",
+     "meaning": "A group of nodes managed together by Kubernetes."
+    },
+    {
+     "term": "namespace",
+     "meaning": "A separate area inside a cluster, often one per team or app."
+    },
+    {
+     "term": "shared responsibility",
+     "meaning": "The cloud provider secures the infrastructure; you secure what you put on it and how you configure it."
+    },
+    {
+     "term": "VPC",
+     "meaning": "Virtual private cloud: your own private network in a cloud provider."
+    },
+    {
+     "term": "east-west traffic",
+     "meaning": "Traffic between services inside a network or cluster."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read what a container is, and watch the short video.",
+     "minutes": 10,
+     "resourceId": "c5-docker-container"
+    },
+    {
+     "text": "Read the Kubernetes overview.",
+     "minutes": 15,
+     "resourceId": "c5-k8s-overview"
+    },
+    {
+     "text": "Read the first sections on pods and namespaces.",
+     "minutes": 15,
+     "resourceId": "c5-k8s-pods"
+    },
+    {
+     "text": "Read the shared responsibility model.",
+     "minutes": 15,
+     "resourceId": "w6-aws-shared"
+    },
+    {
+     "text": "Read what a VPC is, including subnets.",
+     "minutes": 15,
+     "resourceId": "w6-aws-vpc"
+    },
+    {
+     "text": "Draw a picture of a small online shop running in Kubernetes: three services (web, orders, payments) in pods, on two nodes, in one namespace, inside a VPC. Mark east-west and north-south traffic.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Add the new words to your glossary with your own picture for each.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip YAML details, Helm, storage and how the Kubernetes control plane works inside.",
+   "checkYourself": [
+    "Explain containers and Kubernetes with the lunchbox and kitchen pictures.",
+    "What is the difference between a pod, a node and a cluster?",
+    "In the shared responsibility model, give two things that stay your responsibility."
+   ],
+   "lookFor": [
+    "A container packs an app with everything it needs, like a lunchbox that works on any table. Kubernetes is the kitchen manager that decides where each dish is cooked, replaces cooks who leave and adds cooks when busy.",
+    "A pod is the smallest unit that runs (usually one container), a node is a machine that runs pods, and a cluster is all the nodes managed together.",
+    "For example: who has access to your cloud accounts, how your network and security groups are configured, and protecting your data. The provider secures the data centres and hardware."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w5-d30",
+   "week": 5,
+   "day": 30,
+   "date": "2026-12-01",
+   "title": "Kubernetes networking and network policy",
+   "level": "intermediate",
+   "inOneSentence": "By default every pod in a Kubernetes cluster can talk to every other pod; network policies are the rules that limit this, and tools like Calico enforce them.",
+   "youCanNow": "Explain how a Kubernetes NetworkPolicy selects Pods by label, and state that enforcement requires a supporting network plugin such as Calico.",
+   "whyItMattersToADesigner": "This is the problem Tigera exists to solve, and the heart of case study 2. Platform engineers know default-allow is risky, but switching to default-deny can break apps. Designers help them see traffic, write policies safely and roll them out with confidence.",
+   "keyIdeas": [
+    "From Week 3 you know access rules for people and devices. Network policy is the same idea for services inside a cluster.",
+    "Kubernetes finds things by labels, like name tags: app=orders, team=payments. A network policy picks pods by label, not by name or address, because pods come and go.",
+    "A Service gives a group of pods one stable name and address, so web can always reach “orders” even as pods restart.",
+    "Default allow: in a namespace with no NetworkPolicy selecting a pod, everything can reach it. This default-allow behaviour, and NetworkPolicy enforcement itself, both depend on the cluster running a network plugin (CNI) that supports NetworkPolicy, such as Calico — without one, a NetworkPolicy you write is simply not enforced, even though Kubernetes accepted it.",
+    "A network policy says, for example: “pods labelled app=payments-db accept traffic only from pods labelled app=payments on port 5432.” Once a pod is selected by any policy, everything else to it is denied.",
+    "Calico (open source, by Tigera) enforces network policies and adds its own features. Cloud security groups are stateful: if a request is allowed in, its reply is allowed out automatically.",
+    "Mutual TLS (mTLS) is TLS where both sides prove who they are, not only the server. Service meshes use it so each service knows exactly which service is calling."
+   ],
+   "words": [
+    {
+     "term": "label",
+     "meaning": "A key-value tag on a Kubernetes object, such as app=orders."
+    },
+    {
+     "term": "selector",
+     "meaning": "A rule that picks objects by their labels."
+    },
+    {
+     "term": "Service",
+     "meaning": "A stable name and address for a group of pods."
+    },
+    {
+     "term": "network policy",
+     "meaning": "A Kubernetes rule that limits which pods can talk to which."
+    },
+    {
+     "term": "ingress and egress",
+     "meaning": "Traffic coming in to a pod, and traffic going out of it."
+    },
+    {
+     "term": "Calico",
+     "meaning": "Tigera’s open-source networking and network security for Kubernetes."
+    },
+    {
+     "term": "stateful",
+     "meaning": "A firewall that remembers allowed connections and lets their replies through."
+    },
+    {
+     "term": "mTLS",
+     "meaning": "Mutual TLS: both sides of a connection prove who they are."
+    },
+    {
+     "term": "service mesh",
+     "meaning": "A layer that manages and secures traffic between services, often with mTLS."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about labels and selectors.",
+     "minutes": 10,
+     "resourceId": "c5-k8s-labels"
+    },
+    {
+     "text": "Read the introduction and first example of Services.",
+     "minutes": 15,
+     "resourceId": "c5-k8s-service"
+    },
+    {
+     "text": "Read Network Policies up to and including the default policies.",
+     "minutes": 25,
+     "resourceId": "c5-k8s-netpol"
+    },
+    {
+     "text": "Read About Calico.",
+     "minutes": 10,
+     "resourceId": "c5-calico-about"
+    },
+    {
+     "text": "Read about security groups and notice the word “stateful”.",
+     "minutes": 15,
+     "resourceId": "w6-aws-sg"
+    },
+    {
+     "text": "Read what mutual TLS is.",
+     "minutes": 10,
+     "resourceId": "w5-cf-mtls"
+    },
+    {
+     "text": "Add labels to your Day 29 shop picture and write two network policies for it in plain words, then in the shape of a policy (selector, from, ports).",
+     "minutes": 35,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip CNI internals, eBPF and service mesh setup. Understand labels, default allow and what a policy says.",
+   "checkYourself": [
+    "Why does Kubernetes use labels rather than pod names in network policies?",
+    "What does “default allow” mean, and why is it risky?",
+    "How does mTLS differ from ordinary TLS?"
+   ],
+   "lookFor": [
+    "Pods are created and destroyed all the time and get new names and addresses. Labels describe what a pod is (app=orders), so a policy keeps working as pods change.",
+    "With no policies, every pod can reach every other pod. If one service is compromised, the attacker can move freely to databases and other services.",
+    "In ordinary TLS only the server proves who it is. In mTLS both sides do, so the server also knows exactly which client or service is calling."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w5-d31",
+   "week": 5,
+   "day": 31,
+   "date": "2026-12-02",
+   "title": "Exercise 11: a local cluster with Calico",
+   "level": "intermediate",
+   "inOneSentence": "You will run a small Kubernetes cluster on your laptop with Calico and deploy a demo app, so pods, services and namespaces become real things you can see.",
+   "youCanNow": "Set up a local Kubernetes cluster with Calico and apply a basic network policy.",
+   "whyItMattersToADesigner": "Platform engineers live in terminals and YAML. Doing their setup once, slowly and with notes, gives you empathy for their work and a true sense of what is hard, which you will need for case study 2 interviews.",
+   "keyIdeas": [
+    "kind runs a whole Kubernetes cluster inside Docker on your laptop. It is free and you can delete it at any time.",
+    "kubectl is the command-line tool for talking to the cluster: kubectl get pods shows what is running.",
+    "Calico installs as pods in the cluster itself and then controls networking for all other pods.",
+    "A demo app with three or four small services is enough. Many Kubernetes tutorials have one; any simple web plus backend works.",
+    "Take notes as a designer: where you waited, what failed, which error messages helped and which did not."
+   ],
+   "words": [
+    {
+     "term": "kind",
+     "meaning": "Kubernetes in Docker: a tool for running a cluster on your laptop."
+    },
+    {
+     "term": "kubectl",
+     "meaning": "The command-line tool for controlling a Kubernetes cluster."
+    },
+    {
+     "term": "YAML",
+     "meaning": "A text format used to describe Kubernetes objects."
+    },
+    {
+     "term": "deploy",
+     "meaning": "To start an app on a cluster."
+    },
+    {
+     "term": "CNI",
+     "meaning": "Container network interface: the plug-in that gives pods networking, here Calico."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Install kind and create a cluster, following the quick start.",
+     "minutes": 15,
+     "resourceId": "c5-kind"
+    },
+    {
+     "text": "Install Calico on kind, following the guide step by step.",
+     "minutes": 25,
+     "resourceId": "c5-calico-kind"
+    },
+    {
+     "text": "Deploy a small demo app with at least two services in its own namespace. Check it with kubectl get pods and get services.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Draw your real cluster: namespaces, pods, labels and services, using kubectl output.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Write designer notes: three moments of confusion and one thing a visual tool could have shown you.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip cloud clusters, Helm charts and Calico Enterprise features. A local cluster with a small app is the goal.",
+   "checkYourself": [
+    "What do kind, kubectl and Calico each do in your setup?",
+    "What would a platform engineer need from a visual tool that the terminal did not give you?"
+   ],
+   "lookFor": [
+    "kind runs the cluster in Docker on your laptop, kubectl lets you control and inspect it, and Calico provides pod networking and enforces network policies.",
+    "For example: a map of which services talk to which, the labels on each pod, and a clear view of what is allowed or blocked, without running many commands."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w5-d32",
+   "week": 5,
+   "day": 32,
+   "date": "2026-12-03",
+   "title": "Exercise 12: break and fix a network policy",
+   "level": "intermediate",
+   "inOneSentence": "You will turn on default deny, watch your app break, then write policies to fix it, noting exactly how you found the cause.",
+   "youCanNow": "Change a network policy, observe the resulting connectivity break, and explain why it happened.",
+   "whyItMattersToADesigner": "This is the core pain of case study 2: default deny is safe but scary, because a missing rule silently breaks an app. Living through it once gives you the evidence and empathy to design a better way.",
+   "keyIdeas": [
+    "A default-deny policy selects every pod in a namespace and allows nothing. After applying it, your app will stop working. That is the point.",
+    "Breakage is often silent: requests time out, with no message that says “blocked by policy”. Finding the cause takes time and experience.",
+    "Fix it one connection at a time: web to orders, orders to the database, and DNS (pods must still reach the cluster’s DNS service, a common forgotten rule).",
+    "Test after each policy: does the app work, and is anything still allowed that should not be?",
+    "Write down how you found each cause. Your debugging path is research data for a tool that could make it faster."
+   ],
+   "words": [
+    {
+     "term": "default deny",
+     "meaning": "A policy that blocks all traffic not explicitly allowed."
+    },
+    {
+     "term": "timeout",
+     "meaning": "When a request waits for a reply that never comes."
+    },
+    {
+     "term": "allow rule",
+     "meaning": "A policy rule that lets specific traffic through."
+    },
+    {
+     "term": "debugging",
+     "meaning": "Finding and fixing the cause of a problem."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about default deny before you apply it.",
+     "minutes": 15,
+     "resourceId": "c5-calico-default-deny"
+    },
+    {
+     "text": "Work through the Kubernetes network policy examples in your cluster.",
+     "minutes": 25,
+     "resourceId": "c5-calico-k8s-policy"
+    },
+    {
+     "text": "Apply default deny to your app’s namespace. Record what breaks and what you see.",
+     "minutes": 15,
+     "resourceId": "c5-k8s-netpol"
+    },
+    {
+     "text": "Fix it policy by policy, including DNS. Test after each one.",
+     "minutes": 40,
+     "resourceId": null
+    },
+    {
+     "text": "Write it up: what broke, how you found each cause, how long it took, and what a tool could show to make it faster.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip Calico’s global and tiered policies unless you finish early; the optional reference covers them.",
+   "checkYourself": [
+    "Why is default deny both safe and scary?",
+    "What rule is commonly forgotten after default deny, and why?",
+    "How did you find the cause of each break, and what would have made it faster?"
+   ],
+   "lookFor": [
+    "Safe because nothing can talk unless allowed, so an attacker cannot move freely. Scary because any missing rule breaks the app, often with no clear message.",
+    "Allowing DNS. Pods need to look up service names through the cluster’s DNS, so without that rule almost everything fails, even with the right app rules.",
+    "A good answer describes the real path (for example checking pods, guessing, reading logs, testing with a tool) and proposes something concrete, such as showing denied connections next to the policy that blocked them."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w5-d33",
+   "week": 5,
+   "day": 33,
+   "date": "2026-12-04",
+   "title": "Case study 2 kickoff: why network policies are hard",
+   "level": "intermediate",
+   "inOneSentence": "You will start your second case study by researching why platform engineers find network policies hard, and how Tigera and its competitors try to help.",
+   "youCanNow": "Research why network-policy work is hard for platform teams and identify a specific user and problem.",
+   "whyItMattersToADesigner": "Case study 2 should show you can design for a highly technical user and a core problem of a company like Tigera. Today’s research grounds it: competitor patterns, public evidence and your own Exercise 12 notes.",
+   "keyIdeas": [
+    "Your working question: “How might we help platform engineers move from default allow to least-privilege network policy without breaking their apps?”",
+    "One pattern is policy recommendations: watch real traffic for a while, then suggest policies that allow only what was seen. Calico Cloud does this.",
+    "Another is staged policies: apply a policy in “would block” mode first, see what it would have blocked, then enforce it.",
+    "A third is visual traffic maps: Cilium’s Hubble and Calico’s tools show which services talk, so engineers can see before they write.",
+    "Evidence to collect: forum and GitHub issues, conference talks and blog posts about network policy pain, and one conversation with a platform engineer."
+   ],
+   "words": [
+    {
+     "term": "policy recommendation",
+     "meaning": "A suggested policy generated from observed traffic."
+    },
+    {
+     "term": "staged policy",
+     "meaning": "A policy that reports what it would block without blocking yet."
+    },
+    {
+     "term": "service map",
+     "meaning": "A picture of which services talk to which."
+    },
+    {
+     "term": "least privilege (network)",
+     "meaning": "Each service may reach only what it truly needs."
+    },
+    {
+     "term": "platform engineer",
+     "meaning": "An engineer who builds and runs the infrastructure other teams deploy on."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read Calico’s policy recommendations page closely and screenshot the key ideas.",
+     "minutes": 15,
+     "resourceId": "c5-calico-recommend"
+    },
+    {
+     "text": "Read about staged policies: preview impact, then enforce.",
+     "minutes": 15,
+     "resourceId": "c5-calico-staged"
+    },
+    {
+     "text": "Look at Cilium Hubble’s observability screenshots for comparison.",
+     "minutes": 15,
+     "resourceId": "c5-cilium-hubble"
+    },
+    {
+     "text": "Collect at least eight pieces of public evidence about network policy pain (GitHub issues, forums, talks) in your research log.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Arrange a 20-minute chat with one platform or DevOps engineer, and write five questions.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Write your three strongest observations so far, each with evidence, including your Exercise 12 notes.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not design screens yet. Compare patterns and collect evidence.",
+   "checkYourself": [
+    "What is your case study 2 question?",
+    "Explain policy recommendations and staged policies in one sentence each."
+   ],
+   "lookFor": [
+    "For example: “How might we help platform engineers move from default allow to least-privilege network policy without breaking their apps?” It names the user, the move and the fear.",
+    "Recommendations: the tool watches real traffic and suggests policies that allow only what it saw. Staged policies: you apply a policy in a “would block” mode first, see its effect, then enforce it."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w5-d34",
+   "week": 5,
+   "day": 34,
+   "date": "2026-12-05",
+   "title": "Case study 2 problem statement: write it up and share",
+   "level": "intermediate",
+   "inOneSentence": "You will write the case study 2 problem statement and the journey of a platform engineer securing a cluster.",
+   "youCanNow": "Define the user and problem statement for a network-policy product.",
+   "whyItMattersToADesigner": "A clear journey shows where the fear and the risk are, which is where your design will act. Sharing it early with engineers keeps your technical understanding honest.",
+   "keyIdeas": [
+    "The journey: discover what talks to what, write a first policy, test it, roll it out, and keep it right as apps change. Mark the emotions: confident, unsure, afraid.",
+    "Users: the platform engineer (writes and owns policies), app developers (their apps might break) and the security team (wants least privilege and proof).",
+    "Evidence comes from your Exercise 12 debugging, public posts and your conversations.",
+    "Success metrics might be: share of namespaces with policies, time from observed traffic to enforced policy, and incidents caused by policy changes.",
+    "You have moved from containers basics to a real product problem in one week. Notice that progression in how you write: use the right terms, but explain them."
+   ],
+   "words": [
+    {
+     "term": "journey map",
+     "meaning": "A picture of the steps a user takes, with their thoughts and feelings."
+    },
+    {
+     "term": "policy coverage",
+     "meaning": "How much of a cluster is protected by policies."
+    },
+    {
+     "term": "rollout",
+     "meaning": "Putting a change into effect, often in stages."
+    },
+    {
+     "term": "stakeholder",
+     "meaning": "Someone affected by or responsible for an outcome."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read journey mapping 101.",
+     "minutes": 10,
+     "resourceId": "c5-nng-journey"
+    },
+    {
+     "text": "Draw the platform engineer’s journey with steps, thoughts, feelings and risky moments.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Write the problem statement (300–500 words): users, problem, evidence, impact, constraints and success metrics.",
+     "minutes": 45,
+     "resourceId": "c5-nng-problem"
+    },
+    {
+     "text": "Share it with one engineer or post a short version, and note the reply.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Compare it with your case study 1 problem statement: what is similar, what is different?",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not decide the solution yet. Keep the statement neutral.",
+   "checkYourself": [
+    "Who are the three people affected by network policy in a company?",
+    "Write one success metric for case study 2."
+   ],
+   "lookFor": [
+    "The platform engineer who writes and owns the policies, the app developers whose services could break, and the security team who needs least privilege and proof of it.",
+    "For example: time from observed traffic to an enforced policy, the share of namespaces protected by policy, or the number of incidents caused by policy changes."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

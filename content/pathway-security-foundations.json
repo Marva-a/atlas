@@ -1,0 +1,14 @@
+{
+ "schema": "identity-lab-coach.pathway.v1",
+ "createdOn": "2026-11-04",
+ "note": "Retired: Security Foundations is now part of the 60-day core (part-2 lessons on Days 1-13, in lessons-foundations.json). This version removes the old pathway from your course.",
+ "pathway": {
+  "id": "security-foundations",
+  "title": "Security Foundations",
+  "summary": "Now part of the 60-day core: see the Foundations lessons on Days 1, 4, 5, 8, 9, 11 and 13.",
+  "forWho": "Everyone: these lessons are in the calendar now.",
+  "order": 1,
+  "retired": true
+ },
+ "lessons": []
+}

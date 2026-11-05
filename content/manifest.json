@@ -1,0 +1,152 @@
+{
+ "schema": "identity-lab-coach.content-manifest.v1",
+ "packs": [
+  {
+   "id": "resources-weeks-1-8",
+   "title": "Resources: weeks 1–8",
+   "version": 2,
+   "type": "resources",
+   "path": "resources-weeks-1-8.json"
+  },
+  {
+   "id": "resources-additions",
+   "title": "Resources: additions to weeks 1–8",
+   "version": 1,
+   "type": "resources",
+   "path": "resources-additions.json"
+  },
+  {
+   "id": "resources-zero-trust",
+   "title": "Resources: zero trust and cloud foundations",
+   "version": 1,
+   "type": "resources",
+   "path": "resources-zero-trust.json"
+  },
+  {
+   "id": "cards-core",
+   "title": "Flashcards: core (empty for now)",
+   "version": 1,
+   "type": "cards",
+   "path": "cards-core.json"
+  },
+  {
+   "id": "guidance-v1",
+   "title": "Reading tips: level and how to use each resource",
+   "version": 1,
+   "type": "guidance",
+   "path": "guidance-v1.json"
+  },
+  {
+   "id": "lessons-week-1",
+   "title": "Lessons: week 1",
+   "version": 8,
+   "type": "lessons",
+   "path": "lessons-week1.json"
+  },
+  {
+   "id": "resources-curriculum-v5",
+   "title": "Resources: the redesigned curriculum (all weeks)",
+   "version": 1,
+   "type": "resources",
+   "path": "resources-curriculum-v5.json"
+  },
+  {
+   "id": "guidance-v2",
+   "title": "Reading tips and new days for the redesigned curriculum",
+   "version": 1,
+   "type": "guidance",
+   "path": "guidance-v2.json"
+  },
+  {
+   "id": "lessons-week-2",
+   "title": "Lessons: week 2",
+   "version": 3,
+   "type": "lessons",
+   "path": "lessons-week2.json"
+  },
+  {
+   "id": "lessons-week-3",
+   "title": "Lessons: week 3",
+   "version": 2,
+   "type": "lessons",
+   "path": "lessons-week3.json"
+  },
+  {
+   "id": "lessons-week-4",
+   "title": "Lessons: week 4",
+   "version": 2,
+   "type": "lessons",
+   "path": "lessons-week4.json"
+  },
+  {
+   "id": "lessons-week-5",
+   "title": "Lessons: week 5",
+   "version": 2,
+   "type": "lessons",
+   "path": "lessons-week5.json"
+  },
+  {
+   "id": "lessons-week-6",
+   "title": "Lessons: week 6",
+   "version": 3,
+   "type": "lessons",
+   "path": "lessons-week6.json"
+  },
+  {
+   "id": "lessons-week-7",
+   "title": "Lessons: week 7",
+   "version": 2,
+   "type": "lessons",
+   "path": "lessons-week7.json"
+  },
+  {
+   "id": "lessons-week-8",
+   "title": "Lessons: week 8",
+   "version": 4,
+   "type": "lessons",
+   "path": "lessons-week8.json"
+  },
+  {
+   "id": "lessons-week-9",
+   "title": "Lessons: week 9",
+   "version": 2,
+   "type": "lessons",
+   "path": "lessons-week9.json"
+  },
+  {
+   "id": "resources-pathways",
+   "title": "Resources: AI Security pathway and Weeks 1-2 foundations",
+   "version": 1,
+   "type": "resources",
+   "path": "resources-pathways.json"
+  },
+  {
+   "id": "pathway-security-foundations",
+   "title": "Pathway: Security Foundations (retired: now in the 60-day core)",
+   "version": 2,
+   "type": "pathway",
+   "path": "pathway-security-foundations.json"
+  },
+  {
+   "id": "pathway-network-kubernetes",
+   "title": "Pathway: Network and Kubernetes Security",
+   "version": 1,
+   "type": "pathway",
+   "path": "pathway-network-kubernetes.json"
+  },
+  {
+   "id": "pathway-ai-security",
+   "title": "Pathway: AI Security",
+   "version": 3,
+   "type": "pathway",
+   "path": "pathway-ai-security.json"
+  },
+  {
+   "id": "guidance-v3",
+   "title": "Reading tips and day changes for the foundations and pathways",
+   "version": 2,
+   "type": "guidance",
+   "path": "guidance-v3.json"
+  }
+ ]
+}

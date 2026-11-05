@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compliance and policy as code, in plain words · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Compliance and policy as code, in plain words</h1>
+<p class="eyebrow">Day 44 · Week 7 · Advanced · about 120 min</p>
+<p>Compliance frameworks like SOC 2 and ISO 27001 ask companies to prove they control access and changes, and policy as code keeps those rules in files that are reviewed, tested and versioned like software.</p>
+<p><strong>By the end, you can:</strong> Distinguish a SOC 2 report (an attestation) from ISO 27001 certification, and explain how policy-as-code differs from a full GitOps pipeline.</p>
+<h2>Why it matters to a designer</h2>
+<p>Compliance is why many companies buy security products, and policy as code is how technical teams want to manage them. A designer who can bridge the auditor’s need for evidence and the engineer’s need for git workflows can design features that sell and that people actually use.</p>
+<h2>Key ideas</h2>
+<ul><li>SOC 2 is a report from an independent auditor that a company’s controls work: who has access, how changes are approved, how incidents are handled. Customers ask suppliers for it before buying.</li><li>Type 1 checks that controls are designed well at one point in time; Type 2 checks they actually worked over months. SOC 2 itself is an attestation: an auditor&#x27;s report on how well your controls work, not a pass/fail certification. ISO 27001 is different in kind: it is a certification against an international standard, issued after an accredited audit.</li><li>Auditors ask for evidence: screenshots, exports and logs that prove each control. Products that make evidence easy to export save customers weeks.</li><li>Policy as code: rules live in text files in git. Every change is a pull request that someone reviews, tests run automatically, and you can see history and roll back.</li><li>GitOps means git is the source of truth: when a change is merged, a pipeline applies it automatically. Tailscale supports this for its policy file.</li><li>Open Policy Agent (OPA) and Cedar (Week 3) are both policy-as-code engines, but they are not interchangeable: each has its own policy language and evaluation model, so a policy written for one cannot simply be dropped into the other.</li><li>The design challenge: some admins edit in the console, some in git. Products must keep both consistent and show clearly which one is in charge.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>SOC 2</strong></td><td>An independent audit report on a company’s security controls.</td></tr><tr><td><strong>ISO 27001</strong></td><td>An international standard for managing information security.</td></tr><tr><td><strong>control</strong></td><td>A practice or rule that reduces risk, such as requiring approval for changes.</td></tr><tr><td><strong>evidence</strong></td><td>Proof that a control works: logs, exports, screenshots.</td></tr><tr><td><strong>policy as code</strong></td><td>Keeping rules in versioned files that are reviewed and tested like software.</td></tr><tr><td><strong>pull request</strong></td><td>A proposed change in git that others review before it is merged.</td></tr><tr><td><strong>GitOps</strong></td><td>Using git as the source of truth, with changes applied automatically after merge.</td></tr><tr><td><strong>OPA</strong></td><td>Open Policy Agent: a widely used policy-as-code engine.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read the first sections of the plain-language SOC 2 guide. &mdash; <a href="https://www.vanta.com/collection/soc-2/what-is-soc-2">What is SOC 2?</a> (Vanta)</p><span class="step__min">15 min</span></div><div class="step"><p>Skim the official SOC page to see who defines SOC 2. &mdash; <a href="https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2">SOC Suite of Services</a> (AICPA &amp; CIMA)</p><span class="step__min">10 min</span></div><div class="step"><p>Read the Open Policy Agent introduction and one example. &mdash; <a href="https://www.openpolicyagent.org/docs">Open Policy Agent (OPA)</a> (Open Policy Agent)</p><span class="step__min">15 min</span></div><div class="step"><p>Re-read Tailscale just-in-time access and note what evidence it leaves behind. &mdash; <a href="https://tailscale.com/kb/1443/just-in-time-access">Just-in-time access</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Skim the SC-300 study guide headings to see which governance skills enterprises expect admins to have. &mdash; <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-300">Study guide for Exam SC-300</a> (Microsoft Learn)</p><span class="step__min">10 min</span></div><div class="step"><p>Pick one control, such as “access changes are reviewed and approved”, and list the evidence an auditor would ask for and where it would come from in Tailscale.</p><span class="step__min">30 min</span></div><div class="step"><p>Sketch how a product could show “this policy is managed in git” in its console, and what an admin can and cannot do there.</p><span class="step__min">30 min</span></div>
+<h2>Skip or skim</h2><p>Skip the full SOC 2 criteria and ISO clauses. Know what they are for and what evidence looks like.</p>
+<h2>Check yourself</h2><ul><li>What is the difference between SOC 2 Type 1 and Type 2?</li><li>What are three benefits of policy as code?</li><li>Why must a product show clearly whether a policy is managed in git or in the console?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Type 1 checks that controls are well designed at one moment. Type 2 checks that they actually operated over a period, usually several months.</li><li>Every change is reviewed in a pull request, tests run before it goes live, and there is a full history with easy rollback.</li><li>Otherwise an admin edits in the console and the next git sync silently overwrites the change, or the two drift apart. Clear ownership prevents confusion and lost changes.</li></ul>
+<p><a href="../../index.html#lesson/44">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

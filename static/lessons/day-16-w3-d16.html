@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Access policies: groups, tags, ACLs and grants · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Access policies: groups, tags, ACLs and grants</h1>
+<p class="eyebrow">Day 16 · Week 3 · Intermediate · about 120 min</p>
+<p>An access policy is a set of rules that says which people and devices may reach which services; good policies are written for groups and roles, not for individuals.</p>
+<p><strong>By the end, you can:</strong> Write an access rule using source, destination and permission, explain the difference between ACLs and grants, and state that default-deny or default-allow behaviour depends on the specific policy engine&#x27;s rules.</p>
+<h2>Why it matters to a designer</h2>
+<p>Writing access rules is the daily job of the admins you design for, and it is where the worst mistakes happen: a rule that is too open, or one that locks out the whole sales team. Case study 1 is about exactly this problem, so today you learn the vocabulary of rules.</p>
+<h2>Key ideas</h2>
+<ul><li>From Week 1 you know roles and groups in Keycloak. Network access policies use the same ideas for devices and services.</li><li>A rule has a source (who), a destination (what), and what is allowed (for example a port, or “can use SSH”). Example: “group:design may reach tag:figma-proxy on port 443”.</li><li>Tags label machines by purpose instead of by owner. Example: tag:database or tag:prod. Rules about tags keep working when a new database is added.</li><li>In Tailscale, older rules are called ACLs and the newer form is grants. Both say who may reach what; grants can also carry application permissions.</li><li>Default deny: in Tailscale, ACLs are deny-by-default once you have a policy — if no rule allows something, it is blocked. But a policy file with no ACL section at all currently defaults to allowing everything, so “default deny” is a property of how a specific policy engine is configured, not a universal law every access-control product follows.</li><li>RBAC (role-based access control) gives access by role: “engineers may reach staging”. ABAC (attribute-based) uses facts: “engineers on a managed laptop during an incident”. ReBAC (relationship-based) uses links: “the owner of this document may share it”.</li><li>Where RBAC breaks: real companies need exceptions, so roles multiply (“engineer-staging-read-only-contractor”) until nobody understands them. This is called role explosion, and it is a design problem as much as a technical one.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>access policy</strong></td><td>A set of rules deciding who may reach what.</td></tr><tr><td><strong>ACL</strong></td><td>Access control list: rules that list who may access which resources.</td></tr><tr><td><strong>grant</strong></td><td>In Tailscale, the newer rule form that gives a source access to a destination, optionally with app permissions.</td></tr><tr><td><strong>tag</strong></td><td>A label for a machine by purpose, such as tag:prod, used in rules.</td></tr><tr><td><strong>default deny</strong></td><td>Everything is blocked unless a rule allows it.</td></tr><tr><td><strong>RBAC</strong></td><td>Role-based access control: access based on a person’s role.</td></tr><tr><td><strong>ABAC</strong></td><td>Attribute-based access control: access based on facts about the person, device or request.</td></tr><tr><td><strong>ReBAC</strong></td><td>Relationship-based access control: access based on relationships, such as owner or member.</td></tr><tr><td><strong>role explosion</strong></td><td>When a company creates so many special roles that nobody can understand them.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read Tailscale’s ACL page up to the first full example. &mdash; <a href="https://tailscale.com/kb/1018/acls">Manage permissions using ACLs</a> (Tailscale)</p><span class="step__min">20 min</span></div><div class="step"><p>Read about grants and compare one grant with the same rule written as an ACL. &mdash; <a href="https://tailscale.com/kb/1324/grants">Grants</a> (Tailscale Docs)</p><span class="step__min">20 min</span></div><div class="step"><p>Read the access control chapter of the IDPro Body of Knowledge index and pick the RBAC and ABAC articles. &mdash; <a href="https://idpro.org/body-of-knowledge/">IDPro Body of Knowledge</a> (IDPro)</p><span class="step__min">25 min</span></div><div class="step"><p>Look at two example Cedar policies to see how another language writes the same ideas. &mdash; <a href="https://docs.cedarpolicy.com/">Cedar policy language reference guide</a> (Cedar project)</p><span class="step__min">15 min</span></div><div class="step"><p>Translate three plain-language rules for a fictional company into Tailscale-style rules on paper: “designers can reach the design server”, “only on-call engineers can reach production”, “contractors can reach nothing but the wiki”.</p><span class="step__min">30 min</span></div><div class="step"><p>Write down two places where these rules could confuse an admin, and one idea for each.</p><span class="step__min">10 min</span></div>
+<h2>Skip or skim</h2><p>Skip the advanced grant capabilities, autoApprovers and SSH rules. Sources, destinations, groups and tags are enough for today.</p>
+<h2>Check yourself</h2><ul><li>What are the three parts of an access rule?</li><li>Why are rules about tags and groups easier to maintain than rules about named people or IP addresses?</li><li>Give one example each of RBAC, ABAC and ReBAC.</li><li>What is role explosion, and why is it a design problem?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>A source (who is asking: a user, group or tagged machine), a destination (what they want to reach) and what is allowed (ports, protocols or app permissions).</li><li>People and addresses change all the time. Groups and tags describe purpose, so when someone joins a team or a new server is added, the rule still works without editing it.</li><li>RBAC: “engineers may reach staging”. ABAC: “engineers may reach production only from a managed laptop”. ReBAC: “the owner of a document may share it with others”.</li><li>It is when special cases create hundreds of roles that nobody understands. It is a design problem because admins need ways to see, compare and clean up roles, not only to create them.</li></ul>
+<p><a href="../../index.html#lesson/16">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

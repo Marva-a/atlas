@@ -1,0 +1,1372 @@
+{
+ "schema": "identity-lab-coach.resources.v1",
+ "createdOn": "2026-11-04",
+ "note": "Curriculum version 5: references for every week. Every link was opened and its title checked.",
+ "resources": [
+  {
+   "id": "c5-docker-desktop",
+   "title": "Docker Desktop",
+   "source": "Docker",
+   "type": "lab",
+   "estimatedMinutes": 15,
+   "url": "https://www.docker.com/products/docker-desktop/",
+   "planDays": [
+    1
+   ],
+   "why": "The free app that runs Keycloak on your laptop for Exercise 1.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ms-iam",
+   "title": "What is identity and access management (IAM)?",
+   "source": "Microsoft Security",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.microsoft.com/en-us/security/business/security-101/what-is-identity-access-management-iam",
+   "planDays": [
+    1
+   ],
+   "why": "A short overview of the whole field: who you are, what you may do, and how companies manage it.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-passwords",
+   "title": "Password Creation: 3 Ways To Make It Easier",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/password-creation/",
+   "planDays": [
+    2
+   ],
+   "why": "Sign-in seen as a usability problem, from a design research firm.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-cisa-mfa",
+   "title": "Require Multifactor Authentication",
+   "source": "CISA",
+   "type": "article",
+   "estimatedMinutes": 5,
+   "url": "https://www.cisa.gov/secure-our-world/require-multifactor-authentication",
+   "planDays": [
+    2
+   ],
+   "why": "How a government security agency explains MFA to the public: useful for plain-language wording.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nist-mfa",
+   "title": "Back to basics: Multi-factor authentication (MFA)",
+   "source": "NIST",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nist.gov/itl/applied-cybersecurity/tig/back-basics-multi-factor-authentication",
+   "planDays": [
+    2
+   ],
+   "why": "Something you know, have or are, in plain words from the US standards body.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ms-authn",
+   "title": "What is authentication?",
+   "source": "Microsoft Security",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.microsoft.com/en-us/security/business/security-101/what-is-authentication",
+   "planDays": [
+    2
+   ],
+   "why": "The ways people prove who they are: passwords, codes, apps, fingerprints, passkeys.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-okta-authn-authz",
+   "title": "Authentication vs. Authorization",
+   "source": "Okta",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.okta.com/identity-101/authentication-vs-authorization/",
+   "planDays": [
+    2
+   ],
+   "why": "The two ideas everything else is built on, with simple examples.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ms-phishing",
+   "title": "What is phishing?",
+   "source": "Microsoft Security",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.microsoft.com/en-us/security/business/security-101/what-is-phishing",
+   "planDays": [
+    4
+   ],
+   "why": "The most common way accounts are stolen, with everyday examples.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-owasp-tm",
+   "title": "Threat Modeling",
+   "source": "OWASP",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://owasp.org/www-community/Threat_Modeling",
+   "planDays": [
+    4
+   ],
+   "why": "A short definition of threat modelling and the questions it asks.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-persona",
+   "title": "Personas Make Users Memorable",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/persona/",
+   "planDays": [
+    5
+   ],
+   "why": "What a persona is for, and how to keep it grounded in research.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-okta-baw",
+   "title": "Businesses at Work",
+   "source": "Okta",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://www.okta.com/businesses-at-work/",
+   "planDays": [
+    5
+   ],
+   "why": "Which apps companies run and how identity tools are adopted: context for who buys and who uses.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-heuristics",
+   "title": "10 Usability Heuristics for User Interface Design",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.nngroup.com/articles/ten-usability-heuristics/",
+   "planDays": [
+    6
+   ],
+   "why": "The ten heuristics you will use for the admin console teardown.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-heuristic-eval",
+   "title": "How to Conduct a Heuristic Evaluation",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/how-to-conduct-a-heuristic-evaluation/",
+   "planDays": [
+    6
+   ],
+   "why": "A simple method for a structured teardown.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mdn-internet",
+   "title": "How does the Internet work?",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/How_does_the_Internet_work",
+   "planDays": [
+    8
+   ],
+   "why": "A short, picture-led explanation of networks, routers and addresses.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mdn-ip",
+   "title": "IP Address (glossary)",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://developer.mozilla.org/en-US/docs/Glossary/IP_Address",
+   "planDays": [
+    8
+   ],
+   "why": "What an IP address is, in a paragraph.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mdn-port",
+   "title": "Port (glossary)",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 5,
+   "url": "https://developer.mozilla.org/en-US/docs/Glossary/Port",
+   "planDays": [
+    8
+   ],
+   "why": "What a port is, with the common examples.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mdn-dns",
+   "title": "DNS (glossary)",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://developer.mozilla.org/en-US/docs/Glossary/DNS",
+   "planDays": [
+    8
+   ],
+   "why": "How names become addresses.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mdn-tls",
+   "title": "Transport Layer Security (TLS)",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://developer.mozilla.org/en-US/docs/Web/Security/Transport_Layer_Security",
+   "planDays": [
+    9
+   ],
+   "why": "What TLS protects and what it does not.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-how",
+   "title": "How Tailscale works",
+   "source": "Tailscale",
+   "type": "article",
+   "estimatedMinutes": 30,
+   "url": "https://tailscale.com/blog/how-tailscale-works",
+   "planDays": [
+    9
+   ],
+   "why": "The clearest explanation of hub-and-spoke VPNs versus a mesh, from the company itself.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-nat",
+   "title": "How NAT traversal works",
+   "source": "Tailscale",
+   "type": "article",
+   "estimatedMinutes": 35,
+   "url": "https://tailscale.com/blog/how-nat-traversal-works",
+   "planDays": [
+    9
+   ],
+   "why": "Why connecting two devices directly is hard: NAT and firewalls.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-what",
+   "title": "What is Tailscale?",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1151/what-is-tailscale",
+   "planDays": [
+    10
+   ],
+   "why": "The product in its own words.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-tailnet",
+   "title": "What is a tailnet?",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1136/tailnet",
+   "planDays": [
+    10,
+    11
+   ],
+   "why": "Users, devices and the private network they form.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-magicdns",
+   "title": "MagicDNS",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1081/magicdns",
+   "planDays": [
+    11
+   ],
+   "why": "Names instead of numbers for every device.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-sharing",
+   "title": "Share your machines with other users",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1084/sharing",
+   "planDays": [
+    11
+   ],
+   "why": "Narrow, revocable access to one device.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-cli",
+   "title": "Tailscale CLI",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://tailscale.com/kb/1080/cli",
+   "planDays": [
+    11
+   ],
+   "why": "How developers and admins use Tailscale from a terminal.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-cf-warp",
+   "title": "About the Cloudflare One Client",
+   "source": "Cloudflare Docs",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/warp/",
+   "planDays": [
+    12
+   ],
+   "why": "A competitor’s client and first run, for the product study.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-zerotier-start",
+   "title": "Create a Network",
+   "source": "ZeroTier Documentation",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://docs.zerotier.com/start",
+   "planDays": [
+    12
+   ],
+   "why": "Another competitor’s first-run path.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-onboarding",
+   "title": "Onboarding Tutorials vs. Contextual Help",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/onboarding-tutorials/",
+   "planDays": [
+    12
+   ],
+   "why": "When tutorials help and when help in context works better.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-zt",
+   "title": "“Zero Trust Networking” definition",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1123/zero-trust",
+   "planDays": [
+    15
+   ],
+   "why": "A short, practical definition of zero trust from a company that builds it.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-grants",
+   "title": "Grants",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://tailscale.com/kb/1324/grants",
+   "planDays": [
+    16,
+    17
+   ],
+   "why": "The newer way to write access rules in Tailscale: who may reach what, and with which permissions.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-policy-syntax",
+   "title": "Syntax reference for the tailnet policy file",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 30,
+   "url": "https://tailscale.com/kb/1337/policy-syntax",
+   "planDays": [
+    17
+   ],
+   "why": "The full policy file, including groups, tag owners and tests.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-twingate-how",
+   "title": "How Twingate Works",
+   "source": "Twingate",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.twingate.com/docs/how-twingate-works",
+   "planDays": [
+    19
+   ],
+   "why": "A competitor’s model of zero-trust access, for your teardown.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-interviews",
+   "title": "User Interviews 101",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/user-interviews/",
+   "planDays": [
+    19
+   ],
+   "why": "How to run short, useful interviews with admins and engineers.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-problem",
+   "title": "Problem Statements in UX Discovery",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/problem-statements/",
+   "planDays": [
+    20
+   ],
+   "why": "How to write a problem statement that a team can act on.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-okta-scim",
+   "title": "Understanding SCIM",
+   "source": "Okta Developer",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://developer.okta.com/docs/concepts/scim/",
+   "planDays": [
+    23
+   ],
+   "why": "How accounts are created and removed in apps automatically.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-scim-cloud",
+   "title": "SCIM: System for Cross-domain Identity Management",
+   "source": "scim.cloud",
+   "type": "article",
+   "estimatedMinutes": 5,
+   "url": "https://scim.cloud/",
+   "planDays": [
+    23
+   ],
+   "why": "The short official overview of the SCIM standard.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-entra-provisioning",
+   "title": "What is automated app user provisioning in Microsoft Entra ID?",
+   "source": "Microsoft Learn",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://learn.microsoft.com/en-us/entra/identity/app-provisioning/user-provisioning",
+   "planDays": [
+    23,
+    26
+   ],
+   "why": "How the admin of a large identity provider sees provisioning.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-keycloak-oidc",
+   "title": "Securing applications and services with OpenID Connect",
+   "source": "Keycloak",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://www.keycloak.org/securing-apps/oidc-layers",
+   "planDays": [
+    24
+   ],
+   "why": "How an app signs people in through Keycloak with OpenID Connect.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-wizards",
+   "title": "Wizards: Definition and Design Recommendations",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/wizards/",
+   "planDays": [
+    26
+   ],
+   "why": "When a step-by-step wizard helps a long setup, and when it does not.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-docker-container",
+   "title": "What is a container?",
+   "source": "Docker Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/",
+   "planDays": [
+    29
+   ],
+   "why": "Containers explained from scratch, with a short video.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-overview",
+   "title": "Kubernetes overview",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://kubernetes.io/docs/concepts/overview/",
+   "planDays": [
+    29
+   ],
+   "why": "What Kubernetes is and why teams use it.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-pods",
+   "title": "Pods",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://kubernetes.io/docs/concepts/workloads/pods/",
+   "planDays": [
+    29
+   ],
+   "why": "The smallest thing Kubernetes runs.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-namespaces",
+   "title": "Namespaces",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 5,
+   "url": "https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/",
+   "planDays": [
+    29
+   ],
+   "why": "How a cluster is divided into separate spaces for teams or apps.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-labels",
+   "title": "Labels and Selectors",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/",
+   "planDays": [
+    30
+   ],
+   "why": "How Kubernetes finds things by label, which is how network policies pick pods.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-service",
+   "title": "Service",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://kubernetes.io/docs/concepts/services-networking/service/",
+   "planDays": [
+    30
+   ],
+   "why": "How pods get a stable name and address.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-netpol",
+   "title": "Network Policies",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 25,
+   "url": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+   "planDays": [
+    30,
+    32
+   ],
+   "why": "The official explanation of Kubernetes network policy, including default behaviour.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-about",
+   "title": "About Calico",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://docs.tigera.io/calico/latest/about/",
+   "planDays": [
+    30
+   ],
+   "why": "What Calico (made by Tigera) does: networking and network security for Kubernetes.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-kind",
+   "title": "kind: Quick Start",
+   "source": "kind",
+   "type": "lab",
+   "estimatedMinutes": 15,
+   "url": "https://kind.sigs.k8s.io/docs/user/quick-start/",
+   "planDays": [
+    31
+   ],
+   "why": "Run a Kubernetes cluster inside Docker on your laptop.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-kind",
+   "title": "Installing Calico on kind",
+   "source": "Calico Documentation",
+   "type": "lab",
+   "estimatedMinutes": 20,
+   "url": "https://docs.tigera.io/calico/latest/getting-started/kubernetes/kind",
+   "planDays": [
+    31
+   ],
+   "why": "Step-by-step install of Calico on a kind cluster.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-k8s-policy",
+   "title": "Get started with Kubernetes network policy",
+   "source": "Calico Documentation",
+   "type": "lab",
+   "estimatedMinutes": 25,
+   "url": "https://docs.tigera.io/calico/latest/network-policy/get-started/kubernetes-policy/kubernetes-network-policy",
+   "planDays": [
+    32
+   ],
+   "why": "Hands-on examples of writing Kubernetes network policies.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-default-deny",
+   "title": "Enable a default deny policy for Kubernetes pods",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://docs.tigera.io/calico/latest/network-policy/get-started/kubernetes-default-deny",
+   "planDays": [
+    32
+   ],
+   "why": "Why and how to block everything that is not allowed.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-policy",
+   "title": "Get started with Calico network policy",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://docs.tigera.io/calico/latest/network-policy/get-started/calico-policy/calico-network-policy",
+   "planDays": [
+    32
+   ],
+   "why": "Calico’s own policy features beyond the Kubernetes standard.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-recommend",
+   "title": "Enable policy recommendations",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://docs.tigera.io/calico-cloud/network-policy/recommendations/policy-recommendations",
+   "planDays": [
+    33,
+    53
+   ],
+   "why": "How Calico Cloud suggests policies from observed traffic: the core idea of case study 2.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-staged",
+   "title": "Stage, preview impacts, and enforce policy",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://docs.tigera.io/calico/latest/network-policy/staged-network-policies",
+   "planDays": [
+    33,
+    53
+   ],
+   "why": "Trying a policy without enforcing it, and seeing what it would block.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-cilium-hubble",
+   "title": "Network Observability with Hubble",
+   "source": "Cilium Documentation",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://docs.cilium.io/en/stable/observability/hubble/",
+   "planDays": [
+    33
+   ],
+   "why": "How a competitor (Cilium) shows Kubernetes traffic.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-cilium-policy",
+   "title": "Overview of Network Policy (Cilium)",
+   "source": "Cilium Documentation",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://docs.cilium.io/en/stable/security/policy/",
+   "planDays": [
+    33
+   ],
+   "why": "How Cilium describes policy, for your comparison.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-journey",
+   "title": "Journey Mapping 101",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/journey-mapping-101/",
+   "planDays": [
+    34
+   ],
+   "why": "How to map a user’s journey, for the platform engineer journey.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-flowlogs",
+   "title": "Network flow logs",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1219/network-flow-logs",
+   "planDays": [
+    36,
+    38
+   ],
+   "why": "What Tailscale records about connections in a tailnet.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-auditlog",
+   "title": "Configuration audit logging",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1203/audit-logging",
+   "planDays": [
+    36
+   ],
+   "why": "The record of who changed settings and when.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-calico-flowlogs",
+   "title": "View flow logs",
+   "source": "Calico Documentation",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://docs.tigera.io/calico/latest/observability/view-flow-logs",
+   "planDays": [
+    36,
+    38
+   ],
+   "why": "How open-source Calico shows traffic between pods.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-pd-alert-fatigue",
+   "title": "Alert Fatigue and How to Prevent it",
+   "source": "PagerDuty",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.pagerduty.com/resources/digital-operations/learn/alert-fatigue/",
+   "planDays": [
+    36
+   ],
+   "why": "Why too many alerts make people miss the important ones.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-mitre",
+   "title": "MITRE ATT&CK",
+   "source": "MITRE",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://attack.mitre.org/",
+   "planDays": [
+    37
+   ],
+   "why": "The shared catalogue of attacker tactics and techniques.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-pd-response",
+   "title": "PagerDuty Incident Response Documentation",
+   "source": "PagerDuty",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://response.pagerduty.com/",
+   "planDays": [
+    37,
+    39
+   ],
+   "why": "How a real company runs incidents: roles, steps and communication.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-cisa-ttx",
+   "title": "CISA Tabletop Exercise Packages",
+   "source": "CISA",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.cisa.gov/resources-tools/services/cisa-tabletop-exercise-packages",
+   "planDays": [
+    39
+   ],
+   "why": "Ready-made scenarios that organisations use to practise incidents.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-data-tables",
+   "title": "Data Tables: Four Major User Tasks",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/data-tables/",
+   "planDays": [
+    40
+   ],
+   "why": "How people find, compare, view and act on rows: the heart of alert lists.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-dashboards",
+   "title": "Dashboards: Making Charts and Graphs Easier to Understand",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/dashboards-preattentive/",
+   "planDays": [
+    40
+   ],
+   "why": "How to make the important thing visible at a glance.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-notifications",
+   "title": "Indicators, Validations, and Notifications",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/indicators-validations-notifications/",
+   "planDays": [
+    40
+   ],
+   "why": "Choosing the right way to tell people something needs attention.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-roles",
+   "title": "User roles",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1138/user-roles",
+   "planDays": [
+    43
+   ],
+   "why": "How one product splits admin power into roles.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-entra-reviews",
+   "title": "What are access reviews?",
+   "source": "Microsoft Learn",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://learn.microsoft.com/en-us/entra/id-governance/access-reviews-overview",
+   "planDays": [
+    43
+   ],
+   "why": "How large companies regularly check who should keep access.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-entra-pim",
+   "title": "What is Privileged Identity Management?",
+   "source": "Microsoft Learn",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+   "planDays": [
+    43
+   ],
+   "why": "Admin rights given only when needed, for a limited time, with approval.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-jit",
+   "title": "Just-in-time access",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1443/just-in-time-access",
+   "planDays": [
+    43,
+    44
+   ],
+   "why": "Temporary access that expires, in a network access product.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-aicpa-soc",
+   "title": "SOC Suite of Services",
+   "source": "AICPA & CIMA",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+   "planDays": [
+    44
+   ],
+   "why": "The official home of SOC 2 reports, from the body that defines them.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-vanta-soc2",
+   "title": "What is SOC 2?",
+   "source": "Vanta",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.vanta.com/collection/soc-2/what-is-soc-2",
+   "planDays": [
+    44
+   ],
+   "why": "A plain-language guide to SOC 2 from a compliance software company.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-opa",
+   "title": "Open Policy Agent (OPA)",
+   "source": "Open Policy Agent",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://www.openpolicyagent.org/docs",
+   "planDays": [
+    44
+   ],
+   "why": "A widely used engine for writing policy as code.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-gitops",
+   "title": "GitOps for Tailscale",
+   "source": "Tailscale Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/kb/1204/gitops-acls",
+   "planDays": [
+    45
+   ],
+   "why": "Why and how to manage the tailnet policy file in git.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-gitops-github",
+   "title": "GitOps for Tailscale with GitHub Actions",
+   "source": "Tailscale Docs",
+   "type": "lab",
+   "estimatedMinutes": 25,
+   "url": "https://tailscale.com/kb/1306/gitops-acls-github",
+   "planDays": [
+    45
+   ],
+   "why": "Step-by-step setup for Exercise 16.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-progressive",
+   "title": "Progressive Disclosure",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/progressive-disclosure/",
+   "planDays": [
+    46,
+    53
+   ],
+   "why": "Show the essentials first and details on demand: key for complex policy screens.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-complex-apps",
+   "title": "8 Design Guidelines for Complex Applications",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/complex-application-design/",
+   "planDays": [
+    46
+   ],
+   "why": "Patterns for expert tools like policy editors and consoles.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-usability-testing",
+   "title": "Usability (User) Testing 101",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/usability-testing-101/",
+   "planDays": [
+    47,
+    54
+   ],
+   "why": "How to run a small usability test.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-owasp-nhi",
+   "title": "OWASP Non-Human Identities Top 10",
+   "source": "OWASP",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://owasp.org/www-project-non-human-identities-top-10/",
+   "planDays": [
+    50
+   ],
+   "why": "The main risks of service accounts, keys and other machine identities.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-k8s-serviceaccounts",
+   "title": "Service Accounts",
+   "source": "Kubernetes Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://kubernetes.io/docs/concepts/security/service-accounts/",
+   "planDays": [
+    50
+   ],
+   "why": "How workloads in Kubernetes get their own identity.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-gh-secret-scanning",
+   "title": "About secret scanning",
+   "source": "GitHub Docs",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning",
+   "planDays": [
+    50
+   ],
+   "why": "How GitHub finds leaked keys in code, and what happens next.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-gcp-wif",
+   "title": "Workload Identity Federation",
+   "source": "Google Cloud Documentation",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://cloud.google.com/iam/docs/workload-identity-federation",
+   "planDays": [
+    50
+   ],
+   "why": "How workloads outside Google Cloud get access without long-lived keys.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-owasp-llm01",
+   "title": "LLM01: Prompt Injection",
+   "source": "OWASP Gen AI Security Project",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+   "planDays": [
+    51
+   ],
+   "why": "Prompt injection explained, with examples and mitigations.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-confirmation",
+   "title": "Confirmation Dialogs Can Prevent User Errors",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/confirmation-dialog/",
+   "planDays": [
+    52
+   ],
+   "why": "When to ask “are you sure?” and how to make it work.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-errors",
+   "title": "Error-Message Guidelines",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/error-message-guidelines/",
+   "planDays": [
+    52
+   ],
+   "why": "How to write errors people can act on.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-ts-careers",
+   "title": "Careers at Tailscale",
+   "source": "Tailscale",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://tailscale.com/careers",
+   "planDays": [
+    55,
+    59
+   ],
+   "why": "Real roles at a network access company, for matching your skills.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-tigera-careers",
+   "title": "Careers at Tigera",
+   "source": "Tigera",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.tigera.io/careers/",
+   "planDays": [
+    55,
+    59
+   ],
+   "why": "Real roles at a Kubernetes security company.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-portfolio",
+   "title": "5 Steps to Creating a UX-Design Portfolio",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/ux-design-portfolios/",
+   "planDays": [
+    57,
+    59
+   ],
+   "why": "How hiring managers read portfolios, and how to structure yours.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "c5-nng-critiques",
+   "title": "Design Critiques",
+   "source": "Nielsen Norman Group",
+   "type": "article",
+   "estimatedMinutes": 10,
+   "url": "https://www.nngroup.com/articles/design-critiques/",
+   "planDays": [
+    60
+   ],
+   "why": "How to give and receive design feedback, useful for interview retrospectives.",
+   "optional": false,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How AI products work, and where security fits · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>How AI products work, and where security fits</h1>
+<p class="eyebrow">Pathway: AI Security · Lesson 1 · Intermediate · about 85 min</p>
+<p>An AI product is a model surrounded by prompts, retrieved documents, tools, memory and people, and most of its security risks sit in those connections, not inside the model.</p>
+<p><strong>By the end, you can:</strong> Draw the parts of an AI assistant or agent (user, app, model, system prompt, retrieval, tools, memory) with their trust boundaries, and explain the difference between AI security and AI safety.</p>
+<h2>Why it matters to a designer</h2>
+<p>The practical question is not &#x27;what is prompt injection?&#x27; but &#x27;how do I design an AI product that can read enterprise data and take actions without exceeding the authority the user granted?&#x27; That starts with a clear picture of the system, which is the same skill as Day 8, applied to AI.</p>
+<h2>Key ideas</h2>
+<ul><li>A large language model (LLM) predicts text. On its own it has no memory between requests and no access to your systems. Everything else is added by the application around it.</li><li>The usual parts: the user&#x27;s message; a system prompt with the app&#x27;s instructions; retrieved content (RAG: documents fetched from a search index or vector store to answer a question); tools the model can call (send an email, query a database, open a ticket); memory saved across sessions; and the model&#x27;s output, shown to a person or passed to another system.</li><li>An agent is an AI system that plans and takes several steps with tools to reach a goal, with less human checking at each step. More autonomy means more need for limits.</li><li>The key weakness: the model receives instructions and data as one stream of text and cannot reliably tell them apart. Anything that reaches the model can influence what it does next.</li><li>Trust boundaries in AI systems: the user&#x27;s text, every retrieved document, every tool result, every web page and every piece of memory is untrusted input to the model. The model&#x27;s output is untrusted input to whatever comes next.</li><li>AI security protects the system, its data and its users from misuse and attack (leaks, unauthorised actions, poisoning). AI safety is broader: avoiding harmful behaviour and outputs even without an attacker. They overlap but use different methods.</li><li>Identity still matters most: whose permissions does the model use when it retrieves a file or calls a tool? Day 51&#x27;s answer, its own scoped, short-lived, delegated access, is the foundation for the rest of this pathway.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>LLM</strong></td><td>Large language model: a model that generates text by predicting what comes next.</td></tr><tr><td><strong>system prompt</strong></td><td>Instructions from the application that the model sees before the user&#x27;s message.</td></tr><tr><td><strong>RAG</strong></td><td>Retrieval-augmented generation: fetching relevant documents and giving them to the model to answer a question.</td></tr><tr><td><strong>tool call</strong></td><td>When a model asks the application to run a function, such as searching, sending or updating something.</td></tr><tr><td><strong>agent</strong></td><td>An AI system that plans and takes several steps with tools to reach a goal.</td></tr><tr><td><strong>context window</strong></td><td>All the text the model can see at once: instructions, conversation, retrieved content and tool results.</td></tr><tr><td><strong>AI security</strong></td><td>Protecting AI systems, their data and their users from misuse and attack.</td></tr><tr><td><strong>AI safety</strong></td><td>Making AI systems behave in beneficial, non-harmful ways, with or without an attacker.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Reread your notes from Day 51 (agents, delegated access and approvals). This pathway starts where that lesson ended.</p><span class="step__min">10 min</span></div><div class="step"><p>Skim the OWASP Top 10 for LLM applications. Read the list of ten titles and the introduction; you will read several entries closely in later lessons. &mdash; <a href="https://genai.owasp.org/home/resources/owasp-genai-llm-top-10-2026/">OWASP GenAI LLM Top 10 2026</a> (OWASP GenAI Security Project)</p><span class="step__min">20 min</span></div><div class="step"><p>Read the NIST AI Risk Management Framework overview page to see how organisations frame AI risk more broadly. &mdash; <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> (NIST)</p><span class="step__min">15 min</span></div><div class="step"><p>Draw the system for an internal AI assistant that answers HR questions from company documents and can open a ticket. Include the user, app, model, system prompt, document store, ticket tool and memory. Mark every trust boundary.</p><span class="step__min">25 min</span></div><div class="step"><p>On the drawing, write whose permissions are used at each tool or retrieval step: the user&#x27;s, the agent&#x27;s own, or a shared service account. Circle any you think are too broad.</p><span class="step__min">10 min</span></div><div class="step"><p>Add today&#x27;s words to your glossary.</p><span class="step__min">5 min</span></div>
+<h2>Skip or skim</h2><p>Skip how models are trained, transformer architecture and model benchmarks. For product security you need the system around the model, not the model&#x27;s internals.</p>
+<h2>Check yourself</h2><ul><li>Why is every retrieved document and tool result treated as untrusted input to the model?</li><li>What is the difference between AI security and AI safety? Give an example of each.</li><li>In an AI assistant that reads company documents, whose permissions should decide which documents it can retrieve for a question?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Because the model cannot reliably separate instructions from data. Text inside a document, email or tool result can contain instructions, and the model may follow them. So content from anywhere other than the application&#x27;s own fixed instructions must be treated as potentially hostile.</li><li>AI security: stopping an attacker from using a hidden instruction in a shared document to make an assistant leak files. AI safety: stopping a model from giving dangerous medical advice even when nobody is attacking it.</li><li>The asking user&#x27;s, at the moment of asking: it should only retrieve what that person is already allowed to see. Using a broad service account would let anyone see anything the service can reach.</li></ul>
+<p><a href="../../index.html#path/ai-security/1">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

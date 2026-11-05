@@ -1,0 +1,172 @@
+{
+ "schema": "identity-lab-coach.resources.v1",
+ "createdOn": "2026-11-04",
+ "note": "Resources for the AI Security pathway and the security foundations taught in Weeks 1-2. Each is attached as optional to a calendar day, so it never adds required work.",
+ "resources": [
+  {
+   "id": "p-mdn-client-server",
+   "title": "Client-server overview",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview",
+   "planDays": [
+    8
+   ],
+   "why": "How a browser or app asks a server for something and gets an answer: the picture behind every sign-in, API and agent.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-mdn-http",
+   "title": "Overview of HTTP",
+   "source": "MDN Web Docs",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+   "planDays": [
+    8
+   ],
+   "why": "Requests, responses, methods, status codes and headers in plain terms. Read up to and including the section on HTTP messages.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-nist-800-30",
+   "title": "NIST SP 800-30 Rev. 1: Guide for Conducting Risk Assessments",
+   "source": "NIST",
+   "type": "spec",
+   "estimatedMinutes": 30,
+   "url": "https://csrc.nist.gov/pubs/sp/800/30/r1/final",
+   "planDays": [
+    4
+   ],
+   "why": "The standard reference for how risk is assessed: threat, vulnerability, likelihood and impact. Read the abstract and skim the risk model figure.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-owasp-bola",
+   "title": "API1:2023 Broken Object Level Authorization",
+   "source": "OWASP",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/",
+   "planDays": [
+    11
+   ],
+   "why": "The most common API flaw: a signed-in user changes an id in a request and gets someone else's data. A clear example of authorization failing after authentication succeeded.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-owasp-password-storage",
+   "title": "Password Storage Cheat Sheet",
+   "source": "OWASP Cheat Sheet Series",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html",
+   "planDays": [
+    9
+   ],
+   "why": "Why passwords are hashed rather than encrypted, in practice. Read the introduction and the section on hashing versus encryption.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-nist-privacy",
+   "title": "NIST Privacy Framework",
+   "source": "NIST",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://www.nist.gov/privacy-framework",
+   "planDays": [
+    9
+   ],
+   "why": "How privacy risk differs from security risk, and how organisations manage both. Read the overview page.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-owasp-llm02",
+   "title": "LLM02:2025 Sensitive Information Disclosure",
+   "source": "OWASP Gen AI Security Project",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/",
+   "planDays": [
+    51
+   ],
+   "why": "How AI systems leak data they should not show: from training data, from connected sources and from other users' context.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-owasp-llm06",
+   "title": "LLM06:2025 Excessive Agency",
+   "source": "OWASP Gen AI Security Project",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/",
+   "planDays": [
+    51
+   ],
+   "why": "When an AI system has more functions, permissions or autonomy than its task needs, and what limits that.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-owasp-llm08",
+   "title": "LLM08:2025 Vector and Embedding Weaknesses",
+   "source": "OWASP Gen AI Security Project",
+   "type": "article",
+   "estimatedMinutes": 15,
+   "url": "https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/",
+   "planDays": [
+    51
+   ],
+   "why": "The risks in retrieval (RAG): documents reaching people who should not see them, and poisoned content entering the knowledge base.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-mcp-security",
+   "title": "Model Context Protocol: Security Best Practices",
+   "source": "Model Context Protocol",
+   "type": "spec",
+   "estimatedMinutes": 30,
+   "url": "https://modelcontextprotocol.io/specification/draft/basic/security_best_practices",
+   "planDays": [
+    51
+   ],
+   "why": "How the protocol many agents use to reach tools handles consent, tokens and confused-deputy problems. Skim the headings; read the user consent parts closely.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  },
+  {
+   "id": "p-mitre-atlas",
+   "title": "MITRE ATLAS",
+   "source": "MITRE",
+   "type": "article",
+   "estimatedMinutes": 20,
+   "url": "https://atlas.mitre.org/",
+   "planDays": [
+    51
+   ],
+   "why": "A knowledge base of real attack techniques against AI systems, modelled on ATT&CK. Browse the matrix and open two techniques.",
+   "optional": true,
+   "urlStatus": "verified",
+   "verifiedNote": "Checked on Nov 4, 2026: the page loads and its title matches."
+  }
+ ]
+}

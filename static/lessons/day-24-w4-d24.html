@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 8: an OIDC sign-in, step by step · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 8: an OIDC sign-in, step by step</h1>
+<p class="eyebrow">Day 24 · Week 4 · Intermediate · about 120 min</p>
+<p>You will sign in to a sample app through your Keycloak and watch every redirect, code and token in the browser’s developer tools.</p>
+<p><strong>By the end, you can:</strong> Follow an OIDC authorization-code flow in the browser and identify its visible steps (redirect, consent, callback, token).</p>
+<h2>Why it matters to a designer</h2>
+<p>Seeing the flow with your own eyes turns abstract diagrams into screens and moments. You will know where users wait, where errors appear and what engineers mean by “the redirect URI is wrong”, which makes your designs and conversations much stronger.</p>
+<h2>Key ideas</h2>
+<ul><li>Developer tools (in Chrome or Firefox) show every network request your browser makes. The Network tab is where you will watch the sign-in.</li><li>You will see: the app redirect to Keycloak (with client_id, scope and code_challenge), your sign-in, a redirect back with a code, and a request that swaps the code for tokens.</li><li>The redirect URI must exactly match what is registered in Keycloak. A one-character mismatch is one of the most common setup errors.</li><li>You can paste an ID token into a JWT decoder to read its claims: who you are (sub, email), who issued it (iss) and when it expires (exp).</li><li>Watch it as a designer: which screens does the user see, which happen invisibly, and where could they get stuck?</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>redirect URI</strong></td><td>The address the identity provider sends the user back to after sign-in.</td></tr><tr><td><strong>client ID</strong></td><td>The public name of an app registered with the identity provider.</td></tr><tr><td><strong>claim</strong></td><td>A piece of information inside a token, such as email or expiry time.</td></tr><tr><td><strong>developer tools</strong></td><td>Browser tools that show network requests and page details.</td></tr><tr><td><strong>code challenge</strong></td><td>The PKCE value sent at the start of the flow to protect the code.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read the overview and endpoints sections of Keycloak’s OpenID Connect guide. &mdash; <a href="https://www.keycloak.org/securing-apps/oidc-layers">Securing applications and services with OpenID Connect</a> (Keycloak)</p><span class="step__min">20 min</span></div><div class="step"><p>In Keycloak, register a client for a sample single-page app (or use the account console) and sign in with the Network tab open.</p><span class="step__min">40 min</span></div><div class="step"><p>Screenshot each step: the redirect, the sign-in page, the code returning, the token request. Label every parameter you recognise. &mdash; <a href="https://www.oauth.com/">OAuth 2.0 Simplified</a> (Aaron Parecki, oauth.com)</p><span class="step__min">25 min</span></div><div class="step"><p>Break it on purpose: change the redirect URI by one character and record the error the user sees.</p><span class="step__min">15 min</span></div><div class="step"><p>Write an annotated sequence: visible screens versus invisible steps, and three moments a design could improve.</p><span class="step__min">20 min</span></div>
+<h2>Skip or skim</h2><p>Skip writing your own app code. A sample client or the account console is enough.</p>
+<h2>Check yourself</h2><ul><li>What does the redirect URI do, and what happens when it is wrong?</li><li>Which steps of the sign-in are invisible to the user?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>It is where the identity provider sends the user back with the code. If it does not match exactly, the provider refuses, and the user sees an error that usually means nothing to them.</li><li>The code exchange for tokens and token checks happen behind the scenes. The user sees only the app, the sign-in page and maybe a consent screen.</li></ul>
+<p><a href="../../index.html#lesson/24">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

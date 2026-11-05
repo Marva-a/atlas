@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 3: connect two devices with Tailscale · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 3: connect two devices with Tailscale</h1>
+<p class="eyebrow">Day 10 · Week 2 · Basics · about 120 min</p>
+<p>You will set up a small private network between your laptop and your phone and record, as a designer, every moment of the first run.</p>
+<p><strong>By the end, you can:</strong> Connect two devices with Tailscale and reach one from the other, and explain why reachability between tailnet devices depends on policy rather than being automatic.</p>
+<h2>Why it matters to a designer</h2>
+<p>Onboarding is where networking products win or lose users: if two devices do not connect in the first few minutes, many people give up. Designers at companies like Tailscale study these “it works” moments closely, and you will redesign this flow on Day 12.</p>
+<h2>Key ideas</h2>
+<ul><li>A tailnet is your own private network: the people and devices you add to it can be reached, and no one outside it can reach in. “Can be reached” is not automatic for every pair, though: an access policy (Week 3) decides which devices on the tailnet may actually reach which others.</li><li>Sign-in uses an identity provider (Google, Microsoft, GitHub). This is identity-based networking: your account, not your location, decides which network you join.</li><li>Each device gets a stable address starting with 100. that works wherever the device is: home, a café, a phone network.</li><li>The “aha” moment is reaching one device from another (for example opening a page served on your laptop from your phone) without touching a router or firewall.</li><li>Watch for friction: words you did not understand, permissions your phone asked for, waiting with no feedback, and anything that made you unsure whether it worked.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>tailnet</strong></td><td>Your private Tailscale network of users and devices.</td></tr><tr><td><strong>identity provider</strong></td><td>The service that signs you in, such as Google or Microsoft.</td></tr><tr><td><strong>client</strong></td><td>The app installed on each device.</td></tr><tr><td><strong>coordination server</strong></td><td>The service that shares keys and rules between devices; your traffic does not go through it.</td></tr><tr><td><strong>time to value</strong></td><td>How long a new user takes to reach the first useful result.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read “What is Tailscale?” before installing anything. &mdash; <a href="https://tailscale.com/kb/1151/what-is-tailscale">What is Tailscale?</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read “What is a tailnet?” &mdash; <a href="https://tailscale.com/kb/1136/tailnet">What is a tailnet?</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Follow the quickstart on your laptop and phone. Screenshot every screen, including permission prompts and errors. &mdash; <a href="https://tailscale.com/kb/1017/install">Tailscale quickstart</a> (Tailscale)</p><span class="step__min">40 min</span></div><div class="step"><p>Test the connection: ping your laptop from your phone, or open a small page served from your laptop.</p><span class="step__min">15 min</span></div><div class="step"><p>Annotate your screenshots: mark every hesitation, unclear word and wait. Time the whole run from sign-up to the first connection.</p><span class="step__min">30 min</span></div><div class="step"><p>Write three insights about first-time users of networking products.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Do not set up exit nodes, subnet routers or access rules yet. One clean first run, carefully recorded, is the goal.</p>
+<h2>Check yourself</h2><ul><li>In your own words, what is a tailnet?</li><li>Why is signing in with Google or Microsoft part of a networking product?</li><li>What was your “it works” moment, and how long did it take?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>A private network made only of the people and devices you add. They can reach each other from anywhere, and nothing outside it can.</li><li>Because access is based on who you are, not where you are. Your identity decides which network you join, and later, rules decide what you may reach.</li><li>A good answer names the moment (for example, reaching the laptop from the phone) and the time, and notes what nearly stopped you before that.</li></ul>
+<p><a href="../../index.html#lesson/10">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

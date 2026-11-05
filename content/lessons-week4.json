@@ -1,0 +1,528 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 4 lessons: sign-in, SSO and accounts at work. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w4-d22",
+   "week": 4,
+   "day": 22,
+   "date": "2026-11-23",
+   "title": "OAuth 2.0 and OpenID Connect in plain words",
+   "level": "intermediate",
+   "inOneSentence": "OAuth lets one app use another on your behalf without your password; OpenID Connect adds a standard way to say who you are, and together they power “Sign in with Google”.",
+   "youCanNow": "Explain the distinction between OAuth 2.0 authorization and OpenID Connect authentication, and identify which token (ID vs access) serves which purpose.",
+   "whyItMattersToADesigner": "Consent screens, “Sign in with” buttons, connected apps and admin settings for them all come from OAuth and OpenID Connect. Designers who understand the flow can design clearer consent, better errors and safer defaults, and can work with engineers as equals.",
+   "keyIdeas": [
+    "You already know (Week 1) the difference between authentication and authorization. OAuth is about authorization; OpenID Connect adds authentication on top.",
+    "The valet key picture: you give a parking valet a key that only starts the car and opens the door, not the boot. OAuth gives an app a limited key (a token) instead of your password.",
+    "Four roles: the resource owner (you), the client (the app asking), the authorization server (which issues tokens, like Google’s sign-in) and the resource server (the API with your data).",
+    "The authorization code flow: the app sends you to the sign-in page, you sign in and approve, the app gets a short code, then swaps it for tokens behind the scenes. PKCE adds a one-time secret so a stolen code is useless.",
+    "Three tokens: an access token (the key for the API, short-lived), an ID token (who you are, from OpenID Connect) and a refresh token (gets new access tokens without signing in again).",
+    "Tokens are often JWTs: three parts (header, payload, signature). The payload is encoded, not encrypted, so anyone holding the token can read it.",
+    "Current best practice: use the authorization code flow with PKCE, avoid the old implicit and password grants, and be careful where browser apps store tokens."
+   ],
+   "words": [
+    {
+     "term": "OAuth 2.0",
+     "meaning": "A standard that lets an app access something on your behalf with a limited token."
+    },
+    {
+     "term": "OpenID Connect (OIDC)",
+     "meaning": "A layer on OAuth that tells the app who you are, with an ID token."
+    },
+    {
+     "term": "client",
+     "meaning": "The app asking for access."
+    },
+    {
+     "term": "authorization server",
+     "meaning": "The service that signs you in and issues tokens."
+    },
+    {
+     "term": "scope",
+     "meaning": "What the app is asking to do, such as “read your calendar”."
+    },
+    {
+     "term": "consent screen",
+     "meaning": "The page where you approve what an app may do."
+    },
+    {
+     "term": "access token",
+     "meaning": "A short-lived key the app uses to call an API."
+    },
+    {
+     "term": "refresh token",
+     "meaning": "A longer-lived token used to get new access tokens."
+    },
+    {
+     "term": "PKCE",
+     "meaning": "Proof Key for Code Exchange: protects the code in the sign-in flow from being stolen and reused."
+    },
+    {
+     "term": "JWT",
+     "meaning": "JSON Web Token: a signed token with a readable payload."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read how OpenID Connect works.",
+     "minutes": 15,
+     "resourceId": "w2-oidc"
+    },
+    {
+     "text": "Read the OAuth 2.0 Simplified chapters on roles, the authorization code flow and PKCE.",
+     "minutes": 45,
+     "resourceId": "w2-oauthcom"
+    },
+    {
+     "text": "Skim the OAuth security best practice summary to see which grants are no longer recommended.",
+     "minutes": 15,
+     "resourceId": "w2-rfc9700"
+    },
+    {
+     "text": "Draw the authorization code flow with PKCE as a comic strip: you, the app, the sign-in page and the API.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Find three consent screens (Google, GitHub, Slack) and note what each asks for and how clearly it explains it.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the full RFCs and token formats in detail. Understand the roles, the flow and the tokens.",
+   "checkYourself": [
+    "Explain OAuth with the valet key picture.",
+    "What is the difference between an access token, an ID token and a refresh token?",
+    "Why is the payload of a JWT not secret?"
+   ],
+   "lookFor": [
+    "You give the valet a limited key that only does certain things, not your house keys. OAuth gives an app a limited, revocable token for specific actions instead of your password.",
+    "The access token lets the app call an API for a short time. The ID token tells the app who you are. The refresh token gets new access tokens without asking you to sign in again.",
+    "It is only encoded, not encrypted. Anyone who holds the token can decode and read it. The signature proves it was not changed, not that it is private."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w4-d23",
+   "week": 4,
+   "day": 23,
+   "date": "2026-11-24",
+   "title": "SAML single sign-on and SCIM provisioning",
+   "level": "intermediate",
+   "inOneSentence": "SAML is the older standard companies use for single sign-on into work apps, and SCIM automatically creates, updates and removes accounts in those apps.",
+   "youCanNow": "Distinguish SAML-based SSO sign-in from SCIM-based user and group provisioning, and explain why they are not the same operation.",
+   "whyItMattersToADesigner": "When a company buys a product like Tailscale or Tigera, one of the first things an admin does is connect it to their identity provider with SAML or OIDC and set up SCIM. These setups are long and error-prone, and they decide whether a deal goes well. You will redesign one on Day 26.",
+   "keyIdeas": [
+    "SAML does a similar job to OpenID Connect for work apps: the identity provider (Okta, Entra) tells the app “this is Priya, she is in group Design” in a signed message called an assertion.",
+    "SP-initiated sign-in starts at the app (“Sign in with SSO”). IdP-initiated starts at the identity provider’s dashboard. IdP-initiated is riskier because the app receives an assertion it did not ask for.",
+    "Setting up SAML means copying values between two admin consoles: URLs, an entity ID and a certificate. One wrong character and sign-in fails with an unhelpful error.",
+    "SCIM is the joiner–mover–leaver lifecycle, automated. When HR adds someone, the identity provider creates their account in every connected app; when they leave, it deactivates them.",
+    "SCIM’s core schema defines two resources: users and groups. Deprovisioning usually sets a user to inactive or deletes them.",
+    "Without SCIM, leavers keep accounts in apps until someone remembers to remove them: the stale accounts from Week 1."
+   ],
+   "words": [
+    {
+     "term": "SAML",
+     "meaning": "Security Assertion Markup Language: an older single sign-on standard for work apps."
+    },
+    {
+     "term": "assertion",
+     "meaning": "The signed message in which the identity provider tells an app who someone is."
+    },
+    {
+     "term": "service provider (SP)",
+     "meaning": "In SAML, the app the person signs in to."
+    },
+    {
+     "term": "entity ID",
+     "meaning": "A unique name that identifies an app or identity provider in SAML."
+    },
+    {
+     "term": "SCIM",
+     "meaning": "System for Cross-domain Identity Management: a standard for creating and removing accounts automatically."
+    },
+    {
+     "term": "provisioning",
+     "meaning": "Creating and updating accounts in apps."
+    },
+    {
+     "term": "deprovisioning",
+     "meaning": "Removing or deactivating accounts when someone leaves."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read Understanding SAML up to the SSO flow diagrams.",
+     "minutes": 25,
+     "resourceId": "w3-okta-saml"
+    },
+    {
+     "text": "Read the short SCIM overview.",
+     "minutes": 5,
+     "resourceId": "c5-scim-cloud"
+    },
+    {
+     "text": "Read Understanding SCIM from Okta.",
+     "minutes": 15,
+     "resourceId": "c5-okta-scim"
+    },
+    {
+     "text": "Read how Microsoft Entra describes provisioning to admins.",
+     "minutes": 15,
+     "resourceId": "c5-entra-provisioning"
+    },
+    {
+     "text": "Skim the SCIM protocol RFC’s introduction only, to see how a standard reads.",
+     "minutes": 10,
+     "resourceId": "w3-rfc7644"
+    },
+    {
+     "text": "Draw the life of one employee across three apps with and without SCIM: joining, moving teams and leaving.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "List every value an admin must copy between consoles to set up SAML for one app.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip XML signatures and the full SCIM schema. The flow and the admin’s job matter most.",
+   "checkYourself": [
+    "What is a SAML assertion?",
+    "Why is IdP-initiated sign-in riskier than SP-initiated?",
+    "How does SCIM help with leavers?"
+   ],
+   "lookFor": [
+    "A signed message from the identity provider to the app, saying who the person is and often which groups they belong to.",
+    "The app receives an assertion it did not request, so it is harder to be sure it was meant for this sign-in. That makes some attacks easier.",
+    "When someone is disabled in the identity provider, SCIM deactivates or deletes their account in every connected app automatically, so no stale accounts are left behind."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w4-d24",
+   "week": 4,
+   "day": 24,
+   "date": "2026-11-25",
+   "title": "Exercise 8: an OIDC sign-in, step by step",
+   "level": "intermediate",
+   "inOneSentence": "You will sign in to a sample app through your Keycloak and watch every redirect, code and token in the browser’s developer tools.",
+   "youCanNow": "Follow an OIDC authorization-code flow in the browser and identify its visible steps (redirect, consent, callback, token).",
+   "whyItMattersToADesigner": "Seeing the flow with your own eyes turns abstract diagrams into screens and moments. You will know where users wait, where errors appear and what engineers mean by “the redirect URI is wrong”, which makes your designs and conversations much stronger.",
+   "keyIdeas": [
+    "Developer tools (in Chrome or Firefox) show every network request your browser makes. The Network tab is where you will watch the sign-in.",
+    "You will see: the app redirect to Keycloak (with client_id, scope and code_challenge), your sign-in, a redirect back with a code, and a request that swaps the code for tokens.",
+    "The redirect URI must exactly match what is registered in Keycloak. A one-character mismatch is one of the most common setup errors.",
+    "You can paste an ID token into a JWT decoder to read its claims: who you are (sub, email), who issued it (iss) and when it expires (exp).",
+    "Watch it as a designer: which screens does the user see, which happen invisibly, and where could they get stuck?"
+   ],
+   "words": [
+    {
+     "term": "redirect URI",
+     "meaning": "The address the identity provider sends the user back to after sign-in."
+    },
+    {
+     "term": "client ID",
+     "meaning": "The public name of an app registered with the identity provider."
+    },
+    {
+     "term": "claim",
+     "meaning": "A piece of information inside a token, such as email or expiry time."
+    },
+    {
+     "term": "developer tools",
+     "meaning": "Browser tools that show network requests and page details."
+    },
+    {
+     "term": "code challenge",
+     "meaning": "The PKCE value sent at the start of the flow to protect the code."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the overview and endpoints sections of Keycloak’s OpenID Connect guide.",
+     "minutes": 20,
+     "resourceId": "c5-keycloak-oidc"
+    },
+    {
+     "text": "In Keycloak, register a client for a sample single-page app (or use the account console) and sign in with the Network tab open.",
+     "minutes": 40,
+     "resourceId": null
+    },
+    {
+     "text": "Screenshot each step: the redirect, the sign-in page, the code returning, the token request. Label every parameter you recognise.",
+     "minutes": 25,
+     "resourceId": "w2-oauthcom"
+    },
+    {
+     "text": "Break it on purpose: change the redirect URI by one character and record the error the user sees.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Write an annotated sequence: visible screens versus invisible steps, and three moments a design could improve.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip writing your own app code. A sample client or the account console is enough.",
+   "checkYourself": [
+    "What does the redirect URI do, and what happens when it is wrong?",
+    "Which steps of the sign-in are invisible to the user?"
+   ],
+   "lookFor": [
+    "It is where the identity provider sends the user back with the code. If it does not match exactly, the provider refuses, and the user sees an error that usually means nothing to them.",
+    "The code exchange for tokens and token checks happen behind the scenes. The user sees only the app, the sign-in page and maybe a consent screen."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w4-d25",
+   "week": 4,
+   "day": 25,
+   "date": "2026-11-26",
+   "title": "Exercise 9: MFA, passkeys and recovery",
+   "level": "intermediate",
+   "inOneSentence": "You will turn on one-time codes and passkeys in Keycloak, go through them as a user, and study the hardest part of sign-in: getting back in when you lose your device.",
+   "youCanNow": "Set up MFA and a passkey, and explain why passkeys resist phishing in ways one-time codes typically do not, without claiming every account-recovery path is equally phishing-resistant.",
+   "whyItMattersToADesigner": "Sign-in and recovery are where security products meet every employee. Phishing-resistant methods like passkeys are spreading fast, and designers lead the work of making enrolment, fallback and recovery both safe and humane, including for people with disabilities.",
+   "keyIdeas": [
+    "From Day 2 you know the three factor types. Today you see them as screens: enrolment, daily use and recovery.",
+    "TOTP codes (the six digits in an authenticator app) are better than passwords alone, but people can still be tricked into typing them on a fake site.",
+    "Passkeys are phishing-resistant because the key only works on the real website it was made for: a fake site cannot trick it into signing in. That resistance covers the sign-in step itself — it does not make every related journey unphishable. Account recovery, a compromised device, session theft and social engineering around fallback methods are still real risks to design for.",
+    "Synced passkeys are copied across your devices through a cloud account (for example iCloud Keychain). Device-bound passkeys stay on one device or a security key. Synced is easier to recover; device-bound is stricter.",
+    "MFA fatigue (push bombing): attackers send many approval prompts until a tired person taps “approve”. Number matching and limits on prompts help.",
+    "Recovery is often the weakest point: if “forgot password” only needs an email, the strong MFA does not matter. Good recovery is safe and kind.",
+    "Accessible authentication (WCAG 2.2, 3.3.8): don’t force people to remember or transcribe things as the only way to sign in. Allow paste, password managers and passkeys."
+   ],
+   "words": [
+    {
+     "term": "TOTP",
+     "meaning": "Time-based one-time password: the six-digit code from an authenticator app."
+    },
+    {
+     "term": "phishing-resistant",
+     "meaning": "A sign-in method that cannot be used on a fake site, such as passkeys or security keys."
+    },
+    {
+     "term": "synced passkey",
+     "meaning": "A passkey copied across your devices by a cloud account."
+    },
+    {
+     "term": "device-bound passkey",
+     "meaning": "A passkey that stays on one device or a hardware key."
+    },
+    {
+     "term": "MFA fatigue",
+     "meaning": "Attackers sending many approval prompts until someone accepts."
+    },
+    {
+     "term": "account recovery",
+     "meaning": "How someone gets back into their account after losing a password or device."
+    },
+    {
+     "term": "enrolment",
+     "meaning": "Setting up a sign-in method for the first time."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the passkeys introduction for designers and developers.",
+     "minutes": 15,
+     "resourceId": "w4-passkeys"
+    },
+    {
+     "text": "Read the FIDO Alliance passkey design guidelines, focusing on the sign-in and recovery patterns.",
+     "minutes": 20,
+     "resourceId": "w4-fido-ux"
+    },
+    {
+     "text": "Read Understanding WCAG 3.3.8 Accessible Authentication.",
+     "minutes": 10,
+     "resourceId": "w4-wcag338"
+    },
+    {
+     "text": "In Keycloak, require OTP for your test realm and enrol a user. Then enable passkeys (WebAuthn) and enrol one. Screenshot each step.",
+     "minutes": 40,
+     "resourceId": "w1-keycloak-admin"
+    },
+    {
+     "text": "Score three real recovery flows you can access (email, a bank, a work tool) on safety and on accessibility.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Add the new words to your glossary.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the WebAuthn specification and NIST 800-63B in depth; they are references. Look only at the recovery sections if you have time.",
+   "checkYourself": [
+    "Why are passkeys phishing-resistant?",
+    "What is MFA fatigue, and two ways to reduce it?",
+    "Why is account recovery often the weakest part of sign-in?"
+   ],
+   "lookFor": [
+    "The passkey is tied to the real website’s address. A fake site has a different address, so the passkey will not work there, and there is no code the person can be tricked into typing.",
+    "Attackers send many push prompts hoping a tired person approves one. Number matching (typing a number shown on screen) and limits or warnings on repeated prompts reduce it.",
+    "Because attackers can skip strong sign-in methods if recovery is weak, for example if a reset only needs access to an email account or a support call. Recovery must be as strong as sign-in, but still humane."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w4-d26",
+   "week": 4,
+   "day": 26,
+   "date": "2026-11-27",
+   "title": "Exercise 10: redesign the SSO and SCIM setup flow",
+   "level": "intermediate",
+   "inOneSentence": "You will redesign the flow an admin follows to connect their company’s identity provider to a product like Tailscale, with SSO and SCIM, so it is guided and checkable.",
+   "youCanNow": "Redesign an enterprise SSO and SCIM setup flow to reduce admin friction.",
+   "whyItMattersToADesigner": "Enterprise setup flows decide whether a trial turns into a sale. They are long, span two admin consoles, and fail with cryptic errors. This is a typical senior design problem in identity companies, and a strong portfolio piece.",
+   "keyIdeas": [
+    "Map the real setup first: open two vendor guides (for example WorkOS and Microsoft Entra) and list every step, value and decision.",
+    "Most pain comes from copying values between two products, from not knowing if a step worked, and from errors that only appear at the end.",
+    "Design ideas that work: a checklist with progress, copy buttons, validating each value as it is pasted, a “test connection” step, and a clear success state.",
+    "Wizards help for long, rare tasks done by non-experts, but experts want to skip ahead. Offer both.",
+    "Remember SCIM: after SSO works, the admin must decide which groups to sync and what happens to people who leave. Show the effect in plain words: “12 people will be added; 3 will be removed”."
+   ],
+   "words": [
+    {
+     "term": "setup flow",
+     "meaning": "The steps an admin follows to connect two products."
+    },
+    {
+     "term": "wizard",
+     "meaning": "A step-by-step guided flow for a long task."
+    },
+    {
+     "term": "validation",
+     "meaning": "Checking an input as it is entered."
+    },
+    {
+     "term": "test connection",
+     "meaning": "A step that proves the setup works before going live."
+    },
+    {
+     "term": "preview of effect",
+     "meaning": "Showing what will happen before the admin confirms it."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about wizards and when they help.",
+     "minutes": 10,
+     "resourceId": "c5-nng-wizards"
+    },
+    {
+     "text": "Read the WorkOS SSO guide to see one vendor’s admin setup steps.",
+     "minutes": 15,
+     "resourceId": "w3-workos-sso"
+    },
+    {
+     "text": "Look at Microsoft Entra’s provisioning steps for the same job from the identity provider’s side.",
+     "minutes": 10,
+     "resourceId": "c5-entra-provisioning"
+    },
+    {
+     "text": "Map the current flow on one page: every step, every copied value, every place it can fail.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Design the new flow in Figma: progress, copy and validate, test connection, SCIM group choice with a preview of its effect, and the success state.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Write the reason for each change.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not design the identity provider’s own screens. Design the product side, and show only where the admin switches tools.",
+   "checkYourself": [
+    "Where does most pain in SSO setup come from?",
+    "How does your design tell the admin a step worked?"
+   ],
+   "lookFor": [
+    "From copying values between two consoles, not knowing if each step worked, and errors that appear only at the end with unclear messages.",
+    "For example by validating values as they are pasted, a “test connection” step with a clear result, and a success screen that says what now works and what to do next."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w4-d27",
+   "week": 4,
+   "day": 27,
+   "date": "2026-11-28",
+   "title": "SSO setup redesign: write it up and share",
+   "level": "intermediate",
+   "inOneSentence": "You will write up Exercise 10 with a short consent-screen audit, showing how you made a technical setup understandable.",
+   "youCanNow": "Communicate a redesigned SSO/SCIM experience with a clear before-and-after rationale.",
+   "whyItMattersToADesigner": "This piece shows you can work in enterprise identity: long technical flows, two kinds of users (admins and employees) and real constraints. It also prepares you for interview questions about B2B setup and onboarding.",
+   "keyIdeas": [
+    "Structure: the admin, the current flow and its pain, your redesign, and what you would test.",
+    "Add a short consent-screen audit: three real consent screens, what each asks for, and how clearly the scopes are explained.",
+    "Show one technical concept simply, for example the difference between SSO and SCIM in one picture.",
+    "Be explicit about what you did not know and how you would check it with engineers.",
+    "Look back at the week: you moved from basic sign-in ideas to enterprise setup. Note which ideas are still shaky."
+   ],
+   "words": [
+    {
+     "term": "B2B",
+     "meaning": "Business to business: products sold to companies rather than individuals."
+    },
+    {
+     "term": "consent audit",
+     "meaning": "A review of what permissions apps ask for and how clearly."
+    },
+    {
+     "term": "assumption",
+     "meaning": "Something you believe but have not proven yet."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Write the case (500–800 words) with before and after frames.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Write the consent-screen audit: three screens, what each asks, one improvement each.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Make one picture that explains SSO versus SCIM simply.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Share it with one practitioner or post a short version.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Update your glossary and mark the words you still find hard.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not include every screen. Choose the moments that show your thinking.",
+   "checkYourself": [
+    "Explain SSO and SCIM to a new colleague in two sentences.",
+    "Which assumption in your redesign would you test first, and how?"
+   ],
+   "lookFor": [
+    "SSO lets people sign in to an app with their company account. SCIM keeps their account in that app up to date automatically, creating it when they join and removing it when they leave.",
+    "A good answer picks the riskiest assumption, such as admins wanting a guided wizard, and a simple test, such as watching two admins set it up with a prototype."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

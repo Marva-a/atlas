@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marva-a.github.io/atlas/sitemap.xml

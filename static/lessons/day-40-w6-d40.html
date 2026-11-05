@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 15: an alert triage view · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 15: an alert triage view</h1>
+<p class="eyebrow">Day 40 · Week 6 · Advanced · about 120 min</p>
+<p>You will design an alert triage view that cuts noise and tells a tired analyst what happened, why it matters and what to do next.</p>
+<p><strong>By the end, you can:</strong> Design an alert-triage view that separates severity, confidence and impact as distinct fields.</p>
+<h2>Why it matters to a designer</h2>
+<p>Triage screens are some of the most used and most criticised screens in security products. A strong design here shows senior skills: information density, prioritisation, and designing for speed under pressure.</p>
+<h2>Key ideas</h2>
+<ul><li>Start from your Exercise 13 notes: the questions you asked and the context that was missing are your requirements.</li><li>Triage is sorting: is this real, how bad is it, who should handle it? Your view should answer these in seconds for each alert.</li><li>Reduce noise by grouping related alerts into one (ten failed sign-ins become one item), by showing confidence, and by letting analysts tune or mute with care.</li><li>Each alert needs: what happened in plain words, the entities involved (user, device, service) with owners, why it matters (severity and context), and next actions (contain, investigate, dismiss with a reason).</li><li>Analysts are experts: they want density, keyboard shortcuts and filters, not big friendly cards. Design for experts while keeping the most important thing obvious.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>severity</strong></td><td>How harmful an event could be.</td></tr><tr><td><strong>confidence</strong></td><td>How sure the system is that an alert is real.</td></tr><tr><td><strong>grouping</strong></td><td>Combining related alerts into one item.</td></tr><tr><td><strong>entity</strong></td><td>A thing involved in an alert, such as a user, device or service.</td></tr><tr><td><strong>information density</strong></td><td>How much useful information fits on a screen without confusion.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read the four main tasks people do with data tables. &mdash; <a href="https://www.nngroup.com/articles/data-tables/">Data Tables: Four Major User Tasks</a> (Nielsen Norman Group)</p><span class="step__min">10 min</span></div><div class="step"><p>Read how to make dashboards easy to read at a glance. &mdash; <a href="https://www.nngroup.com/articles/dashboards-preattentive/">Dashboards: Making Charts and Graphs Easier to Understand</a> (Nielsen Norman Group)</p><span class="step__min">10 min</span></div><div class="step"><p>Read when to use indicators, validations and notifications. &mdash; <a href="https://www.nngroup.com/articles/indicators-validations-notifications/">Indicators, Validations, and Notifications</a> (Nielsen Norman Group)</p><span class="step__min">10 min</span></div><div class="step"><p>Write your requirements from your Exercise 13 and 14 notes: the questions, the missing context and the actions.</p><span class="step__min">20 min</span></div><div class="step"><p>Design the triage view in Figma: the queue, a grouped alert, the detail panel with context and actions, and a dismiss-with-reason flow.</p><span class="step__min">55 min</span></div><div class="step"><p>Write a short rationale for each major decision.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Do not design the whole product. One queue and one detail view, done well.</p>
+<h2>Check yourself</h2><ul><li>How does your design reduce noise?</li><li>What does each alert in your design tell the analyst in the first few seconds?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>For example by grouping related alerts, showing confidence, hiding low-value alerts behind a filter, and letting analysts tune rules with a recorded reason.</li><li>What happened in plain words, who or what is involved and who owns it, how severe and how certain it is, and the next action.</li></ul>
+<p><a href="../../index.html#lesson/40">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

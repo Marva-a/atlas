@@ -1,0 +1,25 @@
+{
+ "schema": "identity-lab-coach.pathway.v1",
+ "createdOn": "2026-11-04",
+ "note": "Network and Kubernetes Security pathway: Week 5 of the 60-day calendar, presented as a focused pathway for learners targeting network, cloud and Kubernetes security products.",
+ "pathway": {
+  "id": "network-kubernetes",
+  "title": "Network and Kubernetes Security",
+  "summary": "Containers, Kubernetes networking and network policy, hands-on with a local cluster and Calico, and case study 2: a flow from observed traffic to a recommended policy, staged before it is enforced. These are Week 5 and the case study 2 days of the 60-day calendar, grouped here for learners going deep on cloud network security.",
+  "forWho": "Designers targeting network, cloud or Kubernetes security companies such as Tigera. If identity or AI is your focus, you can make these days optional in Settings → Content and use the AI Security pathway's practice lesson as your second case study.",
+  "order": 2,
+  "coreDays": [
+   29,
+   30,
+   31,
+   32,
+   33,
+   34,
+   53,
+   54,
+   55,
+   58
+  ]
+ },
+ "lessons": []
+}

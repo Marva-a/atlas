@@ -1,0 +1,96 @@
+{
+ "schema": "identity-lab-coach.guidance.v1",
+ "createdOn": "2026-11-04",
+ "note": "Reading tips for the resources added with the pathways, and day changes that move readings to the days that now teach their topics.",
+ "resources": {
+  "p-mdn-client-server": {
+   "level": "foundation",
+   "howToUse": "Read it all; it is short. Picture each step as you go."
+  },
+  "p-mdn-http": {
+   "level": "foundation",
+   "howToUse": "Read up to and including HTTP messages. Skip the history and HTTP/2 sections."
+  },
+  "p-nist-800-30": {
+   "level": "deep",
+   "howToUse": "Reference. Read the abstract and find the generic risk model figure; skip the rest."
+  },
+  "p-owasp-bola": {
+   "level": "core",
+   "howToUse": "Read the description and the example attack scenarios."
+  },
+  "p-owasp-password-storage": {
+   "level": "core",
+   "howToUse": "Read the introduction and the section on hashing versus encryption; skip algorithm settings."
+  },
+  "p-nist-privacy": {
+   "level": "core",
+   "howToUse": "Read the overview page to see how privacy risk differs from security risk."
+  },
+  "p-owasp-llm02": {
+   "level": "core",
+   "howToUse": "Read the description and example scenarios; skim the mitigations."
+  },
+  "p-owasp-llm06": {
+   "level": "core",
+   "howToUse": "Read the three forms of excessive agency and the mitigations closely."
+  },
+  "p-owasp-llm08": {
+   "level": "core",
+   "howToUse": "Focus on access control and poisoning; skim the embedding-inversion parts."
+  },
+  "p-mcp-security": {
+   "level": "deep",
+   "howToUse": "Reference. Read the user consent and confused deputy sections; skim the rest."
+  },
+  "p-mitre-atlas": {
+   "level": "core",
+   "howToUse": "Browse the matrix and open two techniques; you do not need to read it all."
+  }
+ },
+ "suggestedDayChanges": [
+  {
+   "id": "w7-owasp-top10",
+   "planDays": [
+    11
+   ],
+   "reason": "Broken access control is now taught on Day 11 (map your tailnet, sharing, and when access control fails)."
+  },
+  {
+   "id": "w7-owasp-api",
+   "planDays": [
+    11
+   ],
+   "reason": "Broken object level authorization is now taught on Day 11 (map your tailnet, sharing, and when access control fails)."
+  },
+  {
+   "id": "p-owasp-bola",
+   "planDays": [
+    11
+   ],
+   "reason": "Used by Day 11, which covers broken access control."
+  },
+  {
+   "id": "w8-cisa-sbd",
+   "planDays": [
+    6,
+    52
+   ],
+   "reason": "Used on Day 6 (admin console teardown: controls and safe defaults) and revisited in Day 52's security UX review."
+  },
+  {
+   "id": "p-owasp-password-storage",
+   "planDays": [
+    9
+   ],
+   "reason": "Used by Day 9, which covers protecting data."
+  },
+  {
+   "id": "p-nist-privacy",
+   "planDays": [
+    9
+   ],
+   "reason": "Used by Day 9, which covers protecting data."
+  }
+ ]
+}
