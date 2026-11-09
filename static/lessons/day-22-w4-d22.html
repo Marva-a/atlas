@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OAuth 2.0 and OpenID Connect in plain words · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>OAuth 2.0 and OpenID Connect in plain words</h1>
+<p class="eyebrow">Day 22 · Week 4 · Intermediate · about 120 min</p>
+<p>OAuth lets one app use another on your behalf without your password; OpenID Connect adds a standard way to say who you are, and together they power “Sign in with Google”.</p>
+<p><strong>By the end, you can:</strong> Explain the distinction between OAuth 2.0 authorization and OpenID Connect authentication, and identify which token (ID vs access) serves which purpose.</p>
+<h2>Why it matters to a designer</h2>
+<p>Consent screens, “Sign in with” buttons, connected apps and admin settings for them all come from OAuth and OpenID Connect. Designers who understand the flow can design clearer consent, better errors and safer defaults, and can work with engineers as equals.</p>
+<h2>Key ideas</h2>
+<ul><li>You already know (Week 1) the difference between authentication and authorization. OAuth is about authorization; OpenID Connect adds authentication on top.</li><li>The valet key picture: you give a parking valet a key that only starts the car and opens the door, not the boot. OAuth gives an app a limited key (a token) instead of your password.</li><li>Four roles: the resource owner (you), the client (the app asking), the authorization server (which issues tokens, like Google’s sign-in) and the resource server (the API with your data).</li><li>The authorization code flow: the app sends you to the sign-in page, you sign in and approve, the app gets a short code, then swaps it for tokens behind the scenes. PKCE adds a one-time secret so a stolen code is useless.</li><li>Three tokens: an access token (the key for the API, short-lived), an ID token (who you are, from OpenID Connect) and a refresh token (gets new access tokens without signing in again).</li><li>Tokens are often JWTs: three parts (header, payload, signature). The payload is encoded, not encrypted, so anyone holding the token can read it.</li><li>Current best practice: use the authorization code flow with PKCE, avoid the old implicit and password grants, and be careful where browser apps store tokens.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>OAuth 2.0</strong></td><td>A standard that lets an app access something on your behalf with a limited token.</td></tr><tr><td><strong>OpenID Connect (OIDC)</strong></td><td>A layer on OAuth that tells the app who you are, with an ID token.</td></tr><tr><td><strong>client</strong></td><td>The app asking for access.</td></tr><tr><td><strong>authorization server</strong></td><td>The service that signs you in and issues tokens.</td></tr><tr><td><strong>scope</strong></td><td>What the app is asking to do, such as “read your calendar”.</td></tr><tr><td><strong>consent screen</strong></td><td>The page where you approve what an app may do.</td></tr><tr><td><strong>access token</strong></td><td>A short-lived key the app uses to call an API.</td></tr><tr><td><strong>refresh token</strong></td><td>A longer-lived token used to get new access tokens.</td></tr><tr><td><strong>PKCE</strong></td><td>Proof Key for Code Exchange: protects the code in the sign-in flow from being stolen and reused.</td></tr><tr><td><strong>JWT</strong></td><td>JSON Web Token: a signed token with a readable payload.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read how OpenID Connect works. &mdash; <a href="https://openid.net/developers/how-connect-works/">How OpenID Connect Works</a> (OpenID Foundation)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the OAuth 2.0 Simplified chapters on roles, the authorization code flow and PKCE. &mdash; <a href="https://www.oauth.com/">OAuth 2.0 Simplified</a> (Aaron Parecki, oauth.com)</p><span class="step__min">45 min</span></div><div class="step"><p>Skim the OAuth security best practice summary to see which grants are no longer recommended. &mdash; <a href="https://www.rfc-editor.org/rfc/rfc9700">RFC 9700: Best Current Practice for OAuth 2.0 Security</a> (IETF)</p><span class="step__min">15 min</span></div><div class="step"><p>Draw the authorization code flow with PKCE as a comic strip: you, the app, the sign-in page and the API.</p><span class="step__min">25 min</span></div><div class="step"><p>Find three consent screens (Google, GitHub, Slack) and note what each asks for and how clearly it explains it.</p><span class="step__min">20 min</span></div>
+<h2>Skip or skim</h2><p>Skip the full RFCs and token formats in detail. Understand the roles, the flow and the tokens.</p>
+<h2>Check yourself</h2><ul><li>Explain OAuth with the valet key picture.</li><li>What is the difference between an access token, an ID token and a refresh token?</li><li>Why is the payload of a JWT not secret?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>You give the valet a limited key that only does certain things, not your house keys. OAuth gives an app a limited, revocable token for specific actions instead of your password.</li><li>The access token lets the app call an API for a short time. The ID token tells the app who you are. The refresh token gets new access tokens without asking you to sign in again.</li><li>It is only encoded, not encrypted. Anyone who holds the token can decode and read it. The signature proves it was not changed, not that it is private.</li></ul>
+<p><a href="../../index.html#lesson/22">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

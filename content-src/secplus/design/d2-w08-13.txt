@@ -1,0 +1,718 @@
+# Product design layer, weeks 8-13.
+
+@d w8-1 professional
+sector: Cloud platforms
+product: Architecture choices limit what a product can promise. Serverless and managed services change who patches what. On-premises deployments mean customers run old versions for years, so a design must survive features being missing or out of date.
+ask eng: Do all customers run the same version of this product?
+ask sec: Which architecture decisions change our shared responsibility with customers?
+ask prod: Which deployment options are we committed to supporting?
+noex: The next lesson's exercise applies this knowledge to a concrete multi-tenant product.
+
+@d w8-2 direct
+sector: B2B SaaS
+product: In multi-tenant SaaS, many customers share one system, and the product's most important promise is that one customer can never reach another's data. Tenant switching, global search, shared caches and support tools are the places where that promise is most likely to break. Data residency turns an architecture decision into a setting and a sales conversation.
+ask eng: At which layer are tenants isolated: application, database or infrastructure?
+ask eng: Which features query across tenants, including internal tools?
+ask sec: How is tenant isolation tested, and how often?
+ask prod: Which customers require a specific data region, and is that a contract term?
+ex: Map tenant isolation and data residency | 60
+scenario: A collaboration product serves companies in Canada, the EU and the US. A large customer asks where its data is stored and what stops another tenant seeing it. Users can also belong to more than one company's workspace.
+problem: The product has no clear model of tenant boundaries for users who belong to several tenants, and nothing tells administrators where their data lives.
+task: Draw a data flow diagram for a document, from upload to search index, backup and third-party processors.
+task: Mark where tenant boundaries and region boundaries are enforced.
+task: Design the workspace switcher so a user always knows which tenant they are acting in.
+task: Design the data residency panel, including what cannot be moved.
+constraint: Cross-tenant data must never appear in search, autocomplete, notifications or caches.
+constraint: Region promises must include backups and third-party processors.
+constraint: Moving a tenant between regions may be slow, partial or impossible.
+need: Multi-tenant users need to avoid posting to the wrong company.
+need: Customer administrators need accurate facts for their own compliance.
+need: Sales needs claims that engineering can stand behind.
+deliver: A data flow diagram with boundaries marked, plus workspace switcher and residency panel designs.
+crit constraints: The diagram shows tenant and region boundaries, including backups and processors.
+crit risk: Wrong-tenant actions and cross-tenant leaks through search or notifications are addressed.
+crit quality: The active tenant is obvious at the moment a user takes an action.
+crit senior: Claims in the interface are checked against what engineering can actually guarantee.
+senior: Do not write a data promise into an interface until engineering and legal have confirmed it.
+senior: Note where isolation is a business decision too, because stronger isolation costs more and may be sold as a tier.
+cq h | Multi-tenancy | Global search in a multi-tenant app shows matching document titles from every tenant, with content hidden until opened. What should a designer flag?
++ Titles are data, so limit results to the current tenant :: Metadata can be sensitive, and it crosses the most important boundary here.
+- Results should be grouped alphabetically by tenant name :: This improves the layout while leaving the leak in place.
+- Search should display fewer results on each page :: Smaller pages still reveal other tenants' titles.
+- Titles are safe because the document body stays hidden :: Titles can themselves reveal deals, patients or plans.
+
+@d w8-3 professional
+sector: Enterprise applications
+product: Zero Trust reaches users as continuous checks: a device must be compliant, a session can be re-evaluated, and access can change partway through. Interfaces need to explain why someone who was allowed a moment ago is now being blocked.
+ask eng: Which signals can change a user's access during a session?
+ask sec: Which zones or policies does this feature cross?
+ask prod: How do customers configure these policies, and who gets the support call?
+noex: The failure-mode exercise in the next lesson applies these ideas directly.
+
+@d w8-4 direct
+sector: Identity and access products
+product: Security controls fail, and when they do a product must either fail open and keep working unsafely, or fail closed and stop people working. That decision can appear as a login outage, a blocked payment or a safety-critical record that clinicians cannot open.
+ask eng: What happens to signed-in sessions when the identity service is unavailable?
+ask eng: Can we tell the difference between a denial and a failed policy check?
+ask sec: Which functions should fail closed, and which may degrade?
+ask prod: What are our customers' obligations during an outage, such as patient care?
+ex: Design what happens when the security system fails | 45
+scenario: A hospital's scheduling and records application relies on a third-party identity and policy service. During a recent outage, nobody could sign in and staff could not view patient schedules.
+problem: The product has no designed behaviour for a failed identity or policy service, so it presents a generic error at the worst possible moment.
+task: For each key function, decide whether it should fail open, fail closed or degrade, and explain why.
+task: Design the degraded mode and how a user knows they are in it.
+task: Design the break-glass route for emergency access, including after-the-fact review.
+constraint: Emergency access must be logged, time-limited and reviewed.
+constraint: Unknown states must never appear as granted permissions.
+constraint: Data entered in degraded mode must be reconciled once service returns.
+need: Clinicians need critical information during an outage.
+need: Privacy officers need a record of any emergency access.
+need: Administrators need to know what is happening and for how long.
+deliver: A fail-open, fail-closed or degrade decision table, plus degraded mode and break-glass designs.
+crit constraints: Break-glass access is limited in time, logged and reviewed.
+crit risk: The decisions consider safety and privacy consequences for each function.
+crit quality: Users can tell they are in a degraded state and what is limited.
+crit senior: The decision table identifies who must approve each fail-open choice.
+senior: Fail-open decisions involve safety and legal judgment, so they need owners beyond the design team.
+senior: Rehearsing outages reveals assumptions, so ask to join a recovery exercise.
+cq m | Failure modes | A payment approval service is unreachable. Which behaviour is the best default for a large transfer?
++ Hold the transfer and tell the user what will happen :: Failing closed protects integrity while keeping the person informed.
+- Approve it automatically and verify it later :: Failing open on a high-value action invites irreversible loss.
+- Silently retry forever with no message to the user :: The user is left guessing, and may submit the transfer twice.
+- Cancel it and delete all the details the user entered :: This fails safely, but it needlessly destroys the user's work.
+
+@d w9-1 direct
+sector: Healthcare applications
+product: Data classification decides what a person sees. Masking shows a card's last four digits, tokenization lets staff work with a stand-in, and reveal-on-demand controls record who viewed a value. The three data states also appear in product questions: is it safe at rest, in transit and on screen while in use?
+ask eng: Is this field encrypted, hashed, tokenized or masked, and where does that happen?
+ask eng: Can a masked value be recovered by an API call that bypasses the interface?
+ask sec: How is this data classified, and which rules follow from that?
+ask prod: Who truly needs to see the full value, and how often?
+ex: Design sensitive data display and access | 60
+scenario: Staff at a health insurer use an internal portal showing member records, including government ID numbers, diagnoses and bank details. Today, every staff member sees everything.
+problem: Access is all-or-nothing, and there is no record of who viewed which sensitive field.
+task: Classify each field on the record and justify each level.
+task: Choose masking, tokenization or restricted reveal for each field.
+task: Design reveal-with-reason, including the record it creates.
+task: Design what appears in exports, printouts, logs and support screenshots.
+constraint: Masking must be applied by the server, so the full value does not reach an unauthorized browser.
+constraint: Hashing can't be reversed, so a value that must be displayed can't be stored only as a hash.
+constraint: Viewing data on screen is the "in use" state, and encryption at rest doesn't protect it.
+need: Claims staff need full values occasionally, for a defined reason.
+need: Members expect their data to be seen only by those who need it.
+need: Privacy officers need to audit unusual access.
+deliver: A field classification table, a protection method per field and designs for the reveal flow.
+crit constraints: Each protection method is technically appropriate for how that field is used.
+crit risk: Exports, logs and screenshots are treated as leak paths.
+crit quality: Routine tasks can be finished without revealing unneeded data.
+crit senior: Reveal friction is matched to data classification, and it is not the same everywhere.
+senior: Masking in the interface alone is decoration, so confirm where the protection is really applied.
+senior: Classification belongs to the data owner, so use the organization's scheme and do not invent your own.
+cq h | Data protection choices | Staff must verify a member's ID by comparing its last four digits and never need the full value. Which approach fits?
++ Server-side masking that returns only the last four digits :: The full value never reaches the browser, and the task still works.
+- Client-side masking with the full value sent to the page :: The full value is exposed to anyone who inspects the response.
+- Hashing the value, then displaying the entire hash to staff :: A hash can't be compared by eye with what a member says.
+- Encrypting at rest and showing the full value to all staff :: Encryption at rest does not limit who can view it on screen.
+
+@d w9-2 direct
+sector: B2B SaaS
+product: Data subject rights become product flows: download my data, delete my account, correct this record. Deletion is especially tricky because data lives in backups, logs and third-party tools. Retention rules or legal holds can also require the opposite of what the user asks.
+ask eng: Where does this person's data live, including backups and third parties?
+ask eng: How long until deletion is actually complete everywhere?
+ask sec: How do we verify the identity of the person requesting an export?
+ask prod: What are our legal retention obligations, and who confirms them?
+ex: Design data export and deletion | 60
+scenario: A B2B product with customers in the EU receives requests from individual users to export and delete their data. The customer organization is the data controller, and it also has retention rules.
+problem: Requests are handled by email and spreadsheets, with no verification, unclear ownership and no way to say what was deleted.
+task: Map the data roles: controller, processor, owner and custodian for this product.
+task: Design the request, verification, approval and progress flow.
+task: Design the export package experience, including secure delivery and expiry.
+task: Write honest messages for partial deletion, retention holds and backup timing.
+constraint: An export is a concentrated copy of sensitive data, so it needs strong verification and expiry.
+constraint: A legal hold can override a deletion request.
+constraint: The customer organization may need to approve or be told about requests.
+need: Individuals need to know what happened to their data, and when.
+need: Customer administrators need to meet their own obligations.
+need: Legal and privacy staff need a defensible record.
+deliver: A flow from request to confirmation, an export delivery design and a set of status messages.
+crit constraints: The flow respects controller and processor roles and legal holds.
+crit risk: An attacker requesting an export is treated as a real scenario.
+crit quality: Status messages are specific about what is done, what is pending and why.
+crit senior: The design is reviewed against actual legal requirements through named stakeholders.
+senior: You are not giving legal advice, so bring questions to privacy counsel and let them confirm the requirement.
+senior: Deletion that can't be verified should not be described as complete.
+cq m | Data rights | A user requests deletion, but a legal hold applies to some records. What should the product say?
++ What was deleted, what remains and why it remains :: Honest specifics respect the user and the legal obligation.
+- All of your data has now been permanently deleted :: This would be false, and it could create legal exposure.
+- Your request failed, so please try again next month :: The request did not fail, and the user learns nothing.
+- Nothing, because legal holds are confidential processes :: The hold's details may be limited, but the outcome should still be communicated.
+
+@d w9-3 professional
+sector: Enterprise applications
+product: Resilience appears as status pages, read-only modes and regional failover. Redundancy decisions determine whether a user experiences a moment of slowness or an afternoon offline.
+ask eng: What do users experience during a failover?
+ask sec: Does the secondary site keep the same security controls?
+ask prod: What uptime have we committed to contractually?
+noex: The failure-state exercise in Week 8 and the incident lesson cover the design work.
+
+@d w9-4 professional
+sector: Financial applications
+product: Recovery point objectives become product truth. If backups run hourly, a restore can lose up to an hour of work, and the interface and support team must say so honestly. Restore tools also need guarding, because a restore can erase current data.
+ask eng: What are our actual recovery time and recovery point objectives?
+ask sec: Are backups protected from an attacker who compromises production?
+ask prod: Can customers restore their own data, and should they be able to?
+noex: Recovery design is applied in the incident response exercise, where it is connected to a real journey.
+
+@d w10-1 professional
+sector: Admin dashboards
+product: Network controls appear in products as IP allow lists, rate-limit errors and web application firewall block pages. An over-eager firewall rule can stop a genuine customer, who then sees an unexplained error. A reference code on the block page lets support help them.
+ask eng: What does a user see when the WAF or a rate limit blocks them?
+ask sec: How would a false positive be reported and resolved?
+ask prod: Which customers need IP allow lists, and who manages them?
+noex: Firewalls are mostly technical knowledge, so the useful step is designing clear block states with your engineers.
+
+@d w10-2 professional
+sector: Enterprise applications
+product: Device management reaches product design through conditional access: "this device is not compliant" is a confusing message for a user who cannot fix it. Mobile policies can also block copy and paste or screenshots inside a managed app.
+ask eng: Which device signals does our product actually receive?
+ask sec: Which device states should block access entirely?
+ask prod: Who helps an employee whose device becomes non-compliant?
+noex: Endpoint controls are mostly operated by IT. The useful design contribution is clear messaging, which the next exercises practice.
+
+@d w10-3 direct
+sector: B2B SaaS
+product: Sending email from a customer's own domain requires SPF, DKIM and DMARC records, which is a difficult task to hand to a marketing manager. Products that handle this well turn a technical protocol into a guided, verifiable setup, and they say plainly what is at risk if it stays incomplete.
+ask eng: How do we check the records, and how often?
+ask eng: What happens to mail while the setup is incomplete?
+ask sec: What is the recommended DMARC policy progression for customers?
+ask prod: Who at a customer usually has access to DNS?
+ex: Design an email authentication setup wizard | 45
+scenario: An email marketing product lets customers send from their own domain. Many customers skip authentication, and their mail ends up in spam or can be spoofed.
+problem: The current settings page lists DNS records with no explanation, and the person using it is often not the person who controls DNS.
+task: Explain SPF, DKIM and DMARC in plain language within the flow.
+task: Design the setup with a hand-off to a DNS administrator.
+task: Design verification, propagation wait, partial success and failure states.
+task: Show the path from a monitoring DMARC policy to enforcement.
+constraint: DNS changes can take time to propagate and the product cannot speed them up.
+constraint: Moving to a reject policy too early can block legitimate mail.
+constraint: Records must be copied exactly, so manual retyping should be avoided.
+need: Marketers need to know what to ask for, and from whom.
+need: DNS administrators need exact values with no marketing context.
+need: Account owners need to see the risk of leaving setup unfinished.
+deliver: A setup wizard flow, a hand-off page and a state list covering verification.
+crit constraints: The flow represents SPF, DKIM and DMARC correctly and in the right order.
+crit risk: The design explains the harm of spoofing and of an early reject policy.
+crit quality: A non-technical user can complete their part and hand off the rest.
+crit senior: The design defines success in terms of authenticated mail, and not of completed screens.
+senior: A setup step that depends on another team needs a designed hand-off, because the product loses the user at that point.
+senior: Confirm the recommended policy timing with deliverability experts.
+cq m | Email authentication | Which step should a setup wizard recommend first for a domain with an unknown sending landscape?
++ Start DMARC in monitoring mode and review reports :: This reveals legitimate senders before anything is blocked.
+- Publish DMARC with an immediate reject policy today :: Legitimate mail from unknown senders could be blocked.
+- Remove all SPF records before adding any DKIM keys :: This removes existing protection and breaks authentication.
+- Wait until spoofing has been reported by customers :: Waiting leaves the domain exposed and gives no data.
+
+@d w10-4 professional
+sector: Admin dashboards
+product: Asset inventories appear as device lists, app inventories and connected-app pages. A product can only help someone secure what it can show them, so an accurate, searchable inventory with ownership and last-seen dates is itself a security feature.
+ask eng: How current is this inventory, and what is missing from it?
+ask sec: Which assets are most critical, and do we show that?
+ask prod: Who owns an asset when its owner leaves?
+noex: Asset management informs dashboards you will design in Week 11.
+
+@d w11-1 direct
+sector: Developer platforms
+product: Vulnerability dashboards often list thousands of findings sorted by severity, leaving teams unable to act. What helps is context: is the system exposed, is the flaw being exploited in the wild, and who owns it? Exceptions need a design too, because accepted risk should not disappear from view.
+ask eng: How are duplicate findings merged, and how accurate is ownership?
+ask sec: Which inputs set our priority: CVSS, known exploitation or asset criticality?
+ask prod: What decision should a person be able to make within a minute?
+ex: Design a vulnerability prioritization view | 45
+scenario: A security platform shows a customer 4,000 open findings. Teams ignore it because everything appears critical.
+problem: Findings are sorted only by CVSS severity, so the list doesn't reveal what needs attention first or who should act.
+task: Define the fields a person needs in order to make a triage decision.
+task: Design the prioritized list and the detail view.
+task: Design the exception flow: accept, defer or mark as a false positive.
+task: Design verification after a fix.
+constraint: CVSS measures severity, and it does not account for your specific environment by itself.
+constraint: Risk exceptions need an owner, a reason and an expiry date.
+constraint: A finding is resolved only when a rescan confirms it.
+need: Engineers need to see what to fix and how.
+need: Security leads need to see trends and overdue items.
+need: Auditors need evidence of exceptions.
+deliver: A list and detail design, an exception flow and a defined priority model.
+crit constraints: Priority combines severity with exposure, exploitation and asset value.
+crit risk: Exceptions expire, and accepted risk stays visible.
+crit quality: The first screen makes the next action clear.
+crit senior: The priority model is presented as an input for security to validate.
+senior: Prioritization logic is a security decision, and your role is making that logic understandable.
+senior: Watch for metrics that reward closing tickets instead of reducing risk.
+cq m | Vulnerability prioritization | Which finding usually deserves attention first?
++ A medium finding on an exposed system under active attack :: Real exploitation and exposure raise the actual risk.
+- A critical finding on an isolated, decommissioned test machine :: The score is high, but the exposure and impact are low.
+- The oldest finding in the list, whatever it happens to affect :: Age alone doesn't measure risk.
+- The finding with the longest technical description available :: Description length says nothing about risk.
+
+@d w11-2 direct
+sector: Admin dashboards
+product: Security monitoring tools turn logs into alerts and alerts into investigations. Analysts suffer from alert fatigue, so a dashboard that adds noise makes the organization less safe. Good design shows why an alert fired, gathers related events and supports a clear decision.
+ask eng: Which fields are reliably available in each log source?
+ask eng: How long between an event and the alert?
+ask sec: What is our false positive rate, and which alerts are ignored most?
+ask prod: Is this tool for a security specialist or a general IT administrator?
+ex: Design a monitoring dashboard and investigation view | 60
+scenario: A mid-sized company's IT team uses a product's security center to review sign-in and admin activity. They have no dedicated analysts and receive 300 alerts a day.
+problem: Alerts appear as an undifferentiated feed with no context, so real incidents are missed.
+task: Define what the overview must answer in the first ten seconds.
+task: Design an alert detail with the reason, related events, affected accounts and severity.
+task: Design triage states: new, investigating, escalated, closed with a reason.
+task: Design tuning for a noisy rule, with safeguards.
+constraint: Logs have delays and gaps, so the interface must show data freshness.
+constraint: Suppressing a rule can hide a true attack, so it must be logged and expire.
+constraint: Investigators can see sensitive activity, so access must itself be audited.
+need: Generalist administrators need plain explanations.
+need: Investigators need a timeline of related events.
+need: Managers need to know whether alerts are being handled.
+deliver: An overview, alert detail and triage design, with an explanation of how noise is reduced.
+crit constraints: Freshness and gaps in log data are visible to the user.
+crit risk: Suppression can't quietly hide attacks.
+crit quality: The reason an alert fired is understandable without specialist knowledge.
+crit senior: Success is defined by outcomes such as time to triage, and not by the count of charts.
+senior: More data is not better, so ask analysts which decisions they make and design for those.
+senior: Decide who may view monitoring data, because the tool itself holds sensitive information.
+cq m | Alert fatigue | A team closes most alerts without reading them. What change addresses the underlying problem?
++ Reduce noise and show why each alert fired :: Fatigue comes from low-value alerts and missing context.
+- Use a brighter colour and sound for every single alert :: Louder alerts add more noise and make the fatigue worse.
+- Require a mandatory comment before each alert is closed :: This adds work without improving the alerts themselves.
+- Show a larger total alert count on the main dashboard :: A bigger number does not help anyone decide what matters.
+
+@d w11-3 direct
+sector: Identity and access products
+product: Enterprise single sign-on is usually configured by one IT administrator, once, with little margin for error. A wrong setting can lock out an entire company. Certificate rotation, just-in-time accounts and an emergency access route are what separate a professional identity product from a form that accepts a metadata file.
+ask eng: Can we test a SAML configuration before enforcing it for everyone?
+ask eng: What happens to existing sessions and accounts when SSO is switched on?
+ask sec: How is the break-glass account protected and monitored?
+ask prod: Which identity providers do most customers use?
+ex: Design enterprise SSO setup | 60
+scenario: A B2B product is adding SAML single sign-on for enterprise customers. An IT administrator must connect the identity provider and then enforce SSO for 2,000 people without locking anyone out.
+problem: A one-step "enable SSO" switch can lock out the whole company, including the administrator who enabled it.
+task: Design domain verification and connection setup.
+task: Design a test-before-enforce stage, with clear success and failure diagnostics.
+task: Design a staged rollout and an emergency access path.
+task: Design the certificate expiry warning and rotation flow.
+task: Decide what happens to existing passwords, sessions and unmatched accounts.
+constraint: Domain ownership must be verified, or someone could claim another company's users.
+constraint: At least one emergency route must survive an identity provider failure.
+constraint: SSO authenticates users, while provisioning and removal need separate handling.
+need: IT administrators need confidence before enforcement.
+need: Employees need the change to be nearly invisible.
+need: Security teams need offboarding to work.
+deliver: A setup flow from verification to enforcement, with lockout prevention and diagnostics.
+crit constraints: Domain verification and test-before-enforce are both included.
+crit risk: Lockout, an expired certificate and a compromised break-glass account are addressed.
+crit quality: A SAML failure gives the administrator a specific, actionable cause.
+crit senior: Migration of existing accounts and sessions is treated as part of the design.
+senior: Enterprise administrators are expert users with high stakes, so show precise technical detail and don't hide it.
+senior: Include the offboarding story, because sign-in is only half of the identity life cycle.
+cq h | SSO rollout | An administrator turns on SSO enforcement, and a metadata mistake then blocks all sign-ins. What should have prevented this?
++ A test stage before enforcement and an emergency route :: This catches errors before they affect everyone, and it leaves a way back.
+- A confirmation dialog asking "Are you sure?" before saving :: Confirmation doesn't reveal whether the configuration really works.
+- A requirement that all administrators use the same browser :: The browser has nothing to do with a metadata mistake.
+- An automatic email telling employees that SSO has changed :: Announcing the change doesn't stop the lockout.
+
+@d w11-4 direct
+sector: B2B SaaS
+product: Workspace products usually begin with admin and member, and then customers need billing-only roles, guests, auditors and project-level overrides. Every addition makes it harder to answer the simple question "who can do what?". Inheritance adds to the difficulty, because effective access may not match what is shown on a person's profile.
+ask eng: Is access evaluated per workspace, per project or per object?
+ask eng: How is a user's effective permission calculated when roles combine?
+ask sec: Which permissions must be separated, such as administering users and approving payments?
+ask prod: Which roles do customers keep asking us to add?
+ex: Design enterprise role and permission management | 60
+scenario: A workspace communications product has an owner, admin and member model. Enterprise customers want custom roles, channel-level permissions, guests and auditor access, and security teams want to prove who has access.
+problem: Permissions have grown ad hoc, and administrators cannot tell what a role grants or why a specific person has access.
+task: Build a permission matrix for at least five roles and twelve actions.
+task: Design role creation that shows impact before saving.
+task: Design a view explaining why a person has a specific permission.
+task: Design bulk changes and an access review.
+constraint: Enforcement happens on the server for every request, whatever the interface displays.
+constraint: The product must always keep at least one owner or admin account.
+constraint: Inherited permissions may conflict, so a clear rule must decide the result.
+need: Administrators need to apply least privilege without understanding every action.
+need: Auditors need read access with no ability to change anything.
+need: Team leads need to manage their own area and nothing wider.
+deliver: A permission matrix and designs for role editing, effective access and access review.
+crit constraints: The matrix applies least privilege and states how inheritance and conflicts resolve.
+crit risk: Privilege escalation is covered, including an admin granting themselves more access.
+crit quality: An administrator can explain why a person has a specific permission.
+crit senior: The model considers scale: hundreds of custom roles, migrations and how new features add permissions.
+senior: Every new permission is a long-term cost, so challenge a custom role when a simpler model would serve.
+senior: Agree the rule for conflicting permissions with engineering before you draw any screens.
+cq h | Least privilege in role design | Customers want a "Billing Admin" role. Today only full admins can see invoices. What is the best approach?
++ Create a narrow role limited to billing actions :: It provides what the job requires and nothing beyond it.
+- Make all billing staff full admins with a usage policy :: A policy doesn't limit what the access technically allows.
+- Hide the admin menu items for these billing users :: Interface hiding doesn't remove their server-side access.
+- Let any member view invoices so that nobody is blocked :: This exposes financial data to people with no need for it.
+
+@d w11-5 direct
+sector: API-based applications
+product: The consent screen is where a person grants another product access to their work, often without reading it. Scope names written for developers, such as files.readwrite.all, mean little to the person approving them. The experience also continues long after consent: tokens expire, integrations break, and administrators need a way to see and end access.
+ask eng: Which scopes do we support, and can they be split further?
+ask eng: How quickly does revocation take effect, given our token lifetimes?
+ask sec: Which scopes need administrator approval?
+ask prod: What happens to the customer's workflow when an integration disconnects?
+ex: Design a third-party integration and consent experience | 60
+scenario: You are designing a B2B SaaS application. A customer wants to connect its workspace to an external analytics platform that requests access to projects and user activity.
+problem: The current flow shows a raw list of scopes and an Allow button. Once connected, integrations are invisible, and nobody knows what they can reach.
+task: Design the connection flow from starting in your product through consent and back.
+task: Write the permission and consent screen, with plain-language scope explanations.
+task: Design token expiration and reconnection states.
+task: Design the integrations list, including what each one can access and last used.
+task: Design revocation, including what happens to the integration's data.
+constraint: Authorization Code with PKCE is the expected flow, and the product never sees the other service's password.
+constraint: Requested scopes should be the minimum needed, and the granted scopes may be narrower.
+constraint: Revocation may not stop existing access tokens until they expire.
+need: Users need to understand what they are granting.
+need: Workspace administrators need to approve, review and revoke integrations.
+need: Integration builders need to know why they were refused a scope.
+deliver: A connection flow, consent screen, reconnection states and an integrations management screen.
+crit constraints: The design reflects the real OAuth flow, including expiry, refresh and revocation.
+crit risk: Excessive scopes, a malicious consent request and an offboarded installer are addressed.
+crit quality: A person can say in plain words what the integration will be able to do.
+crit senior: The design covers the full life of an integration, including who owns it when its installer leaves.
+senior: Ask what happens when the person who connected an integration leaves the company, since its access may depend on their account.
+senior: Be accurate about revocation timing, because "access removed immediately" may not be true.
+cq h | Excessive OAuth scopes | An analytics app needs to read project names, yet it asks for full read and write on all workspace data. What should the product support?
++ Clear scopes, with admins able to refuse excess requests :: Visibility and admin control encourage least privilege before access is granted.
+- Approving automatically if the app comes from a known company :: A familiar name doesn't justify write access that it doesn't need.
+- Hiding detailed scopes so that the consent screen looks simpler :: Simplicity that hides the grant defeats the purpose of consent.
+- Granting everything now and asking the vendor to reduce it later :: Access has already been over-granted by the time anyone asks.
+
+@d w12-1 direct
+sector: Identity and access products
+product: Automation can disable an account in seconds, which is valuable until it disables the chief executive during a board meeting because of a false positive. Workflow builders need previews, limits and rollback, because the automation carries out whatever it has been told, at scale.
+ask eng: What are the rate limits or caps on automated actions?
+ask eng: Can each automated action be reversed?
+ask sec: Which actions may run without a person, and which need approval?
+ask prod: Who should be allowed to create automations?
+ex: Design a safe automated response rule | 45
+scenario: An identity platform lets administrators build rules, for example "if impossible travel is detected, then disable the account". A rule recently disabled 200 traveling sales staff.
+problem: The builder has no preview, limits, approval or undo, so one bad rule can have a large effect instantly.
+task: Design the rule builder's trigger, condition and action.
+task: Design a dry run that shows who would have been affected.
+task: Design limits, approvals for high-impact actions and a kill switch.
+task: Design the run history and one-click reversal.
+constraint: Automated actions must run under limited service permissions.
+constraint: High-impact actions need rate limits, so a mistake can't run unchecked.
+constraint: Every automated action must be logged with the rule that caused it.
+need: Security staff need a faster response to real attacks.
+need: Affected employees need to know what happened and how to get help.
+need: Administrators need to learn from mistakes.
+deliver: A rule builder, dry run, safeguards and run history design.
+crit constraints: Limits, logging and scoped service permissions are included.
+crit risk: The design considers a false positive at scale and the rule being misused.
+crit quality: The dry run makes the impact understandable before activation.
+crit senior: Automation is staged from recommend to approve to act, based on confidence.
+senior: Trust in automation is earned gradually, so offer modes that recommend before they act.
+senior: Consider who gets harmed by a false positive, as they are often not the person who built the rule.
+cq m | Guardrails on automation | Which safeguard best limits the damage from a mistaken mass-disable rule?
++ A cap that pauses the rule after a set number of actions :: This contains an error even when the rule was wrong.
+- A longer name field describing the rule's intended purpose :: Better documentation doesn't limit what the rule does.
+- A monthly report listing every action taken by rules :: A report arrives long after the damage is done.
+- Running the rule more frequently to catch problems sooner :: This speeds up the mistake rather than containing it.
+
+@d w12-2 direct
+sector: Financial applications
+product: For users, an incident is a personal event: their account was used, their money moved, their trust has gone. The stages of incident response map to their journey: detection becomes a warning, containment locks the attacker out, eradication removes the attacker's access, recovery restores the person, and lessons learned change the product.
+ask eng: Which sessions, tokens and devices can we revoke for one account?
+ask eng: What changes did the attacker make that we must detect and reverse?
+ask sec: What must we preserve as evidence before changing anything?
+ask prod: Who communicates with affected users, and what are our legal notification duties?
+ex: Design account compromise investigation and recovery | 60
+scenario: Attackers take over accounts in a personal finance app through reused passwords. They add new payees, change the notification email and create forwarding rules.
+problem: Support has a set of manual steps, and victims get no clear guidance. Sessions stay active and attacker changes remain after a password reset.
+task: Map incident stages to the user journey and to the support console.
+task: Design the "This wasn't me" entry point and secure lockdown.
+task: Design the review of what changed: payees, email, devices, rules.
+task: Design recovery and the follow-up communications.
+constraint: A password reset alone doesn't end existing sessions or undo changes.
+constraint: The attacker may control the email address on file, so recovery can't rely only on it.
+constraint: Evidence must be preserved before accounts are altered.
+need: Victims are stressed, so they need one clear next step at a time.
+need: Support staff need a complete picture of the attacker's actions.
+need: Security staff need preserved evidence and patterns.
+deliver: An incident journey map and designs for lockdown, change review and recovery.
+crit constraints: The design ends sessions and reverses attacker changes, and it preserves evidence.
+crit risk: The design considers an attacker who still controls the email or tries to use the recovery path.
+crit quality: Language is calm, specific and doesn't blame the user.
+crit senior: Lessons learned feed back into product changes, with owners.
+senior: Avoid telling users that everything is safe until the investigation supports that statement.
+senior: Legal and communications must approve notifications, and the design should allow for that time.
+cq m | Incident recovery | A user reports a takeover and resets their password. The attacker's device is still signed in. What was missed?
++ Revoking existing sessions and tokens during containment :: A password reset alone often leaves existing sessions active.
+- Asking the user to choose a much longer password :: A stronger password doesn't end the attacker's active session.
+- Sending a satisfaction survey after the case is closed :: A survey does nothing to contain the attacker.
+- Deleting all the logs so that the account starts clean :: This destroys evidence and doesn't remove the attacker.
+
+@d w12-3 direct
+sector: Enterprise applications
+product: Audit logs are a product feature that customers buy. An investigator asks who did what, to which object, when, from where and with what result. If those fields are missing, inconsistent or easy to alter, the log is decoration. Export and retention settings then decide whether it survives until someone needs it.
+ask eng: Which events are recorded today, and which are missing?
+ask eng: Can a log entry be modified or deleted by an administrator?
+ask sec: What must be excluded from logs, such as secrets or personal data?
+ask prod: What retention period do customers require by contract?
+ex: Design an administrator audit log | 45
+scenario: An enterprise customer is investigating whether a former administrator exported customer data before leaving. The product's activity page lists vague entries such as "User updated settings".
+problem: The log is missing actors, objects, old and new values and IP addresses, so it can't answer an investigator's questions.
+task: Define the event schema: actor, action, target, time, source and result.
+task: Design search and filtering, timeline view and detail with old and new values.
+task: Design export and streaming to a customer's SIEM.
+task: Design retention settings with their consequences.
+constraint: Administrators must not be able to edit or delete audit entries.
+constraint: Logs must not contain passwords, tokens or unnecessary personal data.
+constraint: Time must be precise and shown with a clear time zone.
+need: Investigators need to reconstruct a sequence of events.
+need: Compliance staff need evidence for a stated period.
+need: Admins need to troubleshoot day-to-day changes.
+deliver: An event schema with examples, plus search, detail and export designs.
+crit constraints: Entries are complete, immutable to admins and free of secrets.
+crit risk: Insider misuse, including an admin covering their tracks, is considered.
+crit quality: A person can filter to one user and read a clear timeline.
+crit senior: Retention weighs investigation needs against privacy and cost.
+senior: Logging decisions are product decisions, because a missing event can't be recovered later.
+senior: Audit data can itself be sensitive, so decide who can read it.
+cq m | Audit log quality | Which entry is most useful to an investigator?
++ J. Lee exported 4,120 contacts, 14:02 UTC, from 203.0.113.7, succeeded :: It states the actor, action, object, time, source and result.
+- A user performed an export action on the system today :: It has no identifiable actor, object or precise time.
+- Export complete! Your file is ready in the downloads folder :: This is a user message and not a record of activity.
+- System event 4471 occurred in a production service cluster :: An unexplained code doesn't answer an investigator's questions.
+
+@d w12-4 professional
+sector: Enterprise applications
+product: Legal holds and chain of custody reach products through e-discovery tools and evidence exports. A hold that can quietly be removed, or an export with no record of who ran it, undermines the evidence.
+ask eng: Can we prove an export has not been altered, for example using a hash?
+ask sec: Who may apply or lift a legal hold?
+ask prod: Do customers need e-discovery in this product?
+noex: The audit log exercise covers the design work. This lesson adds the investigation discipline behind it.
+
+@d w13-1 professional
+sector: Enterprise applications
+product: Policies become product requirements. An organization's password standard or acceptable use policy may need settings, enforcement and reporting in your product. Knowing the difference between a policy, a standard and a procedure helps you ask the right person.
+ask sec: Which of our policies directly constrain this feature?
+ask prod: Are customers' policies driving this request?
+ask eng: Can this requirement be enforced technically, or only stated?
+noex: Governance vocabulary supports the risk and compliance exercises that follow.
+
+@d w13-2 direct
+sector: B2B SaaS
+product: Risk management is how a team decides whether to ship. A feature with a known weakness might be accepted, mitigated or held back, and those decisions need to be recorded by someone with authority. Security requirements written during discovery are far cheaper than findings written after launch.
+ask eng: What would it cost to reduce this risk now, compared with later?
+ask sec: How do we score risk here, and who can accept it?
+ask prod: What is the cost of delaying this release?
+ex: Write security requirements during discovery | 45
+scenario: Your team is starting discovery on bulk-invite for workspaces: admins upload a CSV to invite thousands of users, and invitations can grant any role.
+problem: Security review usually happens just before launch, when changes are expensive and contentious.
+task: Identify the assets, actors and likely misuse.
+task: Write a security requirements document with testable requirements.
+task: Create a short risk register with likelihood, impact, treatment and owner.
+task: List questions for engineering, security and product.
+constraint: CSV contents are untrusted and may contain invalid or malicious values.
+constraint: Requirements must be testable, not general wishes such as "be secure".
+constraint: Designers propose treatments, while risk acceptance belongs to the authorized owner.
+need: Engineers need clear requirements early.
+need: Security staff need enough context to review.
+need: Product managers need the trade-offs to plan a release.
+deliver: A one-page security requirements document and a risk register with at least five risks.
+crit constraints: Requirements are specific, testable and tied to the constraints.
+crit risk: Risks include misuse by authorized users as well as outside attackers.
+crit quality: The document can be read and used by non-security colleagues.
+crit senior: Each risk has a treatment and a named owner, with acceptance left to the authorized person.
+senior: Introducing security questions in discovery is one of the most valuable things a designer can do.
+senior: Your risk register supports the decision, and accountability stays with the risk owner.
+cq m | Testable requirements | Which is the best security requirement for bulk invite?
++ Invited roles can't exceed the role of the inviting admin :: It is specific, testable and limits privilege escalation.
+- The bulk invitation feature must be secure and trustworthy :: This can't be tested or built against.
+- The team should think carefully about security for invitations :: This is an intention and doesn't describe any behaviour.
+- Invitations should follow general industry best practices always :: It is too vague to verify.
+
+@d w13-3 direct
+sector: Enterprise applications
+product: Vendor risk workflows are usually spreadsheets and email chains, and customers evaluating your product go through the same process in reverse. A trust center that shares certifications and answers on request is a product experience, and so is the internal tool that decides whether a new vendor gets customer data.
+ask eng: Which vendors currently process customer data, and for what?
+ask sec: What evidence do we require from a vendor, and how often is it refreshed?
+ask prod: Which sales deals have been slowed by security questionnaires?
+ex: Design a vendor security review workflow | 45
+scenario: A growing company wants to replace its emailed spreadsheet process for reviewing software vendors. Any employee can currently sign up for a tool with company data.
+problem: Nobody knows which vendors hold what data, reviews are slow, and approved vendors are never checked again.
+task: Design intake that asks a requester about data and access in plain language.
+task: Design risk tiering that decides how deep the review goes.
+task: Design the evidence and contract checklist, including the right to audit.
+task: Design monitoring, renewal and offboarding.
+constraint: A vendor's assurance documents can be out of date or limited in scope.
+constraint: Offboarding must include return or deletion of data.
+constraint: Review effort must match risk, or staff will bypass it.
+need: Employees need a quick answer on low-risk tools.
+need: Security and legal staff need one source of truth.
+need: Leaders need to see overall vendor exposure.
+deliver: An intake and tiering flow, a review dashboard and a vendor life cycle diagram.
+crit constraints: Evidence, contract terms and offboarding are covered.
+crit risk: The design considers shadow IT, stale assessments and fourth parties.
+crit quality: A requester with no security background can finish the intake.
+crit senior: The process is tuned so that the secure path is also the easy path.
+senior: If the approved route is slow, people will avoid it, so treat turnaround time as a security measure.
+senior: Legal owns contract language, so design the hand-off and leave the wording to them.
+cq m | Third-party risk | A vendor shares a SOC 2 report from two years ago. What should the workflow prompt?
++ Request a current report and check that its scope fits :: Assurance can go stale, and it may not cover the service you use.
+- Accept it, because a SOC 2 report never loses its value :: Reports describe a period and must be kept up to date.
+- Reject every vendor that has ever shared an older report :: This is excessive, because a current report may simply exist.
+- Treat the report as proof that the vendor cannot be breached :: No report can provide that guarantee.
+
+@d w13-4 direct
+sector: Healthcare applications
+product: Privacy is directly experienced in products: consent prompts, cookie banners, settings, notices and retention choices. Dark patterns can turn consent into coercion. Good privacy design gives people real choices and respects the difference between controllers and processors and between regional obligations.
+ask eng: Can consent be enforced technically, so data use actually stops?
+ask sec: Which data flows change depending on region?
+ask prod: Which privacy regulations apply, and who confirms that?
+ex: Design privacy controls and consent | 45
+scenario: A health and wellness app wants to use member data to personalize content and share aggregated insights with partners. It operates in Canada and the EU.
+problem: Currently one checkbox at sign-up covers everything, and members can't later change their choices or see what is being shared.
+task: Separate necessary processing from optional uses.
+task: Design a layered consent moment.
+task: Design a privacy center: choices, history, access, deletion.
+task: Show what changes when consent is withdrawn.
+constraint: Withdrawing consent must be as easy as giving it, and must really stop the processing.
+constraint: Health data has stricter handling obligations in many jurisdictions.
+constraint: Regional legal requirements must be confirmed by privacy counsel.
+need: Members need to understand trade-offs in plain language.
+need: The business needs valid, recorded consent.
+need: Privacy officers need proof of what was agreed and when.
+deliver: A layered consent flow, a privacy center and a data-use map.
+crit constraints: Consent is granular, withdrawable and technically enforced.
+crit risk: The design avoids dark patterns and considers re-identification from aggregated data.
+crit quality: Choices are written in plain language at the point of decision.
+crit senior: The design makes clear which assumptions need legal confirmation.
+senior: Privacy is more than compliance, so ask whether a person would be surprised by this data use.
+senior: Legal review confirms requirements, and your job is making the choice real for users.
+cq m | Valid consent | Which pattern best supports meaningful consent?
++ Separate, unticked choices and an equally easy decline :: People make specific choices without being steered.
+- A single pre-ticked box that covers every possible data use :: Pre-ticked, bundled consent doesn't reflect a real choice.
+- A large Accept button beside a tiny hidden decline link :: This steers people, which makes it a dark pattern.
+- Consent wording placed only inside the full terms of service :: People can't make a specific choice from buried terms.
+
+@d w13-5 professional
+sector: Enterprise applications
+product: Audits and penetration tests produce work for product teams and evidence requests that products can make easier. Admin screens that export access reviews and configuration history turn an audit scramble into a routine task.
+ask sec: What evidence do auditors repeatedly ask us for?
+ask eng: Which penetration test findings keep recurring?
+ask prod: Which certifications do customers require?
+noex: Designers contribute by supporting evidence and remediation. The audit log and vendor exercises apply this.
+
+@d w13-6 professional
+sector: Enterprise applications
+product: Security awareness is partly a product problem. Clear warnings, easy phishing-report buttons and well-timed advice work better than annual training alone. Punishing people who click can discourage the reporting that the organization most needs.
+ask sec: How do people report suspicious activity today?
+ask eng: Can we surface security tips in context without being noisy?
+ask prod: How do we measure whether behaviour actually changes?
+noex: The phishing exercise in Week 6 applies this. Awareness is a shared organizational program and not a design task on its own.
+
+@case cs1
+title: Enterprise identity for a multi-tenant SaaS product
+week: 14
+min: 90
+obj: 4.5, 4.6, 3.2, 3.3
+lessons: w11-3, w11-4, w8-2, w12-3
+sector: B2B SaaS
+practice: Take the objective 4.5 quiz and aim for at least 80% | #cert/quiz/obj-4.5
+practice: Complete the performance-based exercise on least-privilege access | #cert/pbq/access-matrix
+scenario: A 3,000-person customer is moving onto your multi-tenant collaboration product. It requires SSO, automated removal of leavers, custom roles, contractor access and a quarterly access review.
+problem: Each capability has been designed in isolation, and nobody has followed one person from joining to leaving the company.
+task: Map one contractor's life cycle: invited, provisioned, changing role, reviewed and offboarded.
+task: Identify every place the identity, role or tenant boundary could fail along that journey.
+task: Design the administrator's single view of a person's access and where it comes from.
+task: Write a one-page design decision record covering your largest trade-off.
+constraint: Offboarding must remove access, end sessions and handle what the person owned.
+constraint: Guests must be contained within the tenants and spaces they were invited to.
+constraint: Every privileged change must be attributable in the audit log.
+need: IT administrators need one accurate answer to "who has access?".
+need: Contractors need to get started quickly and with limited access.
+need: Auditors need evidence of quarterly reviews.
+deliver: A life cycle map, an access view design and a design decision record.
+crit constraints: SSO, roles, tenant boundaries and audit are consistent across the journey.
+crit risk: Orphaned access and cross-tenant exposure are addressed.
+crit quality: The access view explains the source of each permission.
+crit senior: The decision record states alternatives, the trade-off and who needs to agree.
+senior: Follow people through time, because many identity failures happen during changes and not at sign-in.
+senior: Name which parts need security architecture approval.
+cq h | Offboarding across systems | A contractor is disabled in the identity provider but keeps access through a local guest account. What did the design miss?
++ A single life cycle that also covers non-SSO access paths :: Every path to access has to be included in offboarding.
+- A second confirmation before disabling the contractor :: Extra confirmation doesn't reach the guest account.
+- A larger contractor badge next to the person's name :: Labelling doesn't remove the remaining access.
+- A shorter password policy for the contractor accounts :: Password length is unrelated to the leftover access path.
+
+@case cs2
+title: An AI assistant with connected tools
+week: 15
+min: 90
+obj: 2.6, 4.5, 3.3, 5.3
+lessons: w7-4, w11-5, w9-1, w13-3
+sector: AI-enabled software
+practice: Take the objective 2.6 quiz and aim for at least 80% | #cert/quiz/obj-2.6
+practice: Take the objective 3.3 quiz and read every explanation | #cert/quiz/obj-3.3
+scenario: Your company is adding an AI assistant that can read a user's documents, connect to outside tools through OAuth and take actions. It uses an external model provider.
+problem: The team has discussed only the assistant's helpfulness. Nothing defines what data leaves the company, whose permissions it uses or how a person stops it.
+task: Draw the data flow, including the model provider and every connected tool.
+task: Mark the points where untrusted content can influence the assistant.
+task: Define permissions, confirmations and limits for its actions.
+task: Design the vendor and data-use disclosure for administrators.
+task: Design a rollback plan and incident path for assistant misbehaviour.
+constraint: The assistant can't have broader access than the user it acts for.
+constraint: Content retrieved from documents and tools is untrusted input.
+constraint: Provider data retention and training terms must be confirmed before you state them.
+need: Users need to know what the assistant will do before it acts.
+need: Administrators need controls by group and data type.
+need: Security staff need logs of prompts, tools and actions, handled with care.
+deliver: A data flow diagram, an action permission table and administrator control designs.
+crit constraints: Permission boundaries, OAuth scopes and data classification are all applied.
+crit risk: Prompt injection, data leakage and vendor risk are covered together.
+crit quality: A user can see, confirm and undo what the assistant does.
+crit senior: A go-or-no-go recommendation is given, with conditions and owners.
+senior: Be willing to recommend a smaller launch if the safeguards aren't ready.
+senior: AI security changes fast, so date your assumptions and plan to review them.
+cq h | AI and connected tools | A connected document contains hidden text telling the assistant to send files to an outside address. What limits the damage most?
++ Scoped tool permissions and confirmation before sending outside :: The assistant's ability to act is limited even if it is manipulated.
+- A friendlier assistant personality in its written replies :: Tone has no effect on what the assistant can do.
+- Longer documents, so that hidden instructions are diluted :: Length offers no protection against injection.
+- A filter that blocks the single word "ignore" in documents :: Attackers can easily rephrase the instruction.
+
+@case cs3
+title: Healthcare account takeover, from alert to post-incident review
+week: 16
+min: 90
+obj: 4.7, 4.4, 4.8, 5.4
+lessons: w12-2, w11-2, w12-4, w13-4
+sector: Healthcare applications
+practice: Take the objective 4.7 quiz and aim for at least 80% | #cert/quiz/obj-4.7
+practice: Complete the performance-based incident response exercise | #cert/pbq/ir-sequence
+scenario: A monitoring alert shows that a patient portal's staff account has viewed hundreds of records overnight. The staff member says they were asleep.
+problem: The product has separate tools for alerting, account action, audit and communications, which makes a coordinated response slow and error-prone.
+task: Build a timeline of what the investigator needs at each stage of incident response.
+task: Design the investigation and containment view.
+task: Design evidence handling that doesn't undermine the investigation.
+task: Draft patient communication states, leaving final wording to legal and privacy staff.
+task: Write a post-incident review with product changes and their owners.
+constraint: Containment actions must not destroy evidence.
+constraint: Health privacy obligations may set notification rules, confirmed by privacy counsel.
+constraint: Investigators can see sensitive records, so their access must also be logged.
+need: Investigators need one timeline with reliable data.
+need: Clinical staff need disruption kept to a minimum.
+need: Patients need truthful, timely and clear information.
+deliver: An incident journey, investigation view and post-incident review with product actions.
+crit constraints: Stages follow the incident response process, and evidence is preserved.
+crit risk: The design considers ongoing attacker access and insider possibilities.
+crit quality: The investigator's next action is clear under pressure.
+crit senior: The review turns findings into funded product changes with owners.
+senior: Do not presume that the staff member is innocent or guilty, and design the process accordingly.
+senior: Communications are a joint decision with legal, privacy and clinical leaders.
+cq h | Containment and evidence | An investigator wants to wipe the suspect's workstation immediately to stop the attack. What should the process support first?
++ Isolating it and preserving evidence before any wipe :: Isolation contains the threat, and evidence stays available.
+- Wiping it straight away, since speed matters most of all :: This can destroy the evidence needed to understand the incident.
+- Waiting until the next quarterly review before acting at all :: Delay allows the attack to continue.
+- Sending the entire company the staff member's name :: This is unfair, premature and harmful to the investigation.

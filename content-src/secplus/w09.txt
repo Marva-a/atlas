@@ -1,0 +1,366 @@
+# Week 9: Domain 3.0, part 2.
+
+@lesson w9-1
+title: Protecting data: types, states, classifications and methods
+domain: Domain 3: Security Architecture
+obj: 3.3
+level: Intermediate
+min: 120
+pre: w5-4
+out: Identify data types, states and classifications.
+out: Pick a protection method to fit the need.
+out: Distinguish masking, tokenization and encryption.
+why: Data is usually what attackers are after. Knowing what you have and what state it is in determines how to protect it.
+plain: Think of money. In a vault it is at rest. In an armored truck it is in transit. On the counter while a teller counts it, it is in use. Each state needs its own protection.
+tech: Structured data has a defined format, such as database tables. Unstructured data has none, such as documents, images and email. Data at rest is stored. Data in transit moves across a network. Data in use is being processed in memory, which is hardest to protect. Classifications include public, sensitive, confidential, restricted, critical, and in government settings secret and top secret.
+tech: Methods: masking hides part of a value, such as showing only the last four digits. Hashing creates a one-way digest. Filtering removes or blocks certain data. Tokenization replaces a sensitive value with a random token, stored in a separate vault. Encryption transforms data so that a key is required. Data transpose rearranges characters or fields, a weak method by itself. De-identification (deidentification) removes information that links data to a person. Obfuscation makes data harder to interpret without strong protection.
+diagram: tokenization
+table: Protection methods compared | Method | Reversible? | Common use
+| Masking | Usually not, as displayed | Showing partial card numbers
+| Hashing | No | Passwords and integrity
+| Tokenization | Yes, through the vault | Payment card systems
+| Encryption | Yes, with the key | Files and traffic
+| De-identification | Should not be | Research data sets
+term: Structured == Data with a defined format such as tables.
+term: Unstructured == Data with no fixed format, such as documents.
+term: Data at rest == Data in storage.
+term: Data in use == Data being processed.
+term: Data in transit == Data moving across a network.
+term: Sensitive == Data needing protection from disclosure.
+term: Secret == A government classification for serious harm if disclosed.
+term: Critical == Data essential to operating the organization.
+term: Confidential == Data for authorized people only.
+term: Public == Data that can be shared freely.
+term: Top secret == The highest common government classification.
+term: Restricted == Data limited to a named group.
+term: Masking == Hiding part of a value.
+term: Hashing == Creating a one-way digest.
+term: Filtering == Removing or blocking data based on rules.
+term: Tokenization == Replacing sensitive data with a random stand-in.
+term: Encryption == Transforming data so that only a key can reverse it.
+term: Data transpose == Rearranging characters or fields.
+term: Deidentification == Removing details that link data to a person.
+term: Obfuscation == Making data hard to interpret.
+eg: A store's point-of-sale system handles tokens, so a breach of that system does not expose actual card numbers.
+eg: A support agent sees only the last four digits of a card, through masking.
+walk: Choose a method
+- Need to process payments without storing cards? Tokenization.
+- Need staff to confirm a customer without seeing everything? Masking.
+- Need to store passwords? Salted hashing.
+- Need to send a file securely? Encryption.
+- Need to share data for research? De-identification.
+lab: Classify and protect sample data | 35 | Spreadsheet
+do: Make a table of ten fictional data items such as names, card numbers, press releases.
+do: Label each by type, state and classification.
+do: Choose a protection method for each.
+do: Apply masking in the spreadsheet for one column.
+expect: A completed table with reasons for each choice.
+explain: Different data needs different handling. Protecting all data the same way is either wasteful or inadequate.
+pass: Each item has a type, classification and method.
+pass: You applied masking to at least one column.
+scenario: A retailer wants to keep customer card references for repeat purchases without keeping card numbers on its own systems. Which method fits?
+answer: Tokenization. The retailer stores tokens, and the real numbers remain in the payment provider's secure vault.
+q 3.3 mcq e | Data states | Data stored on a backup drive is in which state?
++ At rest :: It is stored.
+- In transit :: It is not moving.
+- In use :: It is not being processed.
+- Tokenized :: That is a protection method, not a state.
+q 3.3 mcq m | Tokenization | Which statement best describes tokenization?
++ A sensitive value is replaced by a random stand-in mapped in a secure vault :: The token has no mathematical link to the value.
+- A value is transformed with a key :: That is encryption.
+- A value is converted into a one-way digest :: That is hashing.
+- Only part of a value is displayed :: That is masking.
+q 3.3 match m | Data methods | Match each need to a method.
+= Show only the last four digits => Masking
+= Replace a card number with a random value => Tokenization
+= Remove names from a research data set => Deidentification
+= Protect a file with a key => Encryption
+why: Each method solves a different problem.
+q 3.3 mcq h | Data in use | Why is data in use typically hardest to protect?
++ It must be in readable form in memory while being processed :: Decrypted data is exposed during processing.
+- It is always stored on tape :: Tape is storage.
+- It is never present on endpoints :: It may well be.
+- It cannot be classified :: All data can be classified.
+mistake: Calling tokenization encryption. Tokens have no key relationship with the value.
+mistake: Treating obfuscation or transposition as strong protection.
+sum: Know the type, state and classification of your data.
+sum: Masking, tokenization, hashing and encryption solve different problems.
+sum: Protect each state appropriately.
+ref: comptia-objectives r
+ref: nist-800-122 r
+ref: pci s
+card: Name the three data states. == At rest, in transit and in use.
+card: How does tokenization differ from encryption? == A token is a random stand-in held in a vault, with no key that can reverse it.
+
+@lesson w9-2
+title: Data roles, handling, life cycle and compliance
+domain: Domain 3: Security Architecture
+obj: 3.3
+level: Intermediate
+min: 120
+pre: w9-1
+out: Assign data protection roles.
+out: Apply marking, geofencing and placement rules.
+out: Follow data through its life cycle and link it to compliance needs.
+why: When everyone is responsible, no one is. Clearly assigned data roles and known life-cycle stages are the backbone of privacy obligations.
+plain: A library has an owner who sets the rules, a librarian who looks after the books and an assistant who checks them out. Data has similar roles. Data also has a life, from being created until it is securely destroyed.
+tech: Data protection roles: the data owner is accountable for the data and decides how it is classified. The data custodian implements and maintains the technical controls. The data steward looks after data quality and proper use. The data operator handles day-to-day processing. The data controller decides why and how personal data is processed. A data subprocessor is engaged by a processor to carry out part of the processing.
+tech: Data handling covers: endpoints, where data is often copied and lost; marking and labeling, which show classification; geofencing, which restricts access by location; data location, where data physically resides; and data placement, deciding where data is stored according to its sensitivity.
+tech: The data management life cycle covers creation, management, distribution, retention and disposal. Data compliance is shaped by standards and by the kind of data: health data, personal information, financial data, child/minor data, intellectual property and legal data. Examples include HIPAA for US health data, GDPR in the EU and PIPEDA in Canada, and PCI DSS for payment card data.
+term: Data owner == The person accountable for a set of data.
+term: Data custodian == The role implementing technical protection.
+term: Data steward == The role responsible for data quality and proper use.
+term: Data operator == The role carrying out day-to-day data handling.
+term: Data controller == The party deciding why and how personal data is processed.
+term: Data subprocessor == A company engaged by a processor to help process data.
+term: Endpoints == Laptops, phones and desktops where data is handled.
+term: Marking and labeling == Showing data's classification on or within it.
+term: Geofencing == Restricting access according to location.
+term: Data location == Where data physically resides.
+term: Data placement == Choosing where to store data based on sensitivity and rules.
+term: Creation == The stage in which data begins to exist.
+term: Management == Maintaining data during its use.
+term: Distribution == Sharing data with those who need it.
+term: Retention == Keeping data for a defined period.
+term: Disposal == Destroying data securely.
+term: Standards == Published requirements for handling data.
+term: Health data == Medical information, usually strongly regulated.
+term: Personal information == Data relating to an identifiable person.
+term: Financial == Data such as card and bank information.
+term: Child/minor data == Information about children, with extra protections.
+term: Intellectual property == Valuable creative or technical works.
+term: Legal data == Records related to legal matters.
+eg: A hospital (controller) uses a billing company (processor), which uses a cloud host as a subprocessor. Contracts must cover each of these relationships.
+eg: A company allows access to a finance app only from Canada, using geofencing.
+walk: Follow a customer record through the life cycle
+- Creation: a customer signs up, and the record is classified.
+- Management: staff update it under access controls.
+- Distribution: a shipping partner receives only the address.
+- Retention: it is kept for the legally required period.
+- Disposal: it is securely deleted at the end of the period.
+lab: Draw a data flow | 35 | Drawing tool and PIPEDA or GDPR summary
+do: Pick a fictional online shop. Draw where customer data is created, stored and shared.
+do: Label the controller, processor and any subprocessors.
+do: Mark retention and disposal points.
+do: Note one obligation from PIPEDA or GDPR that applies.
+expect: A diagram with roles and life-cycle points marked.
+explain: A map like this is what privacy teams need before answering a regulator or a data subject.
+pass: You identified all relevant roles.
+pass: Every life-cycle stage appears in your diagram.
+scenario: A database administrator applies encryption and access controls according to rules set by a business leader, who is accountable for the data. Which roles are these?
+answer: The database administrator is the data custodian, and the business leader is the data owner.
+q 3.3 mcq e | Data roles | Who is accountable for classifying a data set?
++ The data owner :: Accountability sits with the owner.
+- The data custodian :: The custodian implements controls.
+- The data subprocessor :: This is a third party.
+- An external auditor :: Auditors assess, and do not own.
+q 3.3 mcq m | Controller and processor | A retailer decides what customer data to collect and why, and a payroll vendor processes it as directed. What is the retailer?
++ The data controller :: It determines the purpose and means.
+- The data custodian :: That role implements controls.
+- The subprocessor :: That is a further third party.
+- The data steward :: That focuses on data quality.
+q 3.3 order m | Data life cycle | Put the stages of the data life cycle in order.
+1. Creation
+2. Management
+3. Distribution
+4. Retention
+5. Disposal
+why: Data must be created and managed before it is distributed, and retained before it is disposed of.
+q 3.3 mcq m | Geofencing | A company blocks sign-ins from outside its operating region. What technique is this?
++ Geofencing :: Access depends on location.
+- Masking :: Masking hides values.
+- Tokenization :: This substitutes values.
+- Hashing :: This creates digests.
+mistake: Confusing owner and custodian. The owner is accountable, while the custodian operates the controls.
+mistake: Keeping data indefinitely, since unneeded data is liability.
+sum: Data roles make accountability clear.
+sum: Handling rules apply on endpoints and in storage.
+sum: Data has a life cycle, ending with secure disposal.
+ref: comptia-objectives r
+ref: pipeda r
+ref: gdpr s
+ref: nist-privacy s
+card: What is the difference between a data owner and a data custodian? == The owner is accountable, and the custodian implements the protection.
+card: Name the five data life-cycle stages. == Creation, management, distribution, retention, disposal.
+
+@lesson w9-3
+title: Resilience: sites, platform diversity, redundancy and power
+domain: Domain 3: Security Architecture
+obj: 3.4
+level: Intermediate
+min: 120
+pre: w8-2
+out: Compare hot, warm and cold sites.
+out: Choose redundancy strategies.
+out: Select the right power protection.
+why: Availability is one-third of the CIA triad. Ransomware, storms and hardware failure all test whether a business can keep working.
+plain: A hot site is a furnished, stocked spare office you can walk into right away. A warm site has furniture but needs setup. A cold site is an empty room with power and a lease. Redundancy is keeping a spare tire, and load balancing is sharing the weight among several tires.
+tech: Site considerations: a hot site is fully equipped and current, offering fast recovery at high cost. A warm site has hardware but needs current data and setup. A cold site has space and utilities only. Environmental factors mean a recovery site should not share the same flood plain, power grid or earthquake zone.
+tech: Platform diversity reduces common-mode failure through a different vendor platform, different hardware or different virtualization technology.
+tech: Redundancy strategies: load balancing spreads requests across servers. Clustering groups servers so that one can take over from another. Autoscaling adds or removes capacity automatically. High availability means designing to minimize downtime. Multicloud systems use multiple providers. Storage redundancy includes RAID and replication. Power protection includes an uninterruptible power supply (UPS) for short-term battery power, a redundant power supply (RPS) in a device, a power generator for long outages and a surge protector for voltage spikes.
+diagram: load-balancer
+table: Recovery sites | Site | Ready in | Cost | Contains
+| Hot | Minutes to hours | Highest | Everything, with current data
+| Warm | Hours to days | Medium | Hardware, needs data and setup
+| Cold | Days to weeks | Lowest | Space and utilities only
+table: Power protection | Device | Purpose
+| Surge protector | Absorbs voltage spikes
+| UPS | Battery bridge for short outages
+| RPS | Second power supply inside a device
+| Generator | Sustained power during long outages
+term: Hot == A fully ready recovery site.
+term: Warm == A partly ready recovery site.
+term: Cold == A recovery site with only basic space and utilities.
+term: Environmental == Physical factors at a site such as flood risk.
+term: Vendor platform == Using different suppliers to avoid shared flaws.
+term: Hardware == Physical equipment choices that add diversity.
+term: Virtualization == Software-based compute platforms, which can also be varied.
+term: Load balancing == Distributing requests among servers.
+term: Clustering == Grouping servers so that they can act together or fail over.
+term: Autoscaling == Automatically adjusting capacity.
+term: High availability == A design that minimizes downtime.
+term: Multicloud systems == Spreading workloads across providers.
+term: UPS == Uninterruptible power supply: short-term battery power.
+term: RPS == Redundant power supply: a second supply in a device.
+term: Power generator == A machine that supplies sustained power.
+term: Surge protector == A device that absorbs voltage spikes.
+term: Storage == Disk systems, which can use RAID and replication for redundancy.
+eg: A data centre rides through a brief outage on UPS while its generators start.
+eg: An online shop's load balancer stops sending traffic to a failed server, and customers do not notice.
+walk: Plan power for a server room
+- Add surge protection against spikes.
+- Add a UPS sized to bridge the gap until the generator starts.
+- Add a generator for long outages, with fuel and testing.
+- Use dual power supplies connected to separate circuits.
+- Test it, because untested power protection is only a hope.
+lab: Choose a recovery strategy | 30 | Worksheet
+do: For three fictional organizations (a hospital, a small blog, a regional bank), choose a recovery site type.
+do: Choose two redundancy strategies for each.
+do: Estimate relative cost, and state what each organization is accepting.
+expect: Matching site choices to criticality, such as hot for the hospital and cold or cloud restore for the blog.
+explain: Spending should be proportional to the cost of downtime.
+pass: Each organization has a site type with a reason.
+pass: Each organization has two redundancy strategies.
+scenario: A business needs to resume in about two days after a disaster and wants moderate cost. Its equipment can be pre-installed, but data would need restoring. Which site fits?
+answer: A warm site. It has equipment in place but needs current data and setup, with cost and recovery time between hot and cold.
+q 3.4 mcq e | Recovery sites | Which site offers the fastest recovery?
++ Hot :: It is fully equipped and current.
+- Warm :: It requires data and setup.
+- Cold :: It has only basic facilities.
+- Mobile tape vault :: This is storage only.
+q 3.4 mcq m | Power | Which device keeps equipment running briefly during an outage?
++ UPS :: Batteries give an immediate bridge.
+- Surge protector :: This handles spikes only.
+- Load balancer :: This distributes requests.
+- CASB :: This is a cloud security tool.
+q 3.4 mcq m | Load balancing | What is the main role of a load balancer?
++ Distribute requests across multiple servers :: This improves availability and capacity.
+- Encrypt data at rest :: That is a storage control.
+- Provide battery power :: That is a UPS.
+- Detect phishing :: That is an email security function.
+q 3.4 mcq h | Site location | Why should a recovery site not be located close to the main site?
++ A regional event could affect both :: Shared environmental risk defeats the purpose.
+- Data cannot be transmitted across short distances :: It can.
+- Warm sites must be in another country by law :: There is no such general rule.
+- It would reduce the backup's integrity :: Distance does not affect integrity.
+mistake: Confusing UPS with a generator. A UPS bridges briefly, and a generator sustains longer.
+mistake: Confusing redundancy with backup. Redundancy keeps things running, and backups restore lost data.
+sum: Site type trades cost for recovery speed.
+sum: Redundancy removes single points of failure.
+sum: Power protection comes in layers.
+ref: comptia-objectives r
+ref: nist-800-34 r
+card: Hot, warm or cold: which has only space and utilities? == Cold.
+card: What is the difference between a UPS and a generator? == A UPS bridges short outages, and a generator provides sustained power.
+
+@lesson w9-4
+title: Backups, testing, disaster recovery and recovery metrics
+domain: Domain 3: Security Architecture
+obj: 3.4
+level: Intermediate
+min: 120
+pre: w9-3
+out: Design a backup approach that resists ransomware.
+out: Define and calculate RTO, RPO, MTTR and MTBF.
+out: Distinguish disaster recovery, business continuity and testing types.
+why: A backup that has never been restored is an assumption. Recovery metrics turn vague hopes into commitments that a business can plan and pay for.
+plain: RPO is how far back you can afford to go: if the last save was four hours ago, you lose four hours of work. RTO is how long you can afford to be down. MTBF is how long something tends to work before breaking, and MTTR is how long it takes to fix.
+tech: Backups involve retention (how long copies are kept), immutability (copies cannot be altered or deleted for a period, which resists ransomware), scope (what is included, such as full, incremental or differential) and restoration testing (proving a backup can be recovered). A common guideline is three copies, on two media, with one offsite.
+tech: Testing types: failover moves work to a standby system. Simulation walks through a scenario without affecting production. Parallel processing runs recovery systems alongside production to compare results. Disaster recovery focuses on restoring technology after a major event. Business continuity keeps the critical functions of the organization running. Capacity planning ensures that people, technology and infrastructure can meet expected demand.
+tech: Recovery metrics: the recovery time objective (RTO) is the maximum acceptable time to restore a service. The recovery point objective (RPO) is the maximum acceptable data loss measured in time. Mean time to repair (MTTR) is the average time to fix a failure. Mean time between failures (MTBF) is the average operating time between failures. MTBF equals total operating time divided by the number of failures.
+diagram: rpo-rto
+table: Recovery metrics | Metric | Asks | Example
+| RPO | How much data can we lose? | Backups every 4 hours give an RPO of up to 4 hours
+| RTO | How long can we be down? | Service back within 2 hours
+| MTTR | How long does a repair take on average? | 3 repairs took 6 hours in total, so 2 hours
+| MTBF | How long between failures on average? | 1,000 hours and 4 failures, so 250 hours
+term: Backups == Copies of data kept for recovery.
+term: Retention == How long backup copies are kept.
+term: Immutability == Backups that cannot be altered for a set period.
+term: Scope == What a backup includes.
+term: Restoration testing == Proving that backups can be recovered.
+term: Failover == Moving work to a standby system.
+term: Simulation == Practising a scenario without affecting production.
+term: Parallel processing == Running recovery systems alongside production to compare results.
+term: Disaster recovery == Restoring technology after a major event.
+term: Business continuity == Keeping critical functions running during disruption.
+term: Capacity planning == Making sure resources can meet expected demand.
+term: RTO == Recovery time objective: maximum acceptable downtime.
+term: RPO == Recovery point objective: maximum acceptable data loss, in time.
+term: MTTR == Mean time to repair: the average time to fix a failure.
+term: MTBF == Mean time between failures: average operating time between failures.
+eg: Ransomware encrypts file servers, but immutable backups cannot be changed, so the business restores from them without paying.
+eg: A team discovers its backup job has been failing for months, the first time it attempts a restoration test.
+walk: Work out recovery metrics
+- A database is backed up every 6 hours, so the RPO cannot be better than 6 hours.
+- A required restore takes 3 hours, plus 1 hour of checks, so RTO must be at least 4 hours.
+- A server ran 2,000 hours and failed 5 times, so MTBF is 400 hours.
+- Those 5 repairs took 10 hours in total, so MTTR is 2 hours.
+lab: Back up and actually restore | 35 | tar in your lab VM
+do: Create a folder with five text files in your VM.
+do: Run tar -czf backup.tar.gz myfolder and record the time.
+do: Delete one file, and change another.
+do: Restore into a new folder with mkdir restore, then tar -xzf backup.tar.gz -C restore, and confirm the original contents using diff.
+do: State the RPO your backup represents.
+expect: The restored copy matches the state at the time of backup, and later edits are lost.
+explain: The difference between the backup time and the failure time is exactly what RPO measures.
+pass: You restored and verified the files.
+pass: You stated your RPO correctly.
+scenario: A company backs up at midnight every day. A failure occurs at 18:00 and the service is restored at 21:00. How much data was lost at most, and how long was the outage? Which metrics do these correspond to?
+answer: Up to 18 hours of data were lost, which relates to RPO. The outage was 3 hours, which relates to RTO. If the business needs an RPO of four hours, daily backups will not meet it.
+q 3.4 mcq e | RTO and RPO | Which metric describes the maximum acceptable data loss?
++ RPO :: It is measured back in time from the failure.
+- RTO :: RTO measures downtime.
+- MTBF :: This measures reliability.
+- MTTR :: This measures repair time.
+q 3.4 mcq m | MTBF | A device operated for 3,000 hours and failed 6 times. What is its MTBF?
++ 500 hours :: 3,000 divided by 6.
+- 6 hours :: This is the number of failures.
+- 3,006 hours :: The values should be divided, not added.
+- 18,000 hours :: The values should be divided, not multiplied.
+q 3.4 mcq m | Backups | Which backup property best protects against ransomware that deletes backups?
++ Immutability :: Immutable copies cannot be changed or deleted during the lock period.
+- Larger scope :: Backing up more does not protect the copies.
+- Compression :: Compression saves space.
+- Load balancing :: This distributes requests.
+q 3.4 mcq h | Testing | A team brings the recovery system online alongside production and compares results, without moving users. What is this?
++ Parallel processing :: Both systems run together for comparison.
+- Failover :: Failover moves the workload.
+- Simulation only :: A simulation does not bring up real systems.
+- Capacity planning :: This is about future resources.
+q 3.4 match m | Metrics | Match each statement to its metric.
+= Service must return within 2 hours => RTO
+= Lose no more than 15 minutes of data => RPO
+= Repairs take 4 hours on average => MTTR
+= Fails about once every 900 hours => MTBF
+why: Time to restore, data lost, repair duration and failure frequency measure different things.
+mistake: Swapping RTO and RPO. Time points to downtime, and point refers to a point in the data.
+mistake: Assuming a backup is good because the job reported success.
+sum: Back up, keep an immutable copy and test restores.
+sum: RTO limits downtime, and RPO limits data loss.
+sum: MTBF measures reliability, and MTTR measures repair speed.
+ref: comptia-objectives r
+ref: nist-800-34 r
+ref: cisa-ransomware s
+card: RTO or RPO: maximum acceptable downtime? == RTO.
+card: How is MTBF calculated? == Total operating time divided by the number of failures.

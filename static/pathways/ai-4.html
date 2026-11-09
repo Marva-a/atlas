@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excessive agency and tool permissions · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Excessive agency and tool permissions</h1>
+<p class="eyebrow">Pathway: AI Security · Lesson 4 · Advanced · about 95 min</p>
+<p>An agent becomes dangerous when it has more tools, broader permissions or more autonomy than its task needs, so each tool must be scoped, each consequential action confirmed in context, and human oversight treated as one control, not the security boundary.</p>
+<p><strong>By the end, you can:</strong> Audit an agent&#x27;s tools for excessive functionality, permissions and autonomy, propose least-privilege scopes for each, decide which actions need confirmation, and explain why a human approval step cannot be the only safeguard.</p>
+<h2>Why it matters to a designer</h2>
+<p>Agent permission screens, tool connection flows and approval prompts are new interfaces with no settled patterns yet. They are where an agent&#x27;s authority is granted and checked. Designing them well, without causing approval fatigue, is one of the clearest opportunities for a security product designer right now.</p>
+<h2>Key ideas</h2>
+<ul><li>Day 51 introduced excessive agency. OWASP splits it into three forms: excessive functionality (tools the task does not need, such as a &#x27;run any shell command&#x27; tool), excessive permissions (a tool that can write when it only needs to read) and excessive autonomy (consequential actions with no check).</li><li>Least privilege for tools: give each tool the narrowest operation and data scope. &#x27;Read this user&#x27;s calendar&#x27; rather than &#x27;full Google account&#x27;; &#x27;create a draft&#x27; rather than &#x27;send email&#x27;; &#x27;search tickets in project X&#x27; rather than &#x27;admin API&#x27;.</li><li>Act with the user&#x27;s delegated authority, not more (Day 51): the agent should get scoped, short-lived tokens for each service, issued for that agent, and never a broader service account than the user has. Watch for the confused deputy: a tool with broad rights acting for a user with narrow ones.</li><li>Confirmation in context: before an irreversible or high-impact action, show what will happen in plain terms (recipient, amount, which records, which permission change), from data the system computed, not just the model&#x27;s summary of it.</li><li>Human oversight is a control, not the boundary. People approve quickly when prompts are frequent (approval fatigue, from Day 51), and a convincing model summary can hide a harmful action. Hard limits (rate limits, spending caps, allow-lists, blocked operations) must hold even when a person clicks approve.</li><li>Agents connecting to tools through MCP need consent per tool and per scope, tokens issued for the right server, and clear warnings when a tool server is new or its description changes.</li><li>Make authority visible and revocable: a page listing every agent, what it can reach, who granted it, when it last acted and a single place to revoke it. This is Day 50&#x27;s machine-identity inventory, applied to agents.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>tool scope</strong></td><td>The exact operations and data a tool is allowed to use.</td></tr><tr><td><strong>confused deputy</strong></td><td>A program with broad rights tricked into using them for someone who should not have that power.</td></tr><tr><td><strong>hard limit</strong></td><td>A rule the system enforces regardless of approvals, such as a spending cap or a blocked action.</td></tr><tr><td><strong>allow-list</strong></td><td>A list of the only things permitted, such as approved recipients or tool servers.</td></tr><tr><td><strong>consent screen</strong></td><td>The screen where a person grants an app or agent access to their data or tools.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read OWASP LLM06, Excessive Agency, including its three forms and mitigations. &mdash; <a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/">LLM06:2025 Excessive Agency</a> (OWASP Gen AI Security Project)</p><span class="step__min">15 min</span></div><div class="step"><p>In the OWASP agentic list, read the entry on human-agent trust exploitation (you read tool misuse and identity and privilege abuse on Day 51). &mdash; <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Top 10 for Agentic Applications for 2026</a> (OWASP GenAI Security Project)</p><span class="step__min">10 min</span></div><div class="step"><p>Skim the MCP security best practices, reading the user consent and confused deputy sections closely. &mdash; <a href="https://modelcontextprotocol.io/specification/draft/basic/security_best_practices">Model Context Protocol: Security Best Practices</a> (Model Context Protocol)</p><span class="step__min">20 min</span></div><div class="step"><p>Take a &#x27;sales assistant&#x27; agent with these tools: read CRM, update CRM, send email, read shared drive, create calendar events, issue refunds. For each tool, write the narrowest scope it needs and whether it needs confirmation, a hard limit, both or neither.</p><span class="step__min">25 min</span></div><div class="step"><p>Sketch the &#x27;connect a tool&#x27; consent screen for one of those tools: what it says, which scopes it shows and how a user narrows them.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Skip framework-specific agent tutorials and the internals of token exchange beyond Day 51. Focus on scopes, confirmations, limits and how authority is shown and revoked.</p>
+<h2>Check yourself</h2><ul><li>What are the three forms of excessive agency? Give an example of each.</li><li>Why is a human approval step not enough on its own to keep an agent safe?</li><li>What should a confirmation screen show before an agent issues a refund?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Excessive functionality: an email assistant that also has a &#x27;delete mailbox&#x27; tool. Excessive permissions: a tool with write access to the whole CRM when it only reads one account. Excessive autonomy: an agent that issues refunds without any check.</li><li>Because people approve quickly when prompts are frequent, and a persuasive summary from the model may hide what really happens. Hard limits such as caps, allow-lists and blocked actions must still apply even after someone approves.</li><li>The customer, the order, the exact amount and currency, the reason given, where the money goes, whether it can be reversed, and that these details come from the order system rather than from the model&#x27;s own wording.</li></ul>
+<p><a href="../../index.html#path/ai-security/4">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

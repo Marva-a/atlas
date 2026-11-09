@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 9: MFA, passkeys and recovery · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 9: MFA, passkeys and recovery</h1>
+<p class="eyebrow">Day 25 · Week 4 · Intermediate · about 120 min</p>
+<p>You will turn on one-time codes and passkeys in Keycloak, go through them as a user, and study the hardest part of sign-in: getting back in when you lose your device.</p>
+<p><strong>By the end, you can:</strong> Set up MFA and a passkey, and explain why passkeys resist phishing in ways one-time codes typically do not, without claiming every account-recovery path is equally phishing-resistant.</p>
+<h2>Why it matters to a designer</h2>
+<p>Sign-in and recovery are where security products meet every employee. Phishing-resistant methods like passkeys are spreading fast, and designers lead the work of making enrolment, fallback and recovery both safe and humane, including for people with disabilities.</p>
+<h2>Key ideas</h2>
+<ul><li>From Day 2 you know the three factor types. Today you see them as screens: enrolment, daily use and recovery.</li><li>TOTP codes (the six digits in an authenticator app) are better than passwords alone, but people can still be tricked into typing them on a fake site.</li><li>Passkeys are phishing-resistant because the key only works on the real website it was made for: a fake site cannot trick it into signing in. That resistance covers the sign-in step itself — it does not make every related journey unphishable. Account recovery, a compromised device, session theft and social engineering around fallback methods are still real risks to design for.</li><li>Synced passkeys are copied across your devices through a cloud account (for example iCloud Keychain). Device-bound passkeys stay on one device or a security key. Synced is easier to recover; device-bound is stricter.</li><li>MFA fatigue (push bombing): attackers send many approval prompts until a tired person taps “approve”. Number matching and limits on prompts help.</li><li>Recovery is often the weakest point: if “forgot password” only needs an email, the strong MFA does not matter. Good recovery is safe and kind.</li><li>Accessible authentication (WCAG 2.2, 3.3.8): don’t force people to remember or transcribe things as the only way to sign in. Allow paste, password managers and passkeys.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>TOTP</strong></td><td>Time-based one-time password: the six-digit code from an authenticator app.</td></tr><tr><td><strong>phishing-resistant</strong></td><td>A sign-in method that cannot be used on a fake site, such as passkeys or security keys.</td></tr><tr><td><strong>synced passkey</strong></td><td>A passkey copied across your devices by a cloud account.</td></tr><tr><td><strong>device-bound passkey</strong></td><td>A passkey that stays on one device or a hardware key.</td></tr><tr><td><strong>MFA fatigue</strong></td><td>Attackers sending many approval prompts until someone accepts.</td></tr><tr><td><strong>account recovery</strong></td><td>How someone gets back into their account after losing a password or device.</td></tr><tr><td><strong>enrolment</strong></td><td>Setting up a sign-in method for the first time.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read the passkeys introduction for designers and developers. &mdash; <a href="https://passkeys.dev/">passkeys.dev</a> (passkeys.dev)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the FIDO Alliance passkey design guidelines, focusing on the sign-in and recovery patterns. &mdash; <a href="https://www.passkeycentral.org/design-guidelines">Passkey Central: Design Guidelines (FIDO Alliance)</a> (FIDO Alliance / Passkey Central)</p><span class="step__min">20 min</span></div><div class="step"><p>Read Understanding WCAG 3.3.8 Accessible Authentication. &mdash; <a href="https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html">Understanding SC 3.3.8: Accessible Authentication (Minimum)</a> (W3C WAI)</p><span class="step__min">10 min</span></div><div class="step"><p>In Keycloak, require OTP for your test realm and enrol a user. Then enable passkeys (WebAuthn) and enrol one. Screenshot each step. &mdash; <a href="https://www.keycloak.org/docs/latest/server_admin/index.html">Keycloak Server Administration Guide: users, roles and groups</a> (Keycloak)</p><span class="step__min">40 min</span></div><div class="step"><p>Score three real recovery flows you can access (email, a bank, a work tool) on safety and on accessibility.</p><span class="step__min">25 min</span></div><div class="step"><p>Add the new words to your glossary.</p><span class="step__min">10 min</span></div>
+<h2>Skip or skim</h2><p>Skip the WebAuthn specification and NIST 800-63B in depth; they are references. Look only at the recovery sections if you have time.</p>
+<h2>Check yourself</h2><ul><li>Why are passkeys phishing-resistant?</li><li>What is MFA fatigue, and two ways to reduce it?</li><li>Why is account recovery often the weakest part of sign-in?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>The passkey is tied to the real website’s address. A fake site has a different address, so the passkey will not work there, and there is no code the person can be tricked into typing.</li><li>Attackers send many push prompts hoping a tired person approves one. Number matching (typing a number shown on screen) and limits or warnings on repeated prompts reduce it.</li><li>Because attackers can skip strong sign-in methods if recovery is weak, for example if a reset only needs access to an email account or a support call. Recovery must be as strong as sign-in, but still humane.</li></ul>
+<p><a href="../../index.html#lesson/25">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

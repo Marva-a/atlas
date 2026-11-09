@@ -1,0 +1,796 @@
+{
+ "exam": {
+  "code": "SY0-801",
+  "version": "V8",
+  "questions": "Maximum of 90",
+  "types": "Multiple-choice and performance-based",
+  "minutes": 90,
+  "passing": "750 on a scale of 100 to 900",
+  "experience": "Recommended, not required: security administrator with two years of hands-on experience",
+  "launch": "CompTIA says on or around November 17, 2026",
+  "checked": "2026-11-09",
+  "objectivesDoc": "Exam Objectives Document Version 2.0"
+ },
+ "domains": {
+  "1": {
+   "name": "General Security Concepts",
+   "weight": 16
+  },
+  "2": {
+   "name": "Threats, Vulnerabilities, and Attacks",
+   "weight": 24
+  },
+  "3": {
+   "name": "Security Architecture",
+   "weight": 19
+  },
+  "4": {
+   "name": "Security Operations",
+   "weight": 27
+  },
+  "5": {
+   "name": "Security Program Management and Oversight",
+   "weight": 14
+  }
+ },
+ "objectives": [
+  {
+   "id": "1.1",
+   "short": "Security concepts and control types"
+  },
+  {
+   "id": "1.2",
+   "short": "How change management affects security"
+  },
+  {
+   "id": "1.3",
+   "short": "Choosing cryptographic solutions"
+  },
+  {
+   "id": "2.1",
+   "short": "Characteristics of threats and vulnerabilities"
+  },
+  {
+   "id": "2.2",
+   "short": "Threat actors and what drives them"
+  },
+  {
+   "id": "2.3",
+   "short": "Threat vectors and sources"
+  },
+  {
+   "id": "2.4",
+   "short": "Vulnerability types and attack surfaces"
+  },
+  {
+   "id": "2.5",
+   "short": "Spotting signs of malicious activity"
+  },
+  {
+   "id": "2.6",
+   "short": "AI-related threats and weaknesses"
+  },
+  {
+   "id": "3.1",
+   "short": "Comparing architecture models"
+  },
+  {
+   "id": "3.2",
+   "short": "Protecting infrastructure through architecture"
+  },
+  {
+   "id": "3.3",
+   "short": "Protecting data"
+  },
+  {
+   "id": "3.4",
+   "short": "Resilience and recovery"
+  },
+  {
+   "id": "4.1",
+   "short": "Applying security controls"
+  },
+  {
+   "id": "4.2",
+   "short": "Managing hardware, software and data assets"
+  },
+  {
+   "id": "4.3",
+   "short": "Vulnerability management tasks"
+  },
+  {
+   "id": "4.4",
+   "short": "Monitoring and alerting"
+  },
+  {
+   "id": "4.5",
+   "short": "Identity and access management"
+  },
+  {
+   "id": "4.6",
+   "short": "Automation and orchestration"
+  },
+  {
+   "id": "4.7",
+   "short": "Incident response"
+  },
+  {
+   "id": "4.8",
+   "short": "Evidence and data in investigations"
+  },
+  {
+   "id": "5.1",
+   "short": "Governance documents"
+  },
+  {
+   "id": "5.2",
+   "short": "Risk management"
+  },
+  {
+   "id": "5.3",
+   "short": "Third-party risk"
+  },
+  {
+   "id": "5.4",
+   "short": "Security compliance"
+  },
+  {
+   "id": "5.5",
+   "short": "Audits and assessments"
+  },
+  {
+   "id": "5.6",
+   "short": "Security awareness"
+  }
+ ],
+ "weeks": [
+  {
+   "n": 1,
+   "phase": "foundation",
+   "title": "Computer and IT fundamentals",
+   "outcome": "Explain how a computer system works and name the basic parts of an IT environment.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w1-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w1-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w1-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w1-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 1 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-1"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "phase": "foundation",
+   "title": "Networking fundamentals",
+   "outcome": "Explain how devices communicate within a network and across the internet.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w2-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w2-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w2-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w2-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 2 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-2"
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "phase": "foundation",
+   "title": "Network communication and protocols",
+   "outcome": "Explain how information travels between devices and what happens when someone opens a website or remote service.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w3-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w3-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w3-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w3-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 3 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-3"
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "phase": "foundation",
+   "title": "Operating systems and security fundamentals",
+   "outcome": "Describe the technical environment that security professionals protect.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w4-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w4-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w4-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w4-4"
+    },
+    {
+     "type": "assess",
+     "title": "Foundation assessment",
+     "min": 60,
+     "link": "#cert/quiz/foundation"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "phase": "domain",
+   "title": "Domain 1: General Security Concepts",
+   "outcome": "Explain core security concepts, change management and cryptographic solutions.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w5-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w5-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w5-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w5-4"
+    },
+    {
+     "type": "lesson",
+     "id": "w5-5"
+    },
+    {
+     "type": "review",
+     "title": "Week 5 review and cumulative check",
+     "min": 30,
+     "link": "#cert/quiz/week-5"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "phase": "domain",
+   "title": "Domain 2, part 1: threats, actors and vectors",
+   "outcome": "Describe threats, vulnerabilities, threat actors and how attacks reach an organization.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w6-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w6-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w6-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w6-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 6 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-6"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "phase": "domain",
+   "title": "Domain 2, part 2: vulnerabilities, indicators and AI",
+   "outcome": "Identify attack surfaces, read signs of malicious activity and explain AI-related threats.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w7-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w7-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w7-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w7-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 7 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-7"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "phase": "domain",
+   "title": "Domain 3, part 1: architecture models and infrastructure",
+   "outcome": "Compare architecture models and choose controls that protect infrastructure.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w8-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w8-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w8-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w8-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 8 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-8"
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "phase": "domain",
+   "title": "Domain 3, part 2: data protection and resilience",
+   "outcome": "Protect data through its life cycle and plan for recovery.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w9-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w9-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w9-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w9-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 9 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-9"
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "phase": "domain",
+   "title": "Domain 4, part 1: controls and assets",
+   "outcome": "Apply network, endpoint, application and email controls, and manage assets securely.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w10-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w10-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w10-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w10-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 10 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-10"
+    }
+   ]
+  },
+  {
+   "n": 11,
+   "phase": "domain",
+   "title": "Domain 4, part 2: vulnerabilities, monitoring and identity",
+   "outcome": "Run vulnerability management, understand monitoring tools and apply identity and access concepts.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w11-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w11-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w11-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w11-4"
+    },
+    {
+     "type": "lesson",
+     "id": "w11-5"
+    },
+    {
+     "type": "review",
+     "title": "Week 11 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-11"
+    }
+   ]
+  },
+  {
+   "n": 12,
+   "phase": "domain",
+   "title": "Domain 4, part 3: automation, response and investigation",
+   "outcome": "Automate safely, run incident response and use evidence in an investigation.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w12-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w12-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w12-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w12-4"
+    },
+    {
+     "type": "review",
+     "title": "Week 12 review and cumulative check",
+     "min": 45,
+     "link": "#cert/quiz/week-12"
+    }
+   ]
+  },
+  {
+   "n": 13,
+   "phase": "domain",
+   "title": "Domain 5: Security Program Management and Oversight",
+   "outcome": "Explain governance, risk, third-party management, compliance, audits and awareness.",
+   "sessions": [
+    {
+     "type": "lesson",
+     "id": "w13-1"
+    },
+    {
+     "type": "lesson",
+     "id": "w13-2"
+    },
+    {
+     "type": "lesson",
+     "id": "w13-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w13-4"
+    },
+    {
+     "type": "lesson",
+     "id": "w13-5"
+    },
+    {
+     "type": "lesson",
+     "id": "w13-6"
+    },
+    {
+     "type": "review",
+     "title": "Week 13 review and cumulative check",
+     "min": 30,
+     "link": "#cert/quiz/week-13"
+    }
+   ]
+  },
+  {
+   "n": 14,
+   "phase": "readiness",
+   "title": "Complete objective review",
+   "outcome": "Find and close gaps across all 27 objectives.",
+   "sessions": [
+    {
+     "type": "task",
+     "title": "Domain 1 objective review",
+     "min": 120,
+     "link": "#cert/quiz/domain-1",
+     "detail": "Retake mixed questions for objectives 1.1–1.3. A score of 80% or more counts as a review pass for each objective with enough questions."
+    },
+    {
+     "type": "task",
+     "title": "Domain 2 objective review",
+     "min": 120,
+     "link": "#cert/quiz/domain-2",
+     "detail": "Objectives 2.1–2.6, with attention to indicators of malicious activity."
+    },
+    {
+     "type": "task",
+     "title": "Domain 3 objective review",
+     "min": 120,
+     "link": "#cert/quiz/domain-3",
+     "detail": "Objectives 3.1–3.4."
+    },
+    {
+     "type": "task",
+     "title": "Domain 4 objective review",
+     "min": 120,
+     "link": "#cert/quiz/domain-4",
+     "detail": "Objectives 4.1–4.8, the largest domain."
+    },
+    {
+     "type": "task",
+     "title": "Domain 5 review and gap plan",
+     "min": 120,
+     "link": "#cert/quiz/domain-5",
+     "detail": "Objectives 5.1–5.6, then open the progress dashboard and list every objective below Reviewed."
+    }
+   ]
+  },
+  {
+   "n": 15,
+   "phase": "readiness",
+   "title": "Mock examination and remediation",
+   "outcome": "Sit a timed 90-question exam and repair what it reveals.",
+   "sessions": [
+    {
+     "type": "task",
+     "title": "Timed mock exam A",
+     "min": 90,
+     "link": "#cert/exam/a",
+     "detail": "Sit it in one 90-minute block, with no notes."
+    },
+    {
+     "type": "task",
+     "title": "Read every explanation",
+     "min": 120,
+     "link": "#cert/exam/a/result",
+     "detail": "Work through all explanations for wrong answers, including why your choice was tempting."
+    },
+    {
+     "type": "task",
+     "title": "Remediate your weakest domain",
+     "min": 120,
+     "link": "#cert/quiz/weak",
+     "detail": "Revisit the recommended lessons, then answer your weak-area questions."
+    },
+    {
+     "type": "task",
+     "title": "Remediate your next weakest domain",
+     "min": 120,
+     "link": "#cert/quiz/weak",
+     "detail": "Repeat with the next weakest objectives."
+    },
+    {
+     "type": "task",
+     "title": "Performance-based practice",
+     "min": 120,
+     "link": "#cert/pbq",
+     "detail": "Complete the configuration, log and sequencing exercises."
+    }
+   ]
+  },
+  {
+   "n": 16,
+   "phase": "readiness",
+   "title": "Final examination readiness",
+   "outcome": "Show readiness through performance, not by reaching the last week.",
+   "sessions": [
+    {
+     "type": "task",
+     "title": "Timed mock exam B",
+     "min": 90,
+     "link": "#cert/exam/b",
+     "detail": "A different 90 questions in one 90-minute block."
+    },
+    {
+     "type": "task",
+     "title": "Ports, acronyms and cryptography",
+     "min": 120,
+     "link": "#cert/sheets",
+     "detail": "Use the ports, acronym and cryptography revision sheets."
+    },
+    {
+     "type": "task",
+     "title": "IAM and attack recognition",
+     "min": 120,
+     "link": "#cert/sheets",
+     "detail": "Use the IAM and attack recognition sheets, then your weak-area questions."
+    },
+    {
+     "type": "task",
+     "title": "Security operations and incident response",
+     "min": 120,
+     "link": "#cert/sheets",
+     "detail": "Use the operations and incident response sheets, and retry any PBQ under 80%."
+    },
+    {
+     "type": "task",
+     "title": "Final readiness check",
+     "min": 60,
+     "link": "#cert/ready",
+     "detail": "Compare your demonstrated performance with the readiness checklist. Extend your study if any line is not met."
+    }
+   ]
+  }
+ ],
+ "sections": [
+  [
+   "",
+   "Overview"
+  ],
+  [
+   "curriculum",
+   "Curriculum"
+  ],
+  [
+   "design",
+   "Product design practice"
+  ],
+  [
+   "labs",
+   "Hands-on labs"
+  ],
+  [
+   "checks",
+   "Knowledge checks"
+  ],
+  [
+   "exams",
+   "Practice examinations"
+  ],
+  [
+   "ready",
+   "Exam readiness"
+  ],
+  [
+   "library",
+   "Reference library and glossary"
+  ],
+  [
+   "progress",
+   "Progress dashboard"
+  ]
+ ],
+ "sheets": [],
+ "modules": [
+  {
+   "n": 1,
+   "title": "IT and Networking Foundations",
+   "weeks": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "security": "Computers, operating systems, networks and protocols. Prerequisites, not exam domains.",
+   "design": "Understand how digital products communicate and depend on infrastructure."
+  },
+  {
+   "n": 2,
+   "title": "General Security Concepts",
+   "weeks": [
+    5
+   ],
+   "security": "CIA, AAA, Zero Trust, controls, change management and cryptography.",
+   "design": "Secure UX principles, trust, privacy and security trade-offs."
+  },
+  {
+   "n": 3,
+   "title": "Threats and Vulnerabilities",
+   "weeks": [
+    6,
+    7
+   ],
+   "security": "Attackers, attacks, malware, vulnerabilities and AI threats.",
+   "design": "Threat-aware product flows, AI safeguards and secure interactions."
+  },
+  {
+   "n": 4,
+   "title": "Security Architecture",
+   "weeks": [
+    8,
+    9
+   ],
+   "security": "Cloud, network architecture, data protection and resilience.",
+   "design": "Multi-tenant SaaS, secure product architecture and data flows."
+  },
+  {
+   "n": 5,
+   "title": "Security Operations",
+   "weeks": [
+    10,
+    11,
+    12
+   ],
+   "security": "Controls, IAM, monitoring, automation, incident response and investigation.",
+   "design": "Admin interfaces, permission models, security dashboards and recovery."
+  },
+  {
+   "n": 6,
+   "title": "Security Governance and Risk",
+   "weeks": [
+    13
+   ],
+   "security": "Governance, risk, third parties, compliance, audits and awareness.",
+   "design": "Privacy experiences, security requirements and vendor workflows."
+  },
+  {
+   "n": 7,
+   "title": "Exam Readiness",
+   "weeks": [
+    14,
+    15,
+    16
+   ],
+   "security": "Revision, performance-based practice and timed mock exams.",
+   "design": "Integrated technical and design case studies."
+  }
+ ]
+}

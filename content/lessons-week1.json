@@ -1,0 +1,747 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 1 lessons for the redesigned curriculum (version 5): from the basics in plain words to the people you design for and a first teardown. resourceId links to a resource id in the resource packs. lookFor says what a good answer to each check-yourself question includes. Security foundations are folded into the days that rely on them; \"retired\" lists the separate Foundations lessons this replaces, with where each answer moves.",
+ "lessons": [
+  {
+   "id": "w1-d1",
+   "week": 1,
+   "day": 1,
+   "date": "2026-11-02",
+   "title": "Welcome: identity, access and what security protects",
+   "inOneSentence": "Identity and access security answers three everyday questions (who are you, what may you do, and how do you get there safely?), and all of it exists to keep valuable things confidential, correct and available.",
+   "youCanNow": "Explain identity, access and accounting using the hotel example, name what Okta, Tailscale and Tigera each mainly handle, and say for an asset whether a failure would hurt its confidentiality, integrity or availability.",
+   "whyItMattersToADesigner": "Every product in this field, from Okta to Tailscale to Tigera, is a different answer to those three questions, and every security team decides what to protect first by asking which asset matters and which property would fail. With both lenses the field stops looking like a wall of acronyms, and you can argue for a design in the team's own terms.",
+   "keyIdeas": [
+    "Think of a hotel. At the front desk you show ID (who you are). You get a key card that opens only your room and the gym (what you may do). The hotel keeps a record of when each card was used (what happened). Computer security works the same way.",
+    "Identity: knowing who someone (or something, like a server) is. Example: signing in to your work email with your password and a code on your phone.",
+    "Access: deciding what that someone may do. Example: a designer can open Figma and the design drive, but not the payroll system.",
+    "Network: how you reach the thing safely, from home, a café or the office. Example: Tailscale lets your laptop reach a company server privately from anywhere.",
+    "What all of this protects: an asset is anything worth protecting, such as customer data, money, a company's reputation, a service that must stay up, even an admin's time. Security work starts by listing assets, not tools.",
+    "Security protects three properties of an asset, the CIA triad. Confidentiality: only the right people can see it (only HR reads salaries; a breach is a leak). Integrity: it stays correct and only the right people change it (no one quietly edits an invoice's bank details; a breach is tampering). Availability: people can use it when they need it (a breach is an outage).",
+    "The three pull against each other. Locking an account after five wrong passwords protects confidentiality but lets an attacker lock real users out, hurting availability. Good design finds the balance for the asset at stake.",
+    "Not every asset needs the same protection. A public marketing page needs integrity (no defacement) and availability, but not confidentiality. Matching protection to the asset is the start of risk thinking (Day 4).",
+    "The companies: identity providers (Okta, Microsoft Entra, Keycloak), password managers (1Password), network access (Tailscale, Cloudflare), cloud and Kubernetes security (Tigera, Wiz). You will meet all of these types in this course.",
+    "Why designers matter here: many security failures are design failures. People reuse passwords because rules are painful; admins give too much access because the right setting is hard to find; alerts are ignored because there are too many.",
+    "How this course works: each day has a lesson in plain words, a few short references and a small task. Weeks 1–2 are basics, Weeks 3–6 go deeper, Weeks 7–8 are advanced, and you finish with two portfolio case studies."
+   ],
+   "words": [
+    {
+     "term": "identity",
+     "meaning": "Who a person or a machine is, as a computer knows it, usually an account."
+    },
+    {
+     "term": "access",
+     "meaning": "What an identity is allowed to reach or do."
+    },
+    {
+     "term": "account",
+     "meaning": "The record a system keeps about one person or machine: name, sign-in details, permissions."
+    },
+    {
+     "term": "identity provider (IdP)",
+     "meaning": "The service that signs people in and tells other apps who they are, such as Okta or Google."
+    },
+    {
+     "term": "IAM",
+     "meaning": "Identity and access management: the tools and work of managing who can access what."
+    },
+    {
+     "term": "asset",
+     "meaning": "Anything of value that needs protecting: data, money, systems, reputation."
+    },
+    {
+     "term": "confidentiality",
+     "meaning": "Only authorised people can see the information."
+    },
+    {
+     "term": "integrity",
+     "meaning": "Information and systems stay correct and are changed only by the right people, in the right way."
+    },
+    {
+     "term": "availability",
+     "meaning": "People can use the system and its information when they need to."
+    },
+    {
+     "term": "CIA triad",
+     "meaning": "Confidentiality, integrity and availability: the three properties security protects."
+    },
+    {
+     "term": "data classification",
+     "meaning": "Labelling information by how sensitive it is, such as public, internal, confidential or restricted."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read this lesson's key ideas and picture the hotel example. For each CIA property, think of one product screen you have used that protects it.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Read an overview of identity and access management for the big picture.",
+     "minutes": 15,
+     "resourceId": "c5-ms-iam"
+    },
+    {
+     "text": "Read the overview of the NIST Cybersecurity Framework to see how organisations organise security work around assets and outcomes. Skim the six functions; do not study the details.",
+     "minutes": 15,
+     "resourceId": "w1-nist-csf"
+    },
+    {
+     "text": "Spot identity in your own day: list five times today you proved who you are or were allowed in or blocked (phone unlock, email, a door badge, a bank app). For each, write who checked and what you were allowed to do.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Pick one product you know (a banking app, Figma, a work chat). List five assets it holds. For each, write which CIA property would hurt most if it failed, and one sentence on why.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Find one feature in that product where two CIA properties pull against each other (for example account lock-out or session timeouts). Write how the product balances them and whether you would change it.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Start your glossary with today's words, in your own words, and make a portfolio folder for this course.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Start installing Docker Desktop, which you need on Day 3.",
+     "minutes": 10,
+     "resourceId": "c5-docker-desktop"
+    }
+   ],
+   "skipOrSkim": "Skip product comparisons, certification guides and debates about adding letters to the CIA triad. The goal is the big picture, the three properties and one page of your own notes.",
+   "checkYourself": [
+    "Using the hotel example, explain identity, access and records in your own words.",
+    "Name one security problem that is really a design problem.",
+    "What do Okta, Tailscale and Tigera each mainly help with?",
+    "Give an example of a failure of confidentiality, one of integrity and one of availability in a sign-in system.",
+    "Account lock-out after repeated wrong passwords: which property does it protect, and which can it harm?",
+    "Why should a security team list assets before choosing tools?"
+   ],
+   "lookFor": [
+    "The ID at the front desk proves who you are (identity). The key card opens only some doors (access). The hotel’s log of when the card was used is the record (accounting). Software does the same for accounts, apps and data.",
+    "For example: people reuse simple passwords because the rules are painful; admins give too much access because the right setting is hard to find; or important alerts are missed because there are too many.",
+    "Okta signs people in and manages their accounts (identity). Tailscale connects people and devices privately and decides who can reach what (network access). Tigera controls and shows traffic between services in Kubernetes clusters (cloud network security).",
+    "Confidentiality: password hashes or session tokens leak, so someone else can read them. Integrity: an attacker changes a user's recovery email without permission. Availability: the sign-in service is down, or users are locked out, so nobody can work.",
+    "It protects confidentiality by slowing down password guessing. It can harm availability, because an attacker who knows a username can lock the real person out on purpose. Rate limits, delays or step-up checks can balance the two.",
+    "Because protection should match what is at stake. Without knowing which assets matter and which property matters for each, teams spend effort on the wrong things and miss what would really hurt."
+   ],
+   "plannedMinutes": 125,
+   "level": "basics"
+  },
+  {
+   "id": "w1-d2",
+   "week": 1,
+   "day": 2,
+   "date": "2026-11-03",
+   "title": "Who you are and what you may do: sign-in basics",
+   "inOneSentence": "Authentication proves who you are, authorization decides what you may do, and accounting records what happened.",
+   "youCanNow": "Distinguish authentication, authorization and accounting, and identify the factor type (knowledge, possession or inherence) behind a given sign-in method.",
+   "whyItMattersToADesigner": "Sign-in is the part of security every user touches. Designers in this field design sign-in, recovery, MFA prompts and “you don’t have access” pages, and each one is a balance between safety and getting people to their work.",
+   "keyIdeas": [
+    "Authentication (AuthN) answers “who are you?”. Example: typing your password and approving a prompt on your phone.",
+    "Authorization (AuthZ) answers “what may you do?”. Example: you can view the shared budget sheet but not edit it.",
+    "Accounting answers “what happened?” by recording activity, like the sheet’s history showing who changed cell B4 and when. A security audit log is related but broader: it can record security-relevant events, such as sign-ins or permission changes, without being the same thing as AAA’s resource-usage accounting.",
+    "There are three kinds of proof, called factors: something you know (a password), something you have (your phone, a security key) and something you are (a fingerprint). MFA means using two or more kinds.",
+    "A credential is your proof (a password, a passkey). A session is the time you stay signed in after proving it. A token is the digital ticket an app carries to show you already signed in, like a cinema wristband that lets you back in without buying a new ticket.",
+    "Passkeys replace passwords with a key stored on your device and unlocked with your face, fingerprint or PIN. They cannot be phished the way passwords can. You will design for them in Week 4.",
+    "Design tension: every extra check adds safety and friction. Good products ask for more proof only when the risk is higher, for example a new device or a sensitive action."
+   ],
+   "words": [
+    {
+     "term": "authentication (AuthN)",
+     "meaning": "Proving who you are."
+    },
+    {
+     "term": "authorization (AuthZ)",
+     "meaning": "Deciding what you are allowed to do."
+    },
+    {
+     "term": "accounting",
+     "meaning": "Recording what happened, so it can be checked later."
+    },
+    {
+     "term": "factor",
+     "meaning": "A kind of proof: something you know, have or are."
+    },
+    {
+     "term": "MFA",
+     "meaning": "Multi-factor authentication: using two or more kinds of proof."
+    },
+    {
+     "term": "credential",
+     "meaning": "The proof you use to sign in, such as a password or a passkey."
+    },
+    {
+     "term": "session",
+     "meaning": "The period you stay signed in after proving who you are."
+    },
+    {
+     "term": "token",
+     "meaning": "A digital ticket an app uses to show you already signed in."
+    },
+    {
+     "term": "passkey",
+     "meaning": "A sign-in key stored on your device, unlocked by fingerprint, face or PIN; it replaces a password."
+    },
+    {
+     "term": "audit log",
+     "meaning": "A record of security-relevant events, such as sign-ins or permission changes; related to AAA accounting but broader."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read authentication versus authorization.",
+     "minutes": 10,
+     "resourceId": "c5-okta-authn-authz"
+    },
+    {
+     "text": "Read about the ways people authenticate.",
+     "minutes": 15,
+     "resourceId": "c5-ms-authn"
+    },
+    {
+     "text": "Read NIST’s short explanation of MFA, then CISA’s public version. Notice how plainly CISA writes.",
+     "minutes": 15,
+     "resourceId": "c5-nist-mfa"
+    },
+    {
+     "text": "Watch the identity and access management videos (section 4.6) for a second explanation; 45 minutes is enough.",
+     "minutes": 45,
+     "resourceId": "w1-messer-iam"
+    },
+    {
+     "text": "Read about password creation as a usability problem.",
+     "minutes": 10,
+     "resourceId": "c5-nng-passwords"
+    },
+    {
+     "text": "Audit three sign-ins you use (a bank, your email, a streaming app): which factors, how long the session lasts, how you recover a lost password, and one moment of friction in each.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip how tokens are built (JWT, OAuth flows) and the cryptography of passkeys. They come in Week 4.",
+   "checkYourself": [
+    "Explain authentication, authorization and accounting with one example from your own life.",
+    "What is the difference between a credential, a session and a token?",
+    "Why do good products not ask for MFA on every single action?"
+   ],
+   "lookFor": [
+    "For example, at work: you sign in with a password and a phone prompt (authentication), you can open the design drive but not payroll (authorization), and the drive records who opened which file (accounting).",
+    "The credential is the proof you give (a password or passkey). The session is how long you stay signed in afterwards. The token is the ticket the app carries during that session to show you already proved who you are.",
+    "Each check adds friction, and people find ways around rules that slow them down. Asking for more proof only when risk is higher (a new device, a payment, an admin change) keeps both safety and speed."
+   ],
+   "plannedMinutes": 120,
+   "level": "basics"
+  },
+  {
+   "id": "w1-d3",
+   "week": 1,
+   "day": 3,
+   "date": "2026-11-04",
+   "title": "Exercise 1: be the IT admin in Keycloak",
+   "inOneSentence": "You will run a real identity provider on your laptop, set up a small company in it, and sign in as one of its employees.",
+   "youCanNow": "Create users, groups and roles in a running Keycloak instance, and assign access through group membership rather than per-user edits.",
+   "whyItMattersToADesigner": "Admins are one of your main users, and their world is screens full of users, groups, roles and settings. Doing their job once, with your designer’s eye open, teaches you their vocabulary and shows you exactly where admin tools confuse people.",
+   "keyIdeas": [
+    "Keycloak is a free identity provider, like a small Okta you run yourself. Companies use it to sign people in to their apps.",
+    "A realm is one company or space in Keycloak. Example: a realm called “acme” for a fictional 40-person company.",
+    "Users are the people. Groups collect people who share something, like “Design” or “Sales”. Roles are what someone may do, like “viewer” or “admin”.",
+    "Best practice is to give roles to groups, not to each person. When someone joins Design, they get Design’s access automatically. This is how admins manage hundreds of people.",
+    "A client is an app that uses Keycloak to sign people in. The getting-started guide includes a small test app (the account console) so you can sign in as an employee.",
+    "As a designer, watch for three things: words you did not understand, places where you were unsure what a setting would do, and anything you could break by mistake."
+   ],
+   "words": [
+    {
+     "term": "Keycloak",
+     "meaning": "A free, open-source identity provider you can run yourself."
+    },
+    {
+     "term": "realm",
+     "meaning": "In Keycloak, a separate space for one company or app, with its own users and settings."
+    },
+    {
+     "term": "user",
+     "meaning": "One person’s account."
+    },
+    {
+     "term": "group",
+     "meaning": "A set of users who share access, such as a team."
+    },
+    {
+     "term": "role",
+     "meaning": "A named permission, such as viewer or admin."
+    },
+    {
+     "term": "client",
+     "meaning": "An app that relies on the identity provider to sign people in."
+    },
+    {
+     "term": "Docker",
+     "meaning": "A tool that runs software in a ready-made box called a container, so you do not install it piece by piece."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Follow the Keycloak getting-started guide with Docker: start Keycloak, create a realm and a user, and sign in to the account console as that user.",
+     "minutes": 30,
+     "resourceId": "w1-keycloak-docker"
+    },
+    {
+     "text": "Set up the company: create 6 users in 3 groups (Design, Sales, IT), create two roles (viewer, admin), and give roles to groups rather than to people.",
+     "minutes": 45,
+     "resourceId": null
+    },
+    {
+     "text": "Look up anything confusing in the Keycloak admin guide (users, groups and roles chapters only).",
+     "minutes": 15,
+     "resourceId": "w1-keycloak-admin"
+    },
+    {
+     "text": "Sign in as a Design user and as an IT user. What does each see? Take screenshots.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Write five designer notes: confusing words, unclear settings and risky buttons, each with a screenshot.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip themes, identity brokering, federation and client scopes. Users, groups and roles are enough today.",
+   "checkYourself": [
+    "What is the difference between a group and a role?",
+    "Why do admins give roles to groups instead of to each person?",
+    "Which moment in the admin console would most confuse an IT admin at a small company, and why?"
+   ],
+   "lookFor": [
+    "A group is a set of people (the Design team). A role is a permission (may view, may administer). You attach roles to groups, so everyone in the group gets those permissions.",
+    "It scales and stays correct: when someone joins or leaves a team, their access changes with one action, instead of editing many separate settings that are easy to forget.",
+    "A good answer names a specific screen or word, with a screenshot, says what the admin probably expected, and what happened instead."
+   ],
+   "plannedMinutes": 120,
+   "level": "basics"
+  },
+  {
+   "id": "w1-d4",
+   "week": 1,
+   "day": 4,
+   "date": "2026-11-05",
+   "title": "Accounts over time, what can go wrong, and how risks get ranked",
+   "inOneSentence": "People join, change teams and leave, and their access must change with them; threat modelling asks what could go wrong, and risk thinking decides what to fix first.",
+   "youCanNow": "Walk through a joiner-mover-leaver scenario and name where access was left over, threat-model a sign-in with the four questions and STRIDE, then write one risk as a full scenario, rate its likelihood and impact, and choose and justify a response.",
+   "whyItMattersToADesigner": "Many real breaches start with access that should have been removed or a password that was stolen. Designers who understand the account lifecycle and basic threats design better invitations, offboarding flows, access reviews and warnings. And every security requirement you receive is a risk decision someone made: if you can read the scenario behind it, you can propose a design that reduces the same risk with less friction.",
+   "keyIdeas": [
+    "Joiner: someone new starts and needs the right access on day one. Example: Sam joins Sales and needs email, the CRM and the sales drive.",
+    "Mover: someone changes job inside the company. Example: Jordan moves from Sales to Finance. The risk: Jordan gets finance access but keeps sales access too. Over years, movers collect far more access than they need.",
+    "Leaver: someone leaves and all access must end, quickly. Example: a contractor’s project ends, but their account stays active for months: a stale account.",
+    "Least privilege means giving each person only the access they need, for as long as they need it. It is easy to say and hard to design for, which is why access reviews exist.",
+    "Phishing is tricking someone into giving away their password or approving a sign-in. Example: an email that looks like IT asking you to “confirm your account”. Stolen and phished credentials appear near the top of most industry incident reports, which is why phishing-resistant sign-in (Week 4) matters.",
+    "Threat modelling asks four questions: What are we working on? What can go wrong? What are we going to do about it? Did we do a good job? STRIDE is a checklist for the second question: spoofing, tampering, repudiation, information disclosure, denial of service and elevation of privilege.",
+    "Threat, vulnerability, risk: a threat is something bad that could happen (a thief), a vulnerability is a weakness (an unlocked window), and risk is how likely and how harmful it is together. The rest of this lesson turns that into decisions.",
+    "Risk is a scenario, not a single word: a threat exploits a vulnerability to harm an asset, with some likelihood and some impact. Example: an attacker (threat) uses a leaked password (vulnerability) to read customer records (asset), which is fairly likely and very harmful.",
+    "Likelihood is how plausible the scenario is, given who might try and how hard it is. Impact is how much harm it would do: money, safety, trust, legal duties. Both depend on context: the same weakness is minor on a test server and serious in production.",
+    "Teams rank risks, often on a simple grid of likelihood by impact, because time and money are limited. A rough, honest ranking beats a precise-looking number nobody can defend.",
+    "There are four responses. Reduce (mitigate): add controls. Accept: knowingly live with it. Transfer: share it, for example through insurance or a supplier contract. Avoid: stop doing the risky thing. Accepting a risk is a valid decision when it is explicit and owned.",
+    "Residual risk is what is left after controls. No control makes risk zero, so good teams say what remains and who owns it."
+   ],
+   "words": [
+    {
+     "term": "joiner, mover, leaver",
+     "meaning": "The three moments of an account’s life: starting, changing jobs and leaving."
+    },
+    {
+     "term": "stale account",
+     "meaning": "An account no longer needed or used, but still active."
+    },
+    {
+     "term": "least privilege",
+     "meaning": "Giving only the access someone needs, only for as long as they need it."
+    },
+    {
+     "term": "access review",
+     "meaning": "A regular check where a manager confirms who should keep which access."
+    },
+    {
+     "term": "phishing",
+     "meaning": "Tricking someone into giving away their sign-in or approving a fake request."
+    },
+    {
+     "term": "threat model",
+     "meaning": "A structured look at what could go wrong with a system and what to do about it."
+    },
+    {
+     "term": "STRIDE",
+     "meaning": "A checklist of six kinds of threat: spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege."
+    },
+    {
+     "term": "vulnerability",
+     "meaning": "A weakness that a threat could use."
+    },
+    {
+     "term": "threat",
+     "meaning": "Something that could cause harm: an attacker, an insider, a mistake or a natural event."
+    },
+    {
+     "term": "risk",
+     "meaning": "A scenario where a threat exploits a vulnerability to harm an asset, judged by likelihood and impact."
+    },
+    {
+     "term": "likelihood",
+     "meaning": "How plausible a harmful scenario is in a given context."
+    },
+    {
+     "term": "impact",
+     "meaning": "How much harm a scenario would cause if it happened."
+    },
+    {
+     "term": "mitigate",
+     "meaning": "Reduce a risk by adding controls."
+    },
+    {
+     "term": "risk acceptance",
+     "meaning": "Knowingly deciding to live with a risk, with a named owner."
+    },
+    {
+     "term": "residual risk",
+     "meaning": "The risk that remains after controls are in place."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the Threat Modeling Manifesto.",
+     "minutes": 15,
+     "resourceId": "w1-tmm"
+    },
+    {
+     "text": "Read the beginner’s guide to threat modelling, up to the four questions and STRIDE.",
+     "minutes": 25,
+     "resourceId": "w1-shostack"
+    },
+    {
+     "text": "Read what phishing is.",
+     "minutes": 10,
+     "resourceId": "c5-ms-phishing"
+    },
+    {
+     "text": "Open NIST SP 800-30 Rev. 1. Read the abstract and find the generic risk model figure (threat source, threat event, vulnerability, impact). You do not need the rest.",
+     "minutes": 20,
+     "resourceId": "p-nist-800-30"
+    },
+    {
+     "text": "In your Keycloak company, act out the lifecycle: add Sam to Sales (joiner), move Jordan from Sales to Finance (mover) and disable a contractor (leaver). Note where old access could be left behind.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Threat-model the sign-in of one app you use: answer the four questions on one page and list two STRIDE threats.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Take the threats from your sign-in threat model and write five risk scenarios as full sentences: threat, vulnerability, asset, impact.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Place the five on a 3 by 3 grid (low, medium, high likelihood by impact). For the top two, pick a response (reduce, accept, transfer, avoid) and write one sentence on why.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "For one 'reduce' decision, sketch the user-facing control it would need and note the friction it adds. Is the friction worth the risk reduced?",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Add today’s words to your glossary.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the long threat-modelling methods (attack trees, PASTA), quantitative risk methods (annualised loss, Monte Carlo models) and certification-style risk frameworks. Designers need to ask what could go wrong and question risk decisions, not run formal assessments.",
+   "checkYourself": [
+    "Why are movers a risk?",
+    "What are the four questions of threat modelling?",
+    "Threat, vulnerability and risk: explain the difference with a house example.",
+    "Rewrite 'phishing is a risk' as a proper risk scenario.",
+    "What are the four ways to respond to a risk? Give an example of each.",
+    "Why can a team reasonably accept a risk instead of fixing it?"
+   ],
+   "lookFor": [
+    "When people change jobs they often get new access without losing the old access. Over time they can reach much more than they need, so a stolen account or a mistake does more damage.",
+    "What are we working on? What can go wrong? What are we going to do about it? Did we do a good job?",
+    "A thief is the threat, an unlocked window is the vulnerability, and the risk is how likely it is that a thief uses that window and how much they could take.",
+    "For example: an attacker (threat) sends a convincing fake sign-in page to staff, and some staff can be tricked into entering their password and one-time code (vulnerability), letting the attacker read company email (asset); plausible for any company with email, with high impact if an executive is affected.",
+    "Reduce: require phishing-resistant passkeys. Accept: allow an old internal tool to keep password sign-in until it is retired next quarter, with an owner. Transfer: buy cyber insurance or make a supplier contractually responsible. Avoid: stop storing card numbers at all and use a payment provider.",
+    "Because fixing it might cost more than the harm it prevents, or the likelihood is very low, or a bigger risk needs the effort first. Acceptance is fine when it is a deliberate, recorded decision with someone accountable, not an oversight."
+   ],
+   "plannedMinutes": 210,
+   "level": "basics"
+  },
+  {
+   "id": "w1-d5",
+   "week": 1,
+   "day": 5,
+   "date": "2026-11-06",
+   "title": "The people you design for, and the people you work with",
+   "inOneSentence": "Security products have several kinds of users, and the person who buys the product is often not the person who uses it every day.",
+   "youCanNow": "List the distinct stakeholders in a security product (end users, admins, buyers, security teams) and explain why their goals can conflict.",
+   "whyItMattersToADesigner": "In consumer apps one person signs up, uses and pays. In identity and network security, an IT admin sets things up, employees just want to get to work, a security lead worries about risk, and a CISO signs the contract. Good designs help each of them, and interviewers will ask how you balanced them.",
+   "keyIdeas": [
+    "The IT admin sets up and runs the tool: adds people, connects apps, answers “I can’t get in” tickets. Example: Priya, the only IT person at a 60-person startup, doing it between other jobs.",
+    "The security engineer decides the rules and investigates when something looks wrong. They want to be sure, and they read logs.",
+    "The platform or DevOps engineer connects servers, clusters and pipelines. They prefer a command line or code to a form, and they automate everything.",
+    "The employee (end user) is everyone else. They meet the product only when it is in their way: a sign-in, a prompt, a blocked page. Success for them is not noticing it.",
+    "The buyer (CISO, Head of IT) cares about risk, audits and cost. They judge the product in a demo and a report, not in daily use.",
+    "Inside the company you will work with product managers, engineers, security researchers, solution engineers (who run demos and hear customers’ complaints first), support and technical writers. Solution engineers and support are your fastest route to real user problems.",
+    "One design often serves two people at once: a rule an admin writes becomes a message an employee sees. Always ask “who sees the result of this?”"
+   ],
+   "words": [
+    {
+     "term": "persona",
+     "meaning": "A short, research-based description of a type of user and what they need."
+    },
+    {
+     "term": "end user",
+     "meaning": "The person who uses the product to do their real job, without managing it."
+    },
+    {
+     "term": "admin",
+     "meaning": "The person who sets up and manages the product for others."
+    },
+    {
+     "term": "CISO",
+     "meaning": "Chief Information Security Officer: the leader responsible for security, and often the buyer."
+    },
+    {
+     "term": "buyer versus user",
+     "meaning": "The person who chooses and pays is often not the person who uses the product every day."
+    },
+    {
+     "term": "solution engineer",
+     "meaning": "A technical person on the sales team who runs demos and helps customers set up."
+    },
+    {
+     "term": "jobs to be done",
+     "meaning": "What a person is trying to get done, in their words, regardless of the tool."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about personas and what makes them useful.",
+     "minutes": 15,
+     "resourceId": "c5-nng-persona"
+    },
+    {
+     "text": "Skim Businesses at Work for which tools companies run and who sets them up.",
+     "minutes": 15,
+     "resourceId": "c5-okta-baw"
+    },
+    {
+     "text": "Exercise 2, part 1: on one page, draw the five people above around one product (pick Tailscale or Okta). For each, write one job, one worry, and where they meet the product.",
+     "minutes": 45,
+     "resourceId": null
+    },
+    {
+     "text": "Exercise 2, part 2: read two product designer job posts from identity or network security companies. List the colleagues and users they mention, and add them to your map.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Write one sentence: “If I design an access rule screen, the people who see the result are …”.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip long persona templates and posters. A people map on one page is enough; you will refine it with real interviews later.",
+   "checkYourself": [
+    "Who uses an access product every day, and who pays for it? Why does the difference matter for design?",
+    "Name two colleagues who could tell you about real user problems quickly.",
+    "What does success look like for an employee who meets a security product?"
+   ],
+   "lookFor": [
+    "The admin and the employee use it every day; the CISO or Head of IT usually decides and pays. The buyer judges it in demos and reports, the user lives with it, so you need to design for both: clear daily work and evidence that the risk is handled.",
+    "Solution engineers and support hear customer problems first: they see setup failures and “I can’t get in” tickets every week. Product managers and security researchers are also good sources.",
+    "They get to their work without noticing it. A good security product for employees is fast, quiet and, when it does block them, says why and what to do next."
+   ],
+   "plannedMinutes": 120,
+   "level": "basics"
+  },
+  {
+   "id": "w1-d6",
+   "week": 1,
+   "day": 6,
+   "date": "2026-11-07",
+   "title": "Admin console teardown: usability, controls and safe defaults",
+   "inOneSentence": "A teardown is a short, structured review of a real product screen: what works, what hurts and what you would change; for a security product it also asks which controls the screen gives and whether its defaults are safe.",
+   "youCanNow": "Identify usability problems in a real admin console, classify the security controls it offers as preventive, detective or corrective, spot an insecure default, and write it up as evidence-based design observations.",
+   "whyItMattersToADesigner": "Teardowns are the fastest way to learn a domain's design patterns and to show hiring managers you can judge a complex product fairly. You will do one each week; this one is the admin console of the identity system you used on Day 3. In security products many controls are interface decisions (a default, a warning, a confirmation, an audit view), so a good teardown looks at those too.",
+   "keyIdeas": [
+    "Pick one task, not the whole product. Example: “an admin adds a new employee and gives them access to one app.”",
+    "Walk the task as the person from your people map would. Write down every step, every term you did not understand, and every moment you were unsure.",
+    "Use heuristics as a lens: does the screen show what will happen (visibility), use the admin’s words (match the real world), and make mistakes recoverable (undo, confirm)?",
+    "Security consoles have their own patterns: dangerous actions are separated, changes are logged, and lists can be very long. Notice how the product handles each.",
+    "A control is anything that reduces risk (Day 4). Preventive controls stop harm (MFA, a role that limits access). Detective controls notice it (alerts, audit logs). Corrective controls limit or undo it (backups, revoking a session). Every control has limits, so ask of each one: how does it fail, and what happens then?",
+    "Defence in depth means layering controls so one failure is not fatal. Example for stolen passwords: phishing-resistant sign-in, device checks, least-privilege access, unusual sign-in alerts and quick session revocation.",
+    "Least privilege (Day 4) is a control too: smaller access means less harm when an account is misused. So is separation of duties: no single person can complete a sensitive action alone.",
+    "Secure by default: the product is safe without the customer changing settings. Examples: MFA on for admins from the start, no shared default passwords, logging included in the base price, least-privilege roles as the starting point.",
+    "Security requirements turn risks into testable statements: 'Admins must use phishing-resistant MFA' or 'A deleted user's sessions end within five minutes.' Good requirements say what, not which vendor.",
+    "Keep it fair: one thing it does well, three problems with evidence (a screenshot), and one change you would make first and why.",
+    "Sharing short, honest notes in public (a LinkedIn post, a blog) builds your reputation in a new domain faster than waiting until you feel like an expert."
+   ],
+   "words": [
+    {
+     "term": "teardown",
+     "meaning": "A short critique of a real product, with screenshots and a recommendation."
+    },
+    {
+     "term": "heuristic",
+     "meaning": "A rule of thumb for good usability, used to spot problems."
+    },
+    {
+     "term": "heuristic evaluation",
+     "meaning": "Checking an interface against a list of heuristics."
+    },
+    {
+     "term": "admin console",
+     "meaning": "The web app where admins manage users, devices, apps and rules."
+    },
+    {
+     "term": "destructive action",
+     "meaning": "An action that removes or breaks something, like deleting a user or revoking access."
+    },
+    {
+     "term": "control",
+     "meaning": "A safeguard that reduces risk: technical, administrative or physical."
+    },
+    {
+     "term": "preventive control",
+     "meaning": "A control that stops harm from happening, such as MFA or an access rule."
+    },
+    {
+     "term": "detective control",
+     "meaning": "A control that notices harm, such as an alert or an audit log."
+    },
+    {
+     "term": "corrective control",
+     "meaning": "A control that limits or undoes harm, such as a backup or revoking a session."
+    },
+    {
+     "term": "defence in depth",
+     "meaning": "Layering several controls so that one failing does not lead to harm."
+    },
+    {
+     "term": "secure by default",
+     "meaning": "A product that is safe out of the box, without the customer changing settings."
+    },
+    {
+     "term": "separation of duties",
+     "meaning": "Splitting a sensitive task so no single person can complete it alone."
+    },
+    {
+     "term": "security requirement",
+     "meaning": "A testable statement of what a system must do to reduce a risk."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the 10 usability heuristics.",
+     "minutes": 15,
+     "resourceId": "c5-nng-heuristics"
+    },
+    {
+     "text": "Read how to run a small heuristic evaluation.",
+     "minutes": 10,
+     "resourceId": "c5-nng-heuristic-eval"
+    },
+    {
+     "text": "Read CISA's Secure by Design page, including the principles and the examples of secure-by-default practices.",
+     "minutes": 25,
+     "resourceId": "w8-cisa-sbd"
+    },
+    {
+     "text": "Walk one task in the Keycloak admin console (create a user and give them a role) and take a screenshot at each step. As you go, note every control you see (roles, confirmations, logs) and every default setting.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Label each control you noted as preventive, detective or corrective. Check two Keycloak defaults (for example whether a password policy or MFA is on for new users), and note one insecure default and the safer choice.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Take one risk from Day 4. Design five layered controls for it in Keycloak terms, at least one of each kind (preventive, detective, corrective), and say how each one could fail.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Write the teardown: one strength, three problems with screenshots and the heuristic each breaks, one insecure default with the safer alternative, and one change you would make first.",
+     "minutes": 40,
+     "resourceId": null
+    },
+    {
+     "text": "Write two security requirements for your design as testable sentences.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Write a short post or note about what you learned in Week 1, and add your teardown to your portfolio folder.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not review the whole console, redesign it in Figma or study control catalogues such as NIST SP 800-53 today. One task, clear notes and a security lens are worth more.",
+   "checkYourself": [
+    "What makes a teardown fair and useful rather than just a list of complaints?",
+    "Name one pattern that security admin consoles need more than most apps.",
+    "Is an audit log preventive, detective or corrective? Can it be more than one?",
+    "Why is 'we have MFA' not enough as a defence against account takeover?",
+    "Give one example of a secure default and one example of an insecure default in software you know."
+   ],
+   "lookFor": [
+    "It focuses on one task, walks it as a real user, backs each problem with a screenshot and a reason (a heuristic), says what works, and ends with one clear first change.",
+    "Examples: separating and confirming destructive actions such as deleting users; showing the effect of a change before saving it; an audit log of who changed what; handling very long lists of users or devices.",
+    "Mainly detective: it records what happened so people can notice and investigate. It can also deter misuse (people behave differently when actions are logged) and support correction by showing what to undo.",
+    "Because MFA has its own failure modes: codes and push prompts can be phished or fatigue-bombed, recovery can bypass it, and a stolen session token skips it. Layers such as phishing-resistant methods, device checks, least privilege, alerts and session revocation cover those gaps.",
+    "Secure default: a cloud storage bucket that is private unless you choose to share it, or MFA required for new admin accounts. Insecure default: a device shipped with a shared default password, or a link-sharing setting that starts as 'anyone with the link'."
+   ],
+   "plannedMinutes": 205,
+   "level": "basics"
+  }
+ ],
+ "retired": [
+  {
+   "id": "sf-1",
+   "into": "w1-d1",
+   "answers": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "sf-2",
+   "into": "w1-d4",
+   "answers": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "sf-4",
+   "into": "w1-d6",
+   "answers": [
+    2,
+    3,
+    4
+   ]
+  }
+ ]
+}

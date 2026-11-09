@@ -1,0 +1,321 @@
+# Week 1: computer and IT fundamentals. Foundation material, not exam objectives.
+
+@lesson w1-1
+title: What a computer actually is: hardware, CPU, memory and storage
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: none
+out: Name the main hardware parts of a computer and say what each one does.
+out: Explain the difference between memory and storage, and why it matters when power is lost.
+out: Describe the input, process, store, output cycle using an everyday task.
+why: Every security topic ends up on real hardware. Encryption keeps data safe on a disk, attackers hunt for passwords left in memory, and forensic investigators copy storage and memory in different ways because they behave differently. You cannot protect something you cannot picture.
+plain: A computer is a machine that follows instructions on data. It takes something in (a key press, a file, a network message), works on it, keeps some of it, and gives something back (text on screen, a saved file, a reply).
+plain: Think of a kitchen. The cook is the CPU, doing the work one step at a time, very quickly. The counter is RAM: fast and within reach, but cleared at the end of the day. The pantry is storage: slower to reach, but its contents stay when the lights go out. The recipe is software.
+tech: The central processing unit (CPU) runs instructions. A modern CPU has several cores, and each core can work on its own stream of instructions. Random access memory (RAM) holds the programs and data in active use. RAM is volatile, which means its contents disappear when power is removed.
+tech: Storage is non-volatile: a solid-state drive (SSD) or hard disk drive (HDD) keeps data with the power off. A network interface card (NIC) connects the computer to a network. The motherboard links the parts together, and the power supply feeds them. Firmware, such as the BIOS or its modern replacement UEFI, is software stored on a chip that starts the machine before the operating system loads.
+tech: Everything inside the machine is stored as bits, each a 0 or a 1. Eight bits make one byte. One byte can represent 256 different values, from 0 to 255, a range you will meet again with IP addresses.
+table: Where data lives | Component | Speed | Survives power loss? | Why security cares
+| CPU registers and cache | Fastest | No | Holds data being worked on right now
+| RAM | Very fast | No | Can contain passwords and encryption keys in plain form while in use
+| SSD or HDD | Slower | Yes | Deleted files can often be recovered, so disks need encryption and proper disposal
+| Removable media such as USB drives | Slower | Yes | Easy to lose, easy to carry malware or data out
+term: Hardware == The physical parts of a computer.
+term: Software == Instructions that tell hardware what to do.
+term: CPU == Central processing unit: the part that executes instructions.
+term: RAM == Random access memory: fast working space that is cleared when power is lost.
+term: Volatile == Lost when the power goes off.
+term: Storage == Long-term, non-volatile space for files, such as an SSD.
+term: NIC == Network interface card: the hardware that connects a device to a network.
+term: Firmware == Low-level software stored on a chip, which runs before the operating system.
+term: BIOS and UEFI == Firmware that starts a computer. UEFI is the modern replacement for the older Basic Input/Output System.
+term: Bit and byte == A bit is a single 0 or 1. A byte is eight bits.
+eg: Laptop theft: without disk encryption, a thief can remove the SSD and read the files directly. The password that protects the sign-in screen does not protect the disk itself.
+eg: Incident response: investigators capture memory before shutting a compromised machine down, because RAM may hold running malware and encryption keys that vanish with the power.
+walk: Follow one keystroke
+- You press the letter A. The keyboard sends a signal to the computer. That is input.
+- The operating system receives it and hands it to the program in front of you.
+- The CPU runs the program's instructions, and RAM holds the document you are typing.
+- The program asks for the letter to be drawn, and the screen shows it. That is output.
+- You press Save. The document is written from RAM to storage, where it now survives a power cut.
+lab: Find your own hardware | 25 | Your own computer
+do: Windows: open Settings, then System, then About. Then press Ctrl+Shift+Esc to open Task Manager and choose Performance.
+do: macOS: open the Apple menu, then About This Mac. Then open Activity Monitor from Applications, then Utilities.
+do: Write down your CPU model and core count, your total RAM, and your storage size and type.
+do: Open several browser tabs and watch memory use rise. Close them and watch it fall.
+expect: You have a short written inventory of your machine, and you saw RAM use change as programs opened and closed.
+explain: Memory use changes immediately because RAM holds what is active. Your storage figure stays nearly the same because closing a tab does not delete anything from the disk.
+pass: You recorded CPU, RAM and storage values for your machine.
+pass: You can say in one sentence why RAM use changed but storage use did not.
+scenario: A company laptop is stolen from a car. It was powered off, and it has a sign-in password but no disk encryption. What can the thief do, and which part of the computer is the concern?
+answer: The concern is storage. The sign-in password only controls access through the running operating system. A thief can remove the SSD or start the laptop from other media and read the files. RAM is not the concern here because it was cleared when the laptop lost power. Full disk encryption would address this risk.
+q none mcq e | Volatile memory | Which component loses its contents when the power is turned off?
++ RAM :: RAM is volatile, so it needs power to keep its contents.
+- SSD :: An SSD is non-volatile storage and keeps data with the power off.
+- Hard disk drive :: A hard disk stores data magnetically and keeps it without power.
+- USB flash drive :: A flash drive is non-volatile, which is why it can carry files between computers.
+q none mcq m | Memory versus storage | An investigator wants any encryption keys that are currently in use on a running server. Where are those keys most likely to be found, and what follows from that?
++ In RAM, so memory should be captured before the server is shut down :: Keys in active use sit in memory, which is lost when power is removed.
+- On the SSD, so the server should be shut down first :: Shutting down destroys the contents of RAM, which is exactly where keys in use are held.
+- In the CPU's power supply, so it should be removed :: A power supply stores no data.
+- In the NIC, so the network cable should be replaced :: A NIC moves network traffic and does not hold encryption keys in use by applications.
+q none tf e | Firmware | True or false: firmware runs before the operating system loads.
++ True :: Firmware such as UEFI initializes the hardware and then starts the operating system.
+- False :: The operating system cannot start until firmware has prepared the hardware.
+q none match e | Computer components | Match each component to its job.
+= CPU => Executes instructions
+= RAM => Holds active programs and data
+= SSD => Keeps files long term
+= NIC => Connects the device to a network
+why: Each part has one main job. Security questions often depend on knowing which part holds the data in question.
+mistake: Thinking a sign-in password encrypts the disk. It only controls who can use the running system unless disk encryption is enabled.
+mistake: Using memory and storage as if they mean the same thing. RAM is working space, while storage is long-term.
+sum: A computer takes input, processes it, stores some of it and produces output.
+sum: The CPU does the work, RAM is volatile working space and storage keeps data without power.
+sum: Where data sits decides how it can be stolen and how it must be protected.
+ref: nist-glossary r
+ref: nist-800-86 s
+card: What does volatile mean? == The data is lost when power is removed. RAM is volatile.
+card: Why capture memory before powering off a compromised system? == RAM can hold running malware and keys in use, and it is lost at power-off.
+
+@lesson w1-2
+title: Operating systems, programs, processes and services
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w1-1
+out: Explain what an operating system does and compare Windows, Linux and macOS at a basic level.
+out: Tell the difference between an application, a process and a service.
+out: Describe how files, users and permissions decide who can do what on a system.
+why: Attackers run malicious processes, hide inside legitimate services and abuse accounts with too many permissions. Defenders look for exactly those things. Almost every log entry you will ever read names a user, a process or a file.
+plain: The operating system (OS) is the manager of the computer. Programs do not touch the hardware directly. They ask the OS for memory, for files and for the network, and the OS decides whether to allow it.
+plain: An application is like a recipe book on the shelf. A process is the recipe actually being cooked right now. You can open the same application twice and get two separate processes. A service is a process that works in the background without anyone looking at it, like the building's heating.
+tech: The kernel is the core of the OS. It controls memory, the CPU and devices, and it separates programs from one another. Programs run in user space with limited rights and ask the kernel to do privileged work through system calls. A process has its own ID, called a PID, and runs on behalf of a user account, which decides what it may touch.
+tech: A service on Windows, or a daemon on Linux, starts in the background, often at boot. Files are organized in a hierarchy of folders. Each file has an owner and permissions. A user account represents a person or a program, and a group collects accounts so that permissions can be granted once rather than person by person.
+tech: Windows dominates business desktops and is common on servers, usually centrally managed. Linux is open source, comes in many distributions and runs most internet servers and cloud workloads. macOS is Apple's Unix-based system for its own hardware. The administrator account is called Administrator on Windows and root on Linux and macOS.
+table: Comparing operating systems | Feature | Windows | Linux | macOS
+| Typical use | Business desktops and servers | Servers, cloud, security tools | Desktops and laptops
+| Top administrator | Administrator or SYSTEM | root | root, with admin users using sudo
+| Background programs | Services | Daemons | Daemons, managed by launchd
+| Log location | Event Viewer | /var/log and journalctl | Console app and the log command
+term: Operating system == Software that manages hardware and gives programs a safe way to use it.
+term: Kernel == The core of the operating system, which controls hardware and separates programs.
+term: Application == A program installed on the system, waiting to be run.
+term: Process == A running instance of a program.
+term: Service or daemon == A background process that usually starts automatically.
+term: PID == Process identifier: the number the OS gives each running process.
+term: User account == An identity that the OS uses to decide what is allowed.
+term: Group == A named collection of accounts that share permissions.
+term: Permission == A rule stating what an account may do with a file or other resource.
+term: root and Administrator == The most powerful accounts on Linux and macOS, and on Windows.
+eg: A web server runs as a low-privilege service account. If attackers break in through the website, they get only that account's limited rights unless they can escalate further.
+eg: Defenders treat a word processor that starts a command shell as suspicious, because a normal document has no reason to launch one.
+walk: Watch a program become a process
+- You double-click a browser icon. The file on disk is the application.
+- The OS copies what it needs into RAM and starts a process with a new PID.
+- The process runs as your user account, so it can read your files but not another user's.
+- Modern browsers start many processes, one for each group of tabs, to separate them.
+- When you close the browser, the OS ends the processes and reclaims the memory.
+lab: Observe processes and services | 30 | Task Manager, Activity Monitor or a Linux terminal
+do: Open Task Manager on Windows and choose Processes, then Services. On macOS open Activity Monitor. On Linux run ps aux in a terminal.
+do: Find your browser in the list. Note how many processes it has.
+do: Find the user column. Windows: choose Details. Identify one process running as your account and one running as a system account.
+do: Open a second application, find its new process, then close it and confirm that it disappeared.
+expect: You can identify processes by name, see that they run under different accounts, and watch one appear and disappear.
+explain: The account shown decides the process's power. A process running as SYSTEM or root can reach far more than one running as you, which is why attackers want those accounts.
+pass: You named one process run by your account and one run by the system.
+pass: You can explain the difference between an application and a process.
+scenario: An analyst sees that an application called invoice.exe started a process that opened a command shell running as the user Maria. No one in accounting uses command shells. Which details matter most, and what do they suggest?
+answer: Three facts matter: the parent program (invoice.exe), the child process (a command shell) and the account (Maria). A document or invoice program launching a shell is unusual, which suggests malicious code running with Maria's permissions. The next questions are what the shell did and whether Maria's account was misused elsewhere.
+q none mcq e | Application versus process | What is a process?
++ A program that is currently running :: A process is a running instance of a program, with its own PID and memory.
+- A file saved on disk :: A file on disk is not running; that describes the application before it starts.
+- A list of user accounts :: Accounts are identities and are separate from processes.
+- A folder that contains programs :: A folder only organizes files.
+q none mcq m | Account context | A web server process is compromised. Why does it matter that the process runs as a low-privilege account rather than as root?
++ The attacker initially gets only that account's limited rights :: A process acts with its account's permissions, so a low-privilege account limits the damage.
+- Low-privilege accounts cannot be attacked at all :: Any account can be attacked. The benefit is limiting the result.
+- It makes the website faster for users :: Account privileges are a security control, not a performance feature.
+- Root accounts cannot run web servers :: Root can run almost anything, which is exactly why it should not be used here.
+q none multi m | Operating system roles | Which of these are jobs of an operating system? Choose two.
++ Deciding whether a program may access a file :: The OS enforces permissions on files.
++ Allocating memory to programs :: Memory management is a core kernel job.
+- Writing the content of your documents :: You and your applications create content, not the OS.
+- Physically supplying power to the CPU :: The power supply is hardware, not an OS function.
+q none tf e | Groups | True or false: permissions granted to a group apply to the accounts in that group.
++ True :: Groups let an administrator grant permissions once rather than to each account.
+- False :: Group membership is exactly how accounts inherit those permissions.
+mistake: Assuming a familiar process name is safe. Malware often copies the name of a legitimate program.
+mistake: Daily work as root or Administrator. Any malicious program you run then gets full control of the machine.
+sum: The OS manages hardware and enforces rules between programs.
+sum: An application is stored, a process is running and a service runs in the background.
+sum: Users, groups and permissions decide what each process can reach.
+ref: ubuntu-cli r
+ref: man-ps s
+ref: ms-commands s
+card: Application, process or service: which one is running in the background without a user interface? == A service, or a daemon on Linux.
+card: What are the top administrator accounts called? == root on Linux and macOS, and Administrator or SYSTEM on Windows.
+
+@lesson w1-3
+title: Clients, servers and the parts of an application
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w1-2
+out: Explain the client-server model and what a server does.
+out: Separate a web server, an application server and a database by their roles.
+out: Identify the trust boundaries in a basic three-tier web application.
+why: Most attacks cross a boundary between a client and a server. Knowing which part talks to which part tells you where to place a firewall, where to validate input, and what is exposed to the entire internet.
+plain: A restaurant is a good model. You are the client, and you ask for something. The waiter takes your order to the kitchen, and the kitchen gets ingredients from the storeroom. You never walk into the storeroom yourself. In a web application, your browser is the customer, the web server is the waiter, the application server is the kitchen, and the database is the storeroom.
+plain: A server is not a special kind of magic box. It is a computer, physical or virtual, running software that waits for requests and answers them. Your own laptop could be a server if it ran that software.
+tech: In the client-server model, the client starts a request and the server responds. A web server such as nginx or Microsoft IIS receives HTTP requests and returns pages. An application server runs business logic, such as checking whether a payment is allowed. A database stores structured data and answers queries, often written in Structured Query Language (SQL).
+tech: Splitting these into tiers means each tier can be protected separately. The web tier faces the internet, the application tier accepts traffic only from the web tier, and the database accepts traffic only from the application tier. An API, or application programming interface, is a defined way for one program to ask another for data or an action.
+tech: A trust boundary is any line where data moves between parts that trust each other differently. Data arriving from a client is untrusted, because the person controlling the client can change anything in it.
+diagram: three-tier
+term: Client == The device or program that makes a request.
+term: Server == A computer or program that listens for requests and answers them.
+term: Web server == Software that receives web requests and returns responses.
+term: Application server == Software that runs an application's business logic.
+term: Database == An organized store of data that answers queries.
+term: SQL == Structured Query Language, used to read and change data in many databases.
+term: API == Application programming interface: a defined way for programs to talk to each other.
+term: Tier == A separate layer of an application, such as web, application or database.
+term: Trust boundary == A point where data passes between parts with different levels of trust.
+eg: Online banking: your browser requests a balance, the web tier passes it on, the application tier checks that the account is yours and the database returns the figure. The database is never directly reachable from the internet.
+eg: A phone app is also a client. It calls the same kind of API as a website, which is why the server must check permissions rather than trusting the app.
+walk: Follow one login through three tiers
+- Your browser sends your username and password to the web server over an encrypted connection.
+- The web server passes the request to the application server.
+- The application server asks the database for the stored password record for that username.
+- The database returns the record, and the application compares it with what you sent.
+- The application tells the browser whether the login worked, and the database was never exposed to you.
+lab: See client and server in your browser | 30 | Any desktop browser's developer tools
+do: Open a website you use, then press F12 (or Cmd+Option+I on a Mac) and choose the Network tab.
+do: Reload the page and click the first entry in the list.
+do: Find the request URL, the method (usually GET) and the status code (200 means OK).
+do: Look at the Response Headers and find one named Server, if the site provides it.
+do: Draw the page load as: browser, then web server, then whatever you think is behind it. Mark the trust boundary.
+expect: You saw individual requests from your browser and responses from a server, each with a status code.
+explain: Your browser is only one side of the conversation. You can inspect and even change everything on your side, which is why servers must never trust a client's input.
+pass: You recorded a request URL, method and status code.
+pass: You drew at least one trust boundary and can say why it is there.
+scenario: A shop's website checks the price of an item in the browser and sends the total to the server, which charges whatever total it receives. What is the design flaw?
+answer: The server trusts data from the client. Anyone can alter a request from their own browser and send a lower total. The server must calculate the price itself from its own data, because the client is on the untrusted side of the boundary.
+q none mcq e | Client-server model | In the client-server model, which side normally starts the conversation?
++ The client :: The client makes the request and the server listens and answers.
+- The server :: A server waits for requests rather than starting them.
+- The database :: A database answers queries from an application.
+- The switch :: A switch forwards traffic and does not take part in the application.
+q none mcq m | Three-tier design | In a three-tier application, which placement is most appropriate for the database?
++ Reachable only from the application tier :: Limiting access to the tier that needs it reduces exposure.
+- Reachable directly from the internet :: Direct exposure is the opposite of the three-tier design.
+- Reachable from every user's browser :: Browsers should never query the database directly.
+- On the same public address as the website :: Sharing the public address would expose it unnecessarily.
+q none match e | Application tiers | Match each part to the restaurant role it resembles.
+= Browser => Customer placing an order
+= Web server => Waiter taking the order
+= Application server => Kitchen preparing the meal
+= Database => Storeroom of ingredients
+why: The analogy shows that each part only talks to its neighbours, which is how the tiers are protected in practice.
+q none tf m | Trust boundaries | True or false: data sent from a client can be trusted if the website's own JavaScript created it.
+- True :: The person using the browser controls that JavaScript and can change or replace what is sent.
++ False :: Anything arriving from the client can be altered, so the server must validate it.
+mistake: Believing a check in the browser is a security control. It improves usability, but only checks on the server can be relied on.
+mistake: Thinking a server must be special hardware. A server is defined by the role software plays.
+sum: A client asks and a server answers.
+sum: Web, application and database tiers can be separated and protected individually.
+sum: Data from the client crosses a trust boundary and must be validated by the server.
+ref: mdn-web r
+ref: mdn-http r
+ref: owasp-input s
+card: Why must input validation happen on the server? == The client is controlled by the user, so anything it sends can be altered.
+card: What is a trust boundary? == A point where data moves between parts with different levels of trust.
+
+@lesson w1-4
+title: Virtual machines and an introduction to cloud computing
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w1-3
+out: Explain what a virtual machine and a hypervisor are.
+out: Describe the cloud service models IaaS, PaaS and SaaS and who manages what in each.
+out: Build a safe, isolated virtual machine for later labs.
+why: Security labs run in virtual machines because a mistake stays contained. Businesses run their systems the same way. Knowing who is responsible for what in the cloud prevents one of the most common causes of breaches: each side assuming the other handled a setting.
+plain: A virtual machine (VM) is a computer simulated in software. One physical computer can pretend to be several separate computers, like one building divided into apartments with separate doors and locks. The hypervisor is the building manager that divides up the space.
+plain: Cloud computing means renting computing from someone else over a network and paying for what you use. Instead of buying a server, you ask a provider for one and it is ready in minutes.
+tech: A hypervisor creates and runs VMs. A Type 1 hypervisor runs directly on the hardware and is typical in data centres. A Type 2 hypervisor runs as an application on an existing OS, such as Oracle VirtualBox on a laptop. Each VM believes it has its own CPU, memory, disk and network card. A snapshot records a VM's state so that you can return to it later.
+tech: A container is lighter than a VM. Containers share the host's kernel and package just an application and its dependencies. They start quickly but are less isolated than VMs.
+tech: NIST defines the main cloud service models. In Infrastructure as a Service (IaaS) the provider supplies virtual servers, storage and networks, and you manage the OS and everything above it. In Platform as a Service (PaaS) you deploy your code and the provider runs the platform. In Software as a Service (SaaS) you simply use a finished application, such as web email. Under every model the customer remains responsible for its own data and for who has access.
+diagram: cloud-responsibility
+diagram: vm-container
+table: Who manages what | Layer | On-premises | IaaS | PaaS | SaaS
+| Data and access | You | You | You | You
+| Application | You | You | You | Provider
+| Operating system | You | You | Provider | Provider
+| Virtualization and hardware | You | Provider | Provider | Provider
+term: Virtual machine == A software-based computer that runs on a physical host.
+term: Hypervisor == Software that creates and runs virtual machines.
+term: Type 1 hypervisor == A hypervisor that runs directly on the hardware.
+term: Type 2 hypervisor == A hypervisor that runs as an application on an existing OS.
+term: Snapshot == A saved state of a VM that can be restored later.
+term: Container == A lightweight package for an application that shares the host's kernel.
+term: IaaS == Infrastructure as a Service: rented virtual servers, storage and networking.
+term: PaaS == Platform as a Service: a managed platform for running your code.
+term: SaaS == Software as a Service: a complete application delivered over the internet.
+term: Shared responsibility == The split of security duties between a cloud provider and its customer.
+eg: A company stores customer files in a cloud storage service and leaves the bucket open to everyone. The provider ran its part correctly. The configuration and the data were the customer's responsibility.
+eg: Malware analysts open suspicious files in a VM with networking off, then restore a snapshot, so that the host stays clean.
+walk: Decide who fixes it
+- A vulnerability is found in the operating system of a server you rent as IaaS. You patch it, because you manage the OS in IaaS.
+- The same flaw affects the platform under a PaaS application. The provider patches it.
+- An employee shares a SaaS document with the public. You fix that, because data and access are always yours.
+- Physical disks fail in the provider's data centre. The provider replaces them in every cloud model.
+lab: Build your isolated lab machine | 60 | Oracle VirtualBox and an Ubuntu Desktop image (both free)
+do: Install VirtualBox from its official site. Apple-silicon Macs need the Arm build and an Arm version of Ubuntu.
+do: Download the Ubuntu Desktop installer from ubuntu.com. Check that the page is the official one.
+do: Create a VM with at least 2 CPUs, 4 GB of RAM and 25 GB of disk, then install Ubuntu in it.
+do: Shut the VM down, and in Settings, then Network, select Host-only Adapter or disable the adapter. Later labs tell you when you need internet access.
+do: Take a snapshot named clean-install.
+expect: A working Ubuntu VM that you can reset to a clean state at any time.
+explain: The snapshot gives you a safe way to undo any mistake. Limiting the network keeps experiments inside the VM. Use this lab only on your own computer.
+pass: The VM starts and you can sign in.
+pass: A snapshot named clean-install exists.
+pass: You can state what network mode your VM uses and why.
+scenario: A team moves an application to PaaS and assumes that everything is now the provider's job. An attacker later signs in with a former employee's account, which was still active. Who was responsible?
+answer: The customer was. In every cloud model, the customer remains responsible for its data and for managing who has access. Removing the former employee's account was the customer's task, regardless of PaaS.
+q none mcq e | Hypervisors | What software creates and runs virtual machines?
++ A hypervisor :: The hypervisor divides the host's resources between VMs.
+- A router :: A router forwards network traffic.
+- A database :: A database stores and retrieves data.
+- A web browser :: A browser is a client application.
+q none mcq m | Cloud service models | A company uses an online email service and manages only its users and settings. Which cloud model is this?
++ SaaS :: The company uses a finished application and manages only its data and users.
+- IaaS :: IaaS would require the company to manage servers and operating systems.
+- PaaS :: PaaS would require the company to deploy its own code.
+- On-premises :: On-premises would mean running the email system itself.
+q none multi m | Shared responsibility | Which items does the customer remain responsible for in SaaS? Choose two.
++ Who has access to the application :: Identity and access stay with the customer in every model.
++ The data the customer puts into it :: Data ownership and protection stay with the customer.
+- Patching the application's code :: In SaaS, the provider maintains the application.
+- Replacing failed disks :: Physical infrastructure is the provider's job.
+q none mcq m | Isolation in labs | Why take a snapshot of a clean lab VM before testing?
++ To return quickly to a known-good state :: A snapshot lets you undo changes, even harmful ones.
+- To make the VM's disk encrypted :: A snapshot does not encrypt anything.
+- To give the VM more memory :: Snapshots do not change the resources allocated.
+- To connect the VM to the internet :: Network access is a separate setting.
+mistake: Assuming the cloud provider handles all security. Customers always keep responsibility for data and access.
+mistake: Treating a VM as perfectly isolated. Isolation is strong but not absolute, so keep labs away from anything important.
+sum: A hypervisor runs VMs, and snapshots let you return to a known state.
+sum: IaaS, PaaS and SaaS move more management to the provider at each step.
+sum: Customers are always responsible for their own data and access.
+ref: nist-800-145 r
+ref: virtualbox r
+ref: nist-800-125 s
+ref: aws-shared s
+card: In which cloud model do you patch the operating system? == IaaS, because the provider manages only the layers below the OS.
+card: What stays the customer's responsibility in every cloud model? == Its data and who has access to it.
+also: 8 | The internet and the apps on it

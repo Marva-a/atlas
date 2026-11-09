@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kubernetes networking and network policy · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Kubernetes networking and network policy</h1>
+<p class="eyebrow">Day 30 · Week 5 · Intermediate · about 120 min</p>
+<p>By default every pod in a Kubernetes cluster can talk to every other pod; network policies are the rules that limit this, and tools like Calico enforce them.</p>
+<p><strong>By the end, you can:</strong> Explain how a Kubernetes NetworkPolicy selects Pods by label, and state that enforcement requires a supporting network plugin such as Calico.</p>
+<h2>Why it matters to a designer</h2>
+<p>This is the problem Tigera exists to solve, and the heart of case study 2. Platform engineers know default-allow is risky, but switching to default-deny can break apps. Designers help them see traffic, write policies safely and roll them out with confidence.</p>
+<h2>Key ideas</h2>
+<ul><li>From Week 3 you know access rules for people and devices. Network policy is the same idea for services inside a cluster.</li><li>Kubernetes finds things by labels, like name tags: app=orders, team=payments. A network policy picks pods by label, not by name or address, because pods come and go.</li><li>A Service gives a group of pods one stable name and address, so web can always reach “orders” even as pods restart.</li><li>Default allow: in a namespace with no NetworkPolicy selecting a pod, everything can reach it. This default-allow behaviour, and NetworkPolicy enforcement itself, both depend on the cluster running a network plugin (CNI) that supports NetworkPolicy, such as Calico — without one, a NetworkPolicy you write is simply not enforced, even though Kubernetes accepted it.</li><li>A network policy says, for example: “pods labelled app=payments-db accept traffic only from pods labelled app=payments on port 5432.” Once a pod is selected by any policy, everything else to it is denied.</li><li>Calico (open source, by Tigera) enforces network policies and adds its own features. Cloud security groups are stateful: if a request is allowed in, its reply is allowed out automatically.</li><li>Mutual TLS (mTLS) is TLS where both sides prove who they are, not only the server. Service meshes use it so each service knows exactly which service is calling.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>label</strong></td><td>A key-value tag on a Kubernetes object, such as app=orders.</td></tr><tr><td><strong>selector</strong></td><td>A rule that picks objects by their labels.</td></tr><tr><td><strong>Service</strong></td><td>A stable name and address for a group of pods.</td></tr><tr><td><strong>network policy</strong></td><td>A Kubernetes rule that limits which pods can talk to which.</td></tr><tr><td><strong>ingress and egress</strong></td><td>Traffic coming in to a pod, and traffic going out of it.</td></tr><tr><td><strong>Calico</strong></td><td>Tigera’s open-source networking and network security for Kubernetes.</td></tr><tr><td><strong>stateful</strong></td><td>A firewall that remembers allowed connections and lets their replies through.</td></tr><tr><td><strong>mTLS</strong></td><td>Mutual TLS: both sides of a connection prove who they are.</td></tr><tr><td><strong>service mesh</strong></td><td>A layer that manages and secures traffic between services, often with mTLS.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read about labels and selectors. &mdash; <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Labels and Selectors</a> (Kubernetes Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read the introduction and first example of Services. &mdash; <a href="https://kubernetes.io/docs/concepts/services-networking/service/">Service</a> (Kubernetes Docs)</p><span class="step__min">15 min</span></div><div class="step"><p>Read Network Policies up to and including the default policies. &mdash; <a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Network Policies</a> (Kubernetes Docs)</p><span class="step__min">25 min</span></div><div class="step"><p>Read About Calico. &mdash; <a href="https://docs.tigera.io/calico/latest/about/">About Calico</a> (Calico Documentation)</p><span class="step__min">10 min</span></div><div class="step"><p>Read about security groups and notice the word “stateful”. &mdash; <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html">Control traffic to your AWS resources using security groups</a> (AWS)</p><span class="step__min">15 min</span></div><div class="step"><p>Read what mutual TLS is. &mdash; <a href="https://www.cloudflare.com/learning/ssl/what-is-mutual-tls/">What is mutual TLS (mTLS)?</a> (Cloudflare Learning Center)</p><span class="step__min">10 min</span></div><div class="step"><p>Add labels to your Day 29 shop picture and write two network policies for it in plain words, then in the shape of a policy (selector, from, ports).</p><span class="step__min">35 min</span></div>
+<h2>Skip or skim</h2><p>Skip CNI internals, eBPF and service mesh setup. Understand labels, default allow and what a policy says.</p>
+<h2>Check yourself</h2><ul><li>Why does Kubernetes use labels rather than pod names in network policies?</li><li>What does “default allow” mean, and why is it risky?</li><li>How does mTLS differ from ordinary TLS?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Pods are created and destroyed all the time and get new names and addresses. Labels describe what a pod is (app=orders), so a policy keeps working as pods change.</li><li>With no policies, every pod can reach every other pod. If one service is compromised, the attacker can move freely to databases and other services.</li><li>In ordinary TLS only the server proves who it is. In mTLS both sides do, so the server also knows exactly which client or service is calling.</li></ul>
+<p><a href="../../index.html#lesson/30">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

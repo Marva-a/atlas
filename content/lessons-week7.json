@@ -1,0 +1,523 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 7 lessons: least privilege, governance and policy as code. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w7-d43",
+   "week": 7,
+   "day": 43,
+   "date": "2026-12-14",
+   "title": "Least privilege, roles, reviews and audit",
+   "level": "advanced",
+   "inOneSentence": "Least privilege means each person and system has only the access it needs, for only as long as it needs it, and governance is how a company keeps it that way over time.",
+   "youCanNow": "Explain least privilege and just-in-time access, and state that 'explicit deny wins' is a rule of the specific policy engine in use, not a universal law.",
+   "whyItMattersToADesigner": "Enterprise customers buy security products to prove control: who has admin rights, who approved them, when they were last checked. Designing roles, temporary access and access reviews is a senior-level problem that touches admins, managers, auditors and the buyer.",
+   "keyIdeas": [
+    "You met least privilege on Day 4 and policies in Week 3. Now you design the systems that keep access small over months and years.",
+    "Admin roles split power: not every IT person should be able to delete the whole tailnet. Example roles: owner, admin, network admin, IT admin, billing, auditor (read-only).",
+    "Just-in-time (JIT) access: instead of permanent admin rights, people request access for a reason and a time (two hours for an incident), it is approved, and it expires on its own.",
+    "Access reviews: every quarter, managers confirm who should keep which access. Badly designed reviews turn into “approve all”, which is called rubber-stamping.",
+    "In cloud IAM, an identity-based policy is attached to a person or role (“what can I do?”); a resource-based policy is attached to a resource (“who can use me?”). An explicit deny always wins over any allow.",
+    "Audit logs prove it all: who granted what, who approved it and when it ended. Auditors ask for this evidence.",
+    "Break-glass accounts are emergency admin accounts kept locked away for when normal sign-in fails. They must be rare, alarmed and reviewed."
+   ],
+   "words": [
+    {
+     "term": "least privilege",
+     "meaning": "Only the access needed, only for as long as needed."
+    },
+    {
+     "term": "admin role",
+     "meaning": "A named set of admin powers, such as network admin or auditor."
+    },
+    {
+     "term": "just-in-time access",
+     "meaning": "Temporary access requested for a reason and removed automatically."
+    },
+    {
+     "term": "access review",
+     "meaning": "A regular check of who should keep which access."
+    },
+    {
+     "term": "rubber-stamping",
+     "meaning": "Approving everything in a review without really checking."
+    },
+    {
+     "term": "resource-based policy",
+     "meaning": "A policy attached to a resource that says who may use it."
+    },
+    {
+     "term": "explicit deny",
+     "meaning": "A rule that blocks access and overrides any allow, in the policy engines Atlas covers — this precedence is a product/engine design choice, not a universal rule of every authorization system."
+    },
+    {
+     "term": "break-glass account",
+     "meaning": "An emergency admin account used only when normal access fails."
+    },
+    {
+     "term": "separation of duties",
+     "meaning": "No single person can complete a sensitive action alone."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read Tailscale user roles and list what each role can do.",
+     "minutes": 10,
+     "resourceId": "c5-ts-roles"
+    },
+    {
+     "text": "Read Microsoft’s access reviews overview.",
+     "minutes": 10,
+     "resourceId": "c5-entra-reviews"
+    },
+    {
+     "text": "Read what Privileged Identity Management does.",
+     "minutes": 10,
+     "resourceId": "c5-entra-pim"
+    },
+    {
+     "text": "Read Tailscale just-in-time access and compare it with PIM.",
+     "minutes": 10,
+     "resourceId": "c5-ts-jit"
+    },
+    {
+     "text": "Read the AWS IAM best practices on least privilege and temporary credentials.",
+     "minutes": 20,
+     "resourceId": "w6-aws-best"
+    },
+    {
+     "text": "Skim IAM Access Analyzer to see how a tool finds unused or too-broad access.",
+     "minutes": 10,
+     "resourceId": "w6-access-analyzer"
+    },
+    {
+     "text": "Design on paper the review screen a manager sees for 12 people: what helps them decide well instead of approving everything?",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Write three principles for designing least-privilege features.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip writing real IAM policies. Understand the patterns and the people involved.",
+   "checkYourself": [
+    "What is just-in-time access, and why is it better than permanent admin rights?",
+    "Why do access reviews often fail, and what could design do about it?",
+    "How does an explicit deny interact with allows?"
+   ],
+   "lookFor": [
+    "Access is requested for a reason and a limited time, approved, and removed automatically. If an account is stolen, it usually has no standing admin rights to abuse, and every use is recorded.",
+    "Reviewers face long lists with little context, so they approve everything. Design can help with context (last used, risk level), smart defaults (suggest removing unused access) and smaller, focused reviews.",
+    "An explicit deny always wins. Even if another policy allows the action, the deny blocks it."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w7-d44",
+   "week": 7,
+   "day": 44,
+   "date": "2026-12-15",
+   "title": "Compliance and policy as code, in plain words",
+   "level": "advanced",
+   "inOneSentence": "Compliance frameworks like SOC 2 and ISO 27001 ask companies to prove they control access and changes, and policy as code keeps those rules in files that are reviewed, tested and versioned like software.",
+   "youCanNow": "Distinguish a SOC 2 report (an attestation) from ISO 27001 certification, and explain how policy-as-code differs from a full GitOps pipeline.",
+   "whyItMattersToADesigner": "Compliance is why many companies buy security products, and policy as code is how technical teams want to manage them. A designer who can bridge the auditor’s need for evidence and the engineer’s need for git workflows can design features that sell and that people actually use.",
+   "keyIdeas": [
+    "SOC 2 is a report from an independent auditor that a company’s controls work: who has access, how changes are approved, how incidents are handled. Customers ask suppliers for it before buying.",
+    "Type 1 checks that controls are designed well at one point in time; Type 2 checks they actually worked over months. SOC 2 itself is an attestation: an auditor's report on how well your controls work, not a pass/fail certification. ISO 27001 is different in kind: it is a certification against an international standard, issued after an accredited audit.",
+    "Auditors ask for evidence: screenshots, exports and logs that prove each control. Products that make evidence easy to export save customers weeks.",
+    "Policy as code: rules live in text files in git. Every change is a pull request that someone reviews, tests run automatically, and you can see history and roll back.",
+    "GitOps means git is the source of truth: when a change is merged, a pipeline applies it automatically. Tailscale supports this for its policy file.",
+    "Open Policy Agent (OPA) and Cedar (Week 3) are both policy-as-code engines, but they are not interchangeable: each has its own policy language and evaluation model, so a policy written for one cannot simply be dropped into the other.",
+    "The design challenge: some admins edit in the console, some in git. Products must keep both consistent and show clearly which one is in charge."
+   ],
+   "words": [
+    {
+     "term": "SOC 2",
+     "meaning": "An independent audit report on a company’s security controls."
+    },
+    {
+     "term": "ISO 27001",
+     "meaning": "An international standard for managing information security."
+    },
+    {
+     "term": "control",
+     "meaning": "A practice or rule that reduces risk, such as requiring approval for changes."
+    },
+    {
+     "term": "evidence",
+     "meaning": "Proof that a control works: logs, exports, screenshots."
+    },
+    {
+     "term": "policy as code",
+     "meaning": "Keeping rules in versioned files that are reviewed and tested like software."
+    },
+    {
+     "term": "pull request",
+     "meaning": "A proposed change in git that others review before it is merged."
+    },
+    {
+     "term": "GitOps",
+     "meaning": "Using git as the source of truth, with changes applied automatically after merge."
+    },
+    {
+     "term": "OPA",
+     "meaning": "Open Policy Agent: a widely used policy-as-code engine."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the first sections of the plain-language SOC 2 guide.",
+     "minutes": 15,
+     "resourceId": "c5-vanta-soc2"
+    },
+    {
+     "text": "Skim the official SOC page to see who defines SOC 2.",
+     "minutes": 10,
+     "resourceId": "c5-aicpa-soc"
+    },
+    {
+     "text": "Read the Open Policy Agent introduction and one example.",
+     "minutes": 15,
+     "resourceId": "c5-opa"
+    },
+    {
+     "text": "Re-read Tailscale just-in-time access and note what evidence it leaves behind.",
+     "minutes": 10,
+     "resourceId": "c5-ts-jit"
+    },
+    {
+     "text": "Skim the SC-300 study guide headings to see which governance skills enterprises expect admins to have.",
+     "minutes": 10,
+     "resourceId": "w6-sc300"
+    },
+    {
+     "text": "Pick one control, such as “access changes are reviewed and approved”, and list the evidence an auditor would ask for and where it would come from in Tailscale.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Sketch how a product could show “this policy is managed in git” in its console, and what an admin can and cannot do there.",
+     "minutes": 30,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the full SOC 2 criteria and ISO clauses. Know what they are for and what evidence looks like.",
+   "checkYourself": [
+    "What is the difference between SOC 2 Type 1 and Type 2?",
+    "What are three benefits of policy as code?",
+    "Why must a product show clearly whether a policy is managed in git or in the console?"
+   ],
+   "lookFor": [
+    "Type 1 checks that controls are well designed at one moment. Type 2 checks that they actually operated over a period, usually several months.",
+    "Every change is reviewed in a pull request, tests run before it goes live, and there is a full history with easy rollback.",
+    "Otherwise an admin edits in the console and the next git sync silently overwrites the change, or the two drift apart. Clear ownership prevents confusion and lost changes."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w7-d45",
+   "week": 7,
+   "day": 45,
+   "date": "2026-12-16",
+   "title": "Exercise 16: an access policy managed in git",
+   "level": "advanced",
+   "inOneSentence": "You will move your Exercise 6 policy into a git repository, change it through a pull request with tests, and roll it back, as a platform team would.",
+   "youCanNow": "Propose an access-policy change as a pull request and explain what review and automated tests it should pass before merging.",
+   "whyItMattersToADesigner": "This is how many technical customers of Tailscale and Tigera really work. Doing it yourself shows you where the console and git experiences meet, and gives you a design insight for case study 1: policy changes need review, preview and safe rollback.",
+   "keyIdeas": [
+    "Your policy file becomes a file in a GitHub repository. A GitHub Action tests and applies it to the tailnet when a change is merged.",
+    "The workflow: create a branch, edit the policy, open a pull request, tests run, someone reviews, merge, the change goes live.",
+    "Your ACL tests from Exercise 6 now run in the pull request: a failing test blocks the merge.",
+    "Rollback is just reverting the commit. Notice how much safer this feels than editing live in a console.",
+    "As a designer, notice what the pull request does not show: who will gain or lose access in human terms. That gap is a design idea."
+   ],
+   "words": [
+    {
+     "term": "repository",
+     "meaning": "A project folder tracked by git, often on GitHub."
+    },
+    {
+     "term": "branch",
+     "meaning": "A separate line of changes in git."
+    },
+    {
+     "term": "GitHub Actions",
+     "meaning": "GitHub’s system for running automatic steps, such as tests, on changes."
+    },
+    {
+     "term": "merge",
+     "meaning": "Accepting a pull request into the main version."
+    },
+    {
+     "term": "revert",
+     "meaning": "Undoing a change by adding a commit that reverses it."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read GitOps for Tailscale.",
+     "minutes": 10,
+     "resourceId": "c5-ts-gitops"
+    },
+    {
+     "text": "Set up GitOps with GitHub Actions for your test tailnet, following the guide.",
+     "minutes": 35,
+     "resourceId": "c5-ts-gitops-github"
+    },
+    {
+     "text": "Make a change through a pull request: add a group and a rule, with tests. Make one test fail on purpose, then fix it.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Merge, check the change in the console, then revert it and check again.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Write notes: what the pull request showed, what it did not, and a sketch of a “who gains or loses access” summary for reviewers.",
+     "minutes": 30,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip Terraform and other tools unless you already use them. One tool, done end to end, is enough.",
+   "checkYourself": [
+    "What does a test in the pull request protect against?",
+    "What does a reviewer of a policy pull request need to see that a text diff does not show?"
+   ],
+   "lookFor": [
+    "It stops a change that breaks an expected access promise from being merged, so mistakes are caught before they reach real people and systems.",
+    "The effect in human terms: who will gain or lose access to what, how risky the change is, and which tests cover it. A text diff shows only changed lines."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w7-d46",
+   "week": 7,
+   "day": 46,
+   "date": "2026-12-17",
+   "title": "Case study 1: concepts, flows and prototype",
+   "level": "advanced",
+   "inOneSentence": "You will design a policy editor that shows admins who will be able to reach what before they save, using everything from Weeks 3 to 7.",
+   "youCanNow": "Develop a concept, user flow and prototype for an access-policy editor.",
+   "whyItMattersToADesigner": "This is the core design of your first case study. It must show senior skills: several concepts compared, clear reasoning from evidence, and a prototype that handles a complex technical subject in a way admins can trust.",
+   "keyIdeas": [
+    "Start from your problem statement and research log. Every design choice should link to evidence.",
+    "Generate at least three concepts before choosing: for example (1) a live “effect preview” beside the editor, (2) a “who can reach X?” query tool, (3) a change summary like the pull request idea from Exercise 16.",
+    "Use progressive disclosure: show the plain-language effect first (“12 people in Sales will lose access to the wiki”), with the rule details one click away.",
+    "Design for both worlds: admins who edit in the console and teams who use git. Your preview can appear in both places.",
+    "Include the hard states: a change that locks everyone out, a conflict with git, a test that fails, and an empty policy for a new tailnet.",
+    "Build a clickable prototype of the main flow: edit a rule, see the effect, fix a problem, save with confidence."
+   ],
+   "words": [
+    {
+     "term": "concept",
+     "meaning": "An early design direction, explored before committing."
+    },
+    {
+     "term": "effect preview",
+     "meaning": "Showing the result of a change before it is saved."
+    },
+    {
+     "term": "edge case",
+     "meaning": "An unusual situation the design must still handle."
+    },
+    {
+     "term": "prototype",
+     "meaning": "A clickable model of a design, used for testing."
+    },
+    {
+     "term": "design rationale",
+     "meaning": "The reasons behind design decisions."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about progressive disclosure.",
+     "minutes": 10,
+     "resourceId": "c5-nng-progressive"
+    },
+    {
+     "text": "Read the guidelines for complex applications and use them as a checklist.",
+     "minutes": 10,
+     "resourceId": "c5-nng-complex-apps"
+    },
+    {
+     "text": "Sketch three concepts on paper and compare them against your problem statement and metrics.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Choose one concept and design the main flow in Figma, with the key edge cases.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Link the frames into a clickable prototype for testing tomorrow.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not polish visual style. Spend time on the effect preview and the hard states.",
+   "checkYourself": [
+    "Why compare three concepts before choosing one?",
+    "How does your design help an admin trust a change before saving it?"
+   ],
+   "lookFor": [
+    "It avoids falling in love with the first idea, shows hiring managers your process, and often produces a better solution that combines the strengths of several concepts.",
+    "For example by showing in plain words who gains or loses access, flagging risky changes, running tests before saving and making rollback easy."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w7-d47",
+   "week": 7,
+   "day": 47,
+   "date": "2026-12-18",
+   "title": "Case study 1: test and improve",
+   "level": "advanced",
+   "inOneSentence": "You will test your policy editor prototype with two people, ideally admins or engineers, and change it based on what you see.",
+   "youCanNow": "Test the access-policy-editor prototype with a participant and make one evidence-based improvement.",
+   "whyItMattersToADesigner": "Testing turns a nice idea into evidence. Even two sessions with the right people reveal the biggest problems, and a case study that shows “what I learned and changed” is far stronger than one that shows only final screens.",
+   "keyIdeas": [
+    "Give people a realistic task, not a tour: “Contractors should no longer reach the wiki. Make that change and check nothing else breaks.”",
+    "Ask them to think aloud. Do not help or explain; note where they hesitate, misread or are surprised.",
+    "Watch especially for trust: do they believe the effect preview? Would they save the change?",
+    "After both sessions, sort observations into “must fix”, “should fix” and “later”. Fix the must-fix issues in the prototype today.",
+    "Record before and after for the case study: the problem you saw, the evidence and the change you made."
+   ],
+   "words": [
+    {
+     "term": "usability test",
+     "meaning": "Watching people try to complete tasks with a design."
+    },
+    {
+     "term": "think aloud",
+     "meaning": "Asking participants to say what they think as they work."
+    },
+    {
+     "term": "task scenario",
+     "meaning": "A realistic goal given to a participant in a test."
+    },
+    {
+     "term": "finding",
+     "meaning": "An observation from testing, backed by what you saw."
+    },
+    {
+     "term": "iteration",
+     "meaning": "Changing a design based on what you learned, then testing again."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read usability testing 101.",
+     "minutes": 10,
+     "resourceId": "c5-nng-usability-testing"
+    },
+    {
+     "text": "Write two task scenarios and a short script.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Run two 25-minute sessions (remote is fine) and take notes.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Sort the findings and fix the most important ones in the prototype.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Write down the three most important findings with before and after.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "If you cannot find admins, test with engineers or designers, and say so honestly in the case study.",
+   "checkYourself": [
+    "Why give a task rather than a tour in a usability test?",
+    "What was your most important finding, and what did you change?"
+   ],
+   "lookFor": [
+    "A task shows whether people can actually do the job with the design. A tour only tells them what you meant, and they will agree politely.",
+    "A good answer names a real observation (what the person did or said), why it mattered, and the specific change to the design."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w7-d48",
+   "week": 7,
+   "day": 48,
+   "date": "2026-12-19",
+   "title": "Case study 1 draft: write it up and share",
+   "level": "advanced",
+   "inOneSentence": "You will write the first full draft of case study 1: problem, research, concepts, design, testing and what changed.",
+   "youCanNow": "Write an honest, structured first draft of the access-policy case study.",
+   "whyItMattersToADesigner": "This is your first complete portfolio piece in the new domain. A clear, honest story with real evidence is what hiring managers at companies like Tailscale look for, and early feedback from a practitioner makes it much stronger.",
+   "keyIdeas": [
+    "Structure: the problem and why it matters, your role and constraints, research and evidence, concepts and the choice, the design, testing and changes, outcome and next steps.",
+    "Lead with the problem and the result in the first screen of the page; busy readers decide in 30 seconds.",
+    "Show technical understanding plainly: one diagram of how access rules work, with your design on top.",
+    "Label honestly: this is a self-initiated concept, not shipped work. State who you tested with.",
+    "Ask one practitioner for feedback with two specific questions, for example “Is the problem real for you?” and “Would you trust this preview?”"
+   ],
+   "words": [
+    {
+     "term": "self-initiated",
+     "meaning": "Work you chose and did yourself, not for a client or employer."
+    },
+    {
+     "term": "outcome",
+     "meaning": "What changed because of the work, or what you expect to change."
+    },
+    {
+     "term": "feedback",
+     "meaning": "Comments from others used to improve your work."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Write the full draft (900–1,400 words) with the key frames.",
+     "minutes": 60,
+     "resourceId": null
+    },
+    {
+     "text": "Make the opening: problem, your role, the result, in three short paragraphs and one image.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Send it to one practitioner with two specific questions.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Post a short version or save it in your portfolio folder.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "List what you will polish in Week 9.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not aim for perfect. A complete draft with feedback is the goal this week.",
+   "checkYourself": [
+    "What does a reader learn in the first 30 seconds of your case study?",
+    "How do you label this work honestly?"
+   ],
+   "lookFor": [
+    "The problem, why it matters, what you did and the result or key insight. A good opening makes the reader want to keep scrolling.",
+    "As a self-initiated concept project, stating who you researched and tested with and what is assumed. Honesty builds trust with hiring managers."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

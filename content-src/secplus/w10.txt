@@ -1,0 +1,361 @@
+# Week 10: Domain 4.0, part 1.
+
+@lesson w10-1
+title: Network controls: firewalls, IDS and IPS, content filters and NAC
+domain: Domain 4: Security Operations
+obj: 4.1
+level: Intermediate
+min: 120
+pre: w8-3, w3-2
+out: Choose the right firewall type and write basic rules.
+out: Distinguish IDS from IPS, and network from host-based sensors.
+out: Explain content filtering and network access control.
+why: These are the everyday tools of a security team. Knowing which one fits a scenario is a major part of this domain, and PBQs often ask you to configure them.
+plain: A firewall is a guard checking addresses and door numbers. A web application firewall reads the content of what is being carried. An intrusion detection system is a security camera with an alarm, and an intrusion prevention system is a guard who can actually step in.
+tech: Segmentation limits movement between areas of a network. Access controls decide who may reach what. Firewalls include rule-based filtering, which permits or denies according to a list; Layer 4 firewalls, which decide on addresses, ports and connection state; and Layer 7 firewalls, which understand applications. A web application firewall (WAF) protects web applications from attacks such as injection. Unified threat management (UTM) combines several functions in one device. Rate-limiting requests restricts how many requests are allowed in a period, which slows brute force and some denial-of-service attempts.
+tech: An intrusion detection system (IDS) monitors and alerts. An intrusion prevention system (IPS) sits inline and can block. Network-based intrusion detection system (NIDS) and network-based intrusion prevention system (NIPS) sensors watch network traffic. Host-based intrusion detection system (HIDS) and host-based intrusion prevention system (HIPS) agents watch a single host. A wireless intrusion prevention system (WIPS) detects and responds to wireless threats such as rogue access points. Detection may use signatures, which match known patterns, or anomalies, which flag departures from normal.
+tech: A content filter controls what users can reach or send. Data loss prevention (DLP) detects and blocks sensitive data leaving. Agent-based filters run on the device and work anywhere. A centralized proxy routes traffic through a central inspection point.
+tech: Network access control (NAC) decides whether a device may join a network. It uses 802.1X for port-based authentication, usually with a RADIUS server, endpoint posture and compliance checks such as patch level, and captive portals, the web pages that appear before guest Wi-Fi access. Monitoring and alerting tell you when these controls see something important.
+diagram: ids-ips
+table: Commonly confused | Tool | What it does | Where
+| Firewall | Allows or denies traffic by rule | Boundary or host
+| WAF | Inspects and filters web requests | In front of a web app
+| IDS | Detects and alerts, does not block | Out of band
+| IPS | Detects and blocks | Inline
+term: Segmentation == Dividing a network to limit movement.
+term: Access controls == Mechanisms that decide who may reach what.
+term: Monitoring/alerting == Watching systems and notifying people about important events.
+term: Rule-based firewall == A firewall that permits or denies according to an ordered list.
+term: Layer 4 firewall == A firewall that decides using addresses, ports and connection state.
+term: Layer 7 firewall == A firewall that understands application content.
+term: WAF == Web application firewall: protects web applications.
+term: UTM == Unified threat management: several security functions in one device.
+term: Rate-limiting requests == Restricting the number of requests in a period.
+term: NIDS == Network-based intrusion detection system.
+term: NIPS == Network-based intrusion prevention system.
+term: HIDS == Host-based intrusion detection system.
+term: HIPS == Host-based intrusion prevention system.
+term: WIPS == Wireless intrusion prevention system.
+term: Content filter == A control that limits access to or movement of content.
+term: DLP == Data loss prevention: stops sensitive data from leaving.
+term: Agent-based == Using software installed on the device.
+term: Centralized proxy == A central point through which traffic is inspected.
+term: NAC == Network access control: decides which devices may connect.
+term: 802.1X == A standard for port-based network authentication.
+term: Endpoint posture/compliance == Whether a device meets security requirements.
+term: Captive portals == Web pages shown before network access is granted.
+term: RADIUS == A protocol for centralized authentication, often used with 802.1X.
+eg: A login page is rate-limited to five attempts a minute for each IP address, which slows guessing.
+eg: A laptop missing critical patches is placed by NAC into a remediation network until it is updated.
+walk: Read a firewall rule list
+- Rules are evaluated from top to bottom, and the first match wins.
+- Rule 1: allow TCP 443 from any source to the web server.
+- Rule 2: allow TCP 22 from the admin subnet to the web server.
+- Rule 3: deny everything else, and log it.
+- A broad allow rule placed above a specific deny rule will defeat it, so order matters.
+lab: Write and test firewall rules | 40 | ufw in your lab VM; the firewall PBQ in Atlas
+do: In your VM, run sudo ufw reset, then set default deny incoming and default allow outgoing.
+do: Allow TCP 443 from anywhere, and TCP 22 only from a subnet of your choice. Then run sudo ufw enable.
+do: Run sudo ufw status numbered. Explain each rule aloud.
+do: Complete the firewall exercise under Performance-based practice in Atlas.
+do: Finally, run sudo ufw disable or restore your snapshot.
+expect: Your rule list shows exactly the intended permissions.
+explain: Stating the purpose of each rule is good practice, because rules with no known reason build up over time and become risk.
+pass: Your VM's rule list is correct.
+pass: You scored 80% or more on the firewall exercise.
+scenario: A web application is receiving SQL injection attempts. The network firewall already allows only port 443. Which control is most appropriate to add?
+answer: A web application firewall, which inspects the contents of web requests. A Layer 4 firewall permits port 443 and cannot see the attack within. Secure coding should also be applied.
+q 4.1 mcq e | IDS versus IPS | What is the key difference between an IDS and an IPS?
++ An IPS can block traffic, and an IDS only alerts :: The IPS sits inline and can act.
+- An IDS encrypts traffic :: Neither system's purpose is encryption.
+- An IPS can only be used on Wi-Fi :: IPS is used widely.
+- An IDS replaces a firewall :: These have different roles.
+q 4.1 mcq m | WAF | Which control best stops cross-site scripting aimed at a web application?
++ WAF :: It inspects application-layer web content.
+- Layer 4 firewall :: It sees only ports, addresses and connection state.
+- UPS :: This is a power device.
+- Captive portal :: This controls guest network access.
+q 4.1 mcq m | NAC | A device is checked for patches and antivirus before it may join the network. What is this?
++ Network access control using endpoint posture :: NAC can check compliance before granting access.
+- Rate limiting :: This limits request volume.
+- A DLP proxy :: This focuses on data leaving.
+- A honeypot :: This is a decoy system.
+q 4.1 mcq h | Firewall rule order | An ordered list reads: 1) allow any to any on TCP 443; 2) deny 203.0.113.9 to any on TCP 443. What happens to 203.0.113.9?
++ It is allowed, because rule 1 matches first :: First match wins, so rule 2 is never reached.
+- It is denied, because deny rules always take priority :: Most firewalls process rules in order.
+- It is logged and dropped automatically :: Nothing in this list would do that.
+- The firewall will report a syntax error :: These rules are valid.
+q 4.1 match m | Control selection | Match each need with a control.
+= Stop sensitive files leaving by email => DLP
+= Detect a rogue wireless access point => WIPS
+= Authenticate devices at a switch port => 802.1X
+= Slow repeated login attempts => Rate-limiting requests
+why: Each tool has a specific purpose.
+mistake: Thinking a firewall can stop every web attack.
+mistake: Placing a broad allow rule above a narrow deny rule.
+sum: Firewalls enforce rules, and WAFs inspect web content.
+sum: IDS detects, and IPS can block.
+sum: NAC decides what devices may join.
+ref: comptia-objectives r
+ref: nist-800-41 r
+ref: nist-800-94 r
+ref: owasp-waf s
+ref: rfc-2865 s
+ref: rfc-3748 s
+ref: ubuntu-ufw s
+card: IDS or IPS: which can block traffic? == IPS.
+card: What standard provides port-based network authentication? == 802.1X.
+
+@lesson w10-2
+title: Securing endpoints, mobile devices and operating systems
+domain: Domain 4: Security Operations
+obj: 4.1
+level: Intermediate
+min: 120
+pre: w10-1, w4-3
+out: Compare antivirus, EDR and XDR.
+out: Explain sandboxing, application control and MDM.
+out: Describe Group Policy and SELinux.
+why: Most attacks end up on an endpoint. Stronger endpoint visibility and tighter control over what can run are often the difference between a blocked attack and a breach.
+plain: Antivirus is a list of known criminals' photos. Endpoint detection and response is a detective watching for suspicious behaviour and able to intervene. Allow listing is a guest list: if your name is not on it, you do not get in. A sandbox is a quarantine room for testing a suspicious package.
+tech: Hardening removes unnecessary services, accounts and settings. Sandboxing runs code in an isolated environment. Application control restricts what software runs, through allow lists, which permit only approved items, or block lists, which forbid known bad items. Allow lists are stronger but need more upkeep.
+tech: Antivirus detects known malicious code and some suspicious behaviour. Endpoint detection and response (EDR) records endpoint activity, detects suspicious behaviour and enables a response such as isolating a host. Extended detection and response (XDR) correlates data across endpoints, networks, identity and email.
+tech: Mobile device management (MDM) enforces policies such as passcodes and encryption, can remotely wipe a lost device and controls apps. In Windows domains, Group Policy centrally applies settings to users and computers. Security-Enhanced Linux (SELinux) is a mandatory access control system that confines what each process can do, even if it runs as a privileged account.
+term: Hardening == Reducing attack surface through secure settings.
+term: Sandboxing == Running code in an isolated environment.
+term: Application control == Restricting which software can run.
+term: Allow lists == Lists of items that are explicitly permitted.
+term: Block lists == Lists of items that are explicitly forbidden.
+term: Antivirus == Software that detects known malicious code and behaviours.
+term: EDR == Endpoint detection and response: detects and responds on endpoints.
+term: XDR == Extended detection and response: correlates data across many sources.
+term: MDM == Mobile device management: central control of mobile devices.
+term: Group Policy == Windows feature that centrally applies settings.
+term: SELinux == Security-Enhanced Linux: mandatory access control for Linux.
+eg: EDR notices Word launching PowerShell and isolates that laptop from the network, automatically.
+eg: A lost phone is remotely wiped using MDM.
+walk: Choose between allow list and block list
+- If the environment is stable, like a kiosk or a server, consider an allow list.
+- If users constantly need new software, a block list is easier but is weaker.
+- Plan how updates are handled, since a new version can break a hash-based allow list.
+- Apply the change using change management, and monitor what gets blocked.
+lab: Check SELinux or AppArmor and build a sandbox habit | 35 | Your lab VM
+do: In Ubuntu, run sudo aa-status to see AppArmor, Ubuntu's mandatory access control.
+do: If you have a Fedora or RHEL VM, run sestatus to view SELinux, and ls -Z to see file labels.
+do: Identify one confined program, and what it is confining.
+do: Write down how you would use a snapshot-based VM as a sandbox for an unknown file.
+expect: A list of confined profiles, and a safe written procedure.
+explain: Mandatory access control limits even privileged processes, which is why compromises of confined services can stay contained.
+pass: You viewed profile or SELinux status.
+pass: Your sandbox procedure includes isolation and snapshot restore.
+scenario: A company's kiosks should run one application and nothing else. Which control provides the strongest enforcement?
+answer: Application allow listing, as nothing outside the approved list can run. Block lists would miss anything unknown.
+q 4.1 mcq e | Allow lists | Which approach permits only approved software?
++ Allow list :: Everything not listed is blocked.
+- Block list :: This forbids only named items.
+- Captive portal :: This handles network access for guests.
+- Load balancing :: This distributes requests.
+q 4.1 mcq m | EDR versus antivirus | What does EDR add beyond traditional antivirus?
++ Continuous behaviour monitoring and response actions such as host isolation :: EDR is designed for detection and response.
+- Only a larger signature list :: EDR is not limited to signatures.
+- Battery power for laptops :: This is unrelated.
+- Replacement of user authentication :: This is unrelated.
+q 4.1 mcq m | MDM | An employee loses a company phone containing email. Which capability is most useful?
++ Remote wipe through MDM :: MDM can erase the device remotely.
+- SELinux enforcing mode :: This is for Linux access control.
+- A WAF rule :: This is for web applications.
+- A DMARC record :: This is for email domains.
+q 4.1 mcq h | SELinux | A web server running as a service is compromised, but it cannot read other system files. What is the most likely reason?
++ SELinux confines the process by policy :: Mandatory access control limits it.
+- The server has a UPS :: A UPS protects power.
+- The server has a CRL :: A CRL relates to certificates.
+- XDR removed its IP address :: XDR does not do this.
+mistake: Treating EDR and XDR as identical. XDR spans more data sources.
+mistake: Assuming a block list stops new malware.
+sum: EDR adds behaviour-based detection and response.
+sum: Allow lists are stronger, and block lists are easier.
+sum: MDM, Group Policy and SELinux centralize or enforce control.
+ref: comptia-objectives r
+ref: nist-800-124 r
+ref: ms-gpo s
+ref: man-selinux s
+ref: selinux-notebook s
+card: What does XDR add to EDR? == Correlation across endpoints, network, identity and email.
+card: What is SELinux? == A Linux mandatory access control system that confines processes by policy.
+
+@lesson w10-3
+title: Application, email and deception controls
+domain: Domain 4: Security Operations
+obj: 4.1
+level: Intermediate
+min: 120
+pre: w10-2
+out: Apply application security controls.
+out: Explain how SPF, DKIM, DMARC and BIMI work together.
+out: Choose deception technologies.
+why: Web applications and email are the two most common ways into an organization. Deception gives defenders a rare advantage, since nobody legitimate should touch a decoy.
+plain: Input validation is like checking that a phone number field has only digits before accepting it. SPF is a list of who may send mail for your domain, DKIM is a wax seal on the letter, and DMARC tells recipients what to do if either one fails. A honeypot is a decoy safe left out to catch thieves.
+tech: Application security covers input validation, which checks data against what is expected; secure cookies, using the Secure, HttpOnly and SameSite attributes; static code analysis, which reviews source code without running it; and code signing, which proves who published code and that it has not been altered. Repositories should use secrets scanning to find leaked credentials.
+tech: Email security uses DNS records. Sender Policy Framework (SPF) lists the servers allowed to send for a domain. DomainKeys Identified Mail (DKIM) adds a digital signature to messages. Domain-based Message Authentication, Reporting, and Conformance (DMARC) tells recipients how to handle messages failing checks, such as none, quarantine or reject, and asks for reports. Brand Indicators for Message Identification (BIMI) displays a verified brand logo, and depends on DMARC enforcement.
+tech: Deception and disruption technology includes a honeypot (a decoy system), a honeynet (a network of decoys), a honeyfile (a decoy document), a honeytoken (fake data or a credential that raises an alert when used) and a canary account (a decoy account that should never be used). Any use of these indicates something is wrong, so false positives are low.
+diagram: email-auth
+table: Email authentication | Control | Answers | Stored in
+| SPF | Is this server allowed to send for this domain? | DNS TXT record
+| DKIM | Was the message signed and left unchanged? | Signature in message, key in DNS
+| DMARC | What should happen if checks fail? | DNS TXT record
+| BIMI | Can a brand logo be shown? | DNS TXT record
+term: Input validation == Checking data against what is expected.
+term: Secure cookies == Cookies protected using attributes such as Secure and HttpOnly.
+term: Static code analysis == Reviewing code for flaws without running it.
+term: Code signing == Digitally signing code to prove its origin and integrity.
+term: Repositories == Stores of source code and related files.
+term: Secrets scanning == Searching code and repositories for exposed credentials.
+term: SPF == Sender Policy Framework: lists authorized mail servers.
+term: DKIM == DomainKeys Identified Mail: signs outgoing mail.
+term: DMARC == A policy for handling mail failing SPF or DKIM checks.
+term: BIMI == Brand Indicators for Message Identification: shows a verified logo.
+term: Honeypot == A decoy system.
+term: Honeynet == A network of decoy systems.
+term: Honeyfile == A decoy file.
+term: Honeytoken == Fake data that raises an alert when used.
+term: Canary account == A decoy account that should never be used.
+term: Deception and disruption == Techniques that mislead attackers and reveal them.
+eg: A domain publishes a DMARC policy of reject, so forged mail claiming to be from the domain is refused by receiving servers.
+eg: A fake credentials file on a file share triggers an alert the moment anyone opens it.
+walk: Read a domain's email security
+- Look up the SPF TXT record, starting v=spf1.
+- Look up the DMARC record at _dmarc.domain.
+- Check the DMARC policy: p=none only monitors, while p=reject is enforcing.
+- Check whether messages carry a DKIM-Signature header.
+lab: Inspect email authentication | 35 | nslookup, and your own mail client
+do: Run nslookup -type=txt followed by a large public domain, and find an SPF record.
+do: Run nslookup -type=txt _dmarc.domain for the same domain, and note its policy.
+do: In your own mailbox, open a message's full headers and find the Authentication-Results line.
+do: Note whether SPF, DKIM and DMARC passed.
+expect: An SPF record, a DMARC policy and pass or fail results in a real message.
+explain: These results are what mail systems use to decide on spoofed messages.
+pass: You identified an SPF record and a DMARC policy.
+pass: You read SPF and DKIM results in a header.
+scenario: Attackers keep spoofing a company's domain in phishing emails to its customers. Which control lets the company instruct receiving servers to reject those messages?
+answer: DMARC with a policy of reject, supported by correctly configured SPF and DKIM.
+q 4.1 mcq e | Email security | Which record lists mail servers authorized for a domain?
++ SPF :: It is published in DNS.
+- BIMI :: BIMI displays logos.
+- OCSP :: This is for certificates.
+- SNMP :: This is for monitoring.
+q 4.1 mcq m | DMARC | What does a DMARC policy of p=reject do?
++ It asks receiving servers to refuse messages that fail authentication :: This is the strongest policy setting.
+- It encrypts all outgoing mail :: DMARC does not encrypt mail.
+- It displays the company logo :: That is BIMI.
+- It disables spam filtering :: It does not.
+q 4.1 mcq m | Deception | A fake administrator account exists and is never used legitimately. An alert fires when someone tries it. What is this?
++ A canary account :: Any use is suspicious.
+- A gMSA :: That is a real service account.
+- An emergency access account :: That is real and has a legitimate use.
+- A captive portal :: This is a guest network page.
+q 4.1 mcq h | Secure cookies | Which cookie attribute stops page scripts from reading a cookie?
++ HttpOnly :: JavaScript cannot access HttpOnly cookies.
+- Secure :: This limits cookies to HTTPS.
+- Domain :: This limits where cookies are sent.
+- Max-Age :: This controls lifetime.
+q 4.1 match m | Application security | Match each need to a control.
+= Prove a software update came from the publisher => Code signing
+= Find flaws in source without running it => Static code analysis
+= Find cloud keys in a code base => Secrets scanning
+= Reject letters in a numeric field => Input validation
+why: Each one addresses a different stage of building and shipping software.
+mistake: Assuming SPF alone stops spoofing. SPF checks the envelope, and DMARC adds alignment and policy.
+mistake: Thinking p=none protects. It only monitors.
+sum: Validate input and sign code.
+sum: SPF, DKIM and DMARC work together.
+sum: Decoys produce high-confidence alerts.
+ref: comptia-objectives r
+ref: rfc-7208 r
+ref: rfc-6376 r
+ref: rfc-7489 r
+ref: nist-800-177 s
+ref: owasp-input r
+ref: owasp-sca s
+ref: mdn-cookies s
+ref: bimi s
+card: What does DKIM provide? == A digital signature showing that an email came from the domain and was not altered.
+card: What is a honeytoken? == Fake data or a credential that raises an alert when used.
+
+@lesson w10-4
+title: Managing hardware, software and data assets
+domain: Domain 4: Security Operations
+obj: 4.2
+level: Beginner
+min: 120
+pre: w10-3
+out: Follow an asset through its life cycle.
+out: Explain why an accurate inventory matters.
+out: Choose the proper disposal method.
+why: You cannot protect what you do not know you have. Assets that nobody tracks do not get patched, and discarded drives have exposed a surprising amount of sensitive data.
+plain: Think of a company car. It is planned, bought, assigned to a driver, tracked and serviced, then sold or scrapped. You would clear out the glove compartment before selling it. Hardware, software and data need the same care.
+tech: The asset management life cycle has these stages. Planning/scoping decides what is needed. The acquisition/procurement process covers buying through approved suppliers, with security requirements. Assignment/accounting records who owns or uses an asset and adds it to inventory. Monitoring/asset tracking keeps records current, for example through discovery scans. Disposal/decommissioning retires an asset securely.
+tech: NIST SP 800-88 describes three main sanitization outcomes: clear, using logical methods to protect against simple recovery; purge, using stronger techniques that defeat laboratory recovery, such as cryptographic erase; and destroy, making the media unusable. Keep a certificate of destruction when third parties do this work. Data assets need the same tracking and also have owners, classifications and retention periods. Software assets need license and version tracking.
+table: Media sanitization | Method | Protects against | Example
+| Clear | Simple recovery | Overwriting with standard tools
+| Purge | Laboratory recovery | Cryptographic erase
+| Destroy | Any recovery, media unusable | Shredding or incineration
+term: Asset management life cycle == The stages an asset goes through, from planning to disposal.
+term: Planning/scoping == Deciding what is needed and what is included.
+term: Acquisition/procurement process == Buying assets through approved channels.
+term: Assignment/accounting == Recording ownership and adding to inventory.
+term: Monitoring/asset tracking == Keeping track of where assets are and their state.
+term: Disposal/decommissioning == Securely retiring an asset.
+term: Sanitization == Making data on media unrecoverable.
+term: Cryptographic erase == Destroying the key so that encrypted data cannot be recovered.
+term: Certificate of destruction == Proof that media were destroyed.
+eg: A forgotten test server, not on any inventory, runs out-of-date software and becomes the entry point for a breach.
+eg: An organization resells old laptops without wiping them, and customer data ends up on the second-hand market.
+walk: Decommission a server
+- Confirm its owner approves retirement, and check dependencies.
+- Migrate or archive data according to retention rules.
+- Revoke its credentials and certificates and remove its DNS and firewall entries.
+- Sanitize or destroy the disks in accordance with data sensitivity.
+- Update the inventory and keep the record.
+lab: Build a small asset register | 30 | Spreadsheet
+do: Record ten assets you own: devices, software and data sets.
+do: For each, add owner, location, classification and end-of-support date.
+do: Mark the disposal method you would use.
+do: Find the end-of-support date for your OS on the vendor's site.
+expect: A register that shows which assets are near or past end of support.
+explain: An up-to-date register is the base of patching, incident response and audits.
+pass: Your register has all fields for ten assets.
+pass: You selected appropriate disposal methods.
+scenario: A company is retiring encrypted SSDs that held confidential data, and wants to reuse them within the company. What is an appropriate method?
+answer: Purge using cryptographic erase, then verify. Destroying them would prevent reuse, and clearing alone may not be enough for confidential data on SSDs.
+q 4.2 mcq e | Asset life cycle | Why is an accurate asset inventory important?
++ You cannot protect or patch what you do not know exists :: Inventory underpins other controls.
+- It replaces the need for firewalls :: It does not.
+- It encrypts data automatically :: It does not.
+- It removes the need for backups :: It does not.
+q 4.2 order m | Asset life cycle | Put the stages of the asset life cycle in order.
+1. Planning/scoping
+2. Acquisition/procurement
+3. Assignment/accounting
+4. Monitoring/asset tracking
+5. Disposal/decommissioning
+why: Each stage relies on records from the one before.
+q 4.2 mcq m | Sanitization | Which sanitization result protects against laboratory recovery while still allowing reuse?
++ Purge :: Purge defeats laboratory techniques, and the media can be reused.
+- Clear :: Clear protects only against simple recovery.
+- Destroy :: The media cannot be reused after this.
+- Deleting the files :: Deletion does not sanitize.
+q 4.2 mcq m | Decommissioning | A server is retired, but its service account stays active. What risk results?
++ A stale credential remains that could be abused :: Decommissioning must also remove access.
+- The server's disks become faster :: This is unrelated.
+- CVSS scores increase :: This is unrelated.
+- The DMARC policy breaks :: This is unrelated.
+mistake: Assuming that deleting files or formatting a drive destroys the data.
+mistake: Tracking hardware but forgetting data and software.
+sum: Assets need an owner at every stage.
+sum: Inventory drives other security activity.
+sum: Dispose of media according to data sensitivity.
+ref: comptia-objectives r
+ref: nist-800-88 r
+ref: cis-controls s
+card: Name the NIST media sanitization outcomes. == Clear, purge and destroy.
+card: What is cryptographic erase? == Destroying the encryption key so that encrypted data cannot be recovered.

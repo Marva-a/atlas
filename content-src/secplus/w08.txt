@@ -1,0 +1,340 @@
+# Week 8: Domain 3.0, part 1.
+
+@lesson w8-1
+title: Architecture models: cloud, on-premises, serverless and more
+domain: Domain 3: Security Architecture
+obj: 3.1
+level: Intermediate
+min: 120
+pre: w1-4, w6-4
+out: Compare cloud deployment models.
+out: Explain serverless, microservices and Infrastructure as Code.
+out: Identify when on-premises, OT or air-gapped designs apply.
+why: Each architecture moves the attack surface and changes who is responsible. A control that made sense in one design can be meaningless in another.
+plain: Choosing an architecture is like choosing where to live. Owning a house gives control but you fix the roof yourself. Renting an apartment means someone else handles the building, but you share walls. A hotel handles nearly everything, and you only bring your luggage.
+tech: On-premises infrastructure is owned and run by the organization, giving maximum control and full responsibility. Cloud deployment models include public (shared provider infrastructure), private (dedicated to one organization), community (shared by organizations with common needs) and hybrid (a mix connected together). Multicloud means using more than one cloud provider, which reduces dependence on one vendor but increases complexity.
+tech: In serverless computing, the provider runs the servers and the customer supplies functions that run on demand, so the customer has no OS to patch but must still secure code, permissions and data. Microservices split an application into small independent services communicating through APIs, which limits the damage from one failure but adds many more connections to protect. Infrastructure as Code (IaC) defines infrastructure in version-controlled files, giving repeatable builds, but a single flawed template can replicate an error everywhere.
+tech: Operational technology (OT) controls physical equipment. An air-gapped network has no connection to outside networks, which is a strong control but can be defeated through removable media. Logical segmentation separates traffic using software such as VLANs and firewall rules. Physical segmentation uses separate hardware and cabling, which is stronger but costlier.
+diagram: cloud-responsibility
+table: Deployment models | Model | Used by | Key tradeoff
+| Public | Many customers | Scale and low entry cost, with shared infrastructure
+| Private | One organization | Control, at higher cost
+| Community | A group with shared needs | Shared cost and shared governance
+| Hybrid | Combines models | Flexibility, but must secure the connection
+term: Cloud == Computing resources delivered on demand over a network.
+term: Serverless == Running code without managing servers.
+term: Multicloud == Using more than one cloud provider.
+term: Deployment models == The ways a cloud is provided: public, private, community and hybrid.
+term: Hybrid == A combination of cloud and on-premises or different clouds.
+term: Private == A cloud for one organization.
+term: Public == A cloud shared among many customers.
+term: Community == A cloud shared by organizations with common needs.
+term: Infrastructure as Code == Defining infrastructure in files (IaC).
+term: OT == Operational technology: systems controlling physical equipment.
+term: On-premises infrastructure == Systems owned and run at the organization's own site.
+term: Air-gapped network == A network with no connection to outside networks.
+term: Microservices == An application built as small services communicating over APIs.
+term: Logical segmentation == Separating traffic through software such as VLANs.
+term: Physical segmentation == Separating networks using distinct hardware.
+term: VLAN == Virtual LAN: a logical network on shared switches.
+eg: A retailer uses Infrastructure as Code and scans templates before deployment, so that a public storage setting is caught before it exists.
+eg: A power plant keeps its control network separate from office IT, and carefully controls USB devices.
+walk: Pick an architecture
+- Requirement: a seasonal application with unpredictable demand. Consider public cloud or serverless.
+- Requirement: strict control of industrial machinery. Keep it on OT networks, separated.
+- Requirement: legacy database that must remain on site, but with a cloud web front end. That suggests hybrid.
+- For each option, ask what the organization must still secure.
+lab: Compare two architectures | 35 | Drawing tool
+do: Draw a simple shop website as on-premises. Mark what you must secure.
+do: Redraw it as serverless on a public cloud. Mark what you still must secure.
+do: Write down two risks that went away and two new ones.
+do: Write three lines of pseudo-template for a storage bucket and spot the insecure setting you could accidentally repeat.
+expect: Two diagrams showing that responsibilities moved, not that they disappeared.
+explain: The exercise shows the core idea: changing architecture changes the shape of risk.
+pass: Both diagrams mark responsibilities.
+pass: You named two removed risks and two new risks.
+scenario: A government contractor must share a system with three other agencies under the same compliance rules, and wants to split the cost. Which deployment model fits best?
+answer: A community cloud, which serves organizations with shared requirements and shares the costs among them.
+q 3.1 mcq e | Deployment models | A company connects its data centre to a public cloud and runs one application across both. What is this?
++ Hybrid :: It combines on-premises and cloud.
+- Community :: That is shared among organizations with common needs.
+- Multicloud only :: Multicloud refers to several cloud providers.
+- Air-gapped :: An air-gapped network has no external connection.
+q 3.1 mcq m | Serverless | What remains the customer's job with serverless functions?
++ Securing the code, its permissions and its data :: The provider manages servers, but not your logic or access.
+- Patching the host OS :: This is handled by the provider.
+- Replacing failed disks :: This is the provider's job.
+- Managing data centre cooling :: This is the provider's job.
+q 3.1 mcq m | IaC | What is a key security benefit of Infrastructure as Code?
++ Configurations can be reviewed, versioned and reproduced consistently :: Infrastructure becomes auditable like source code.
+- It removes the need to control access :: Access still needs managing.
+- It makes templates impossible to misconfigure :: A flawed template can spread an error widely.
+- It eliminates the shared responsibility model :: The model still applies.
+q 3.1 mcq h | Air gap | An air-gapped network was infected. What is the most likely route?
++ Removable media :: Data must cross the gap somehow, often through USB drives.
+- DDoS from the internet :: An air gap has no internet connection.
+- DNS cache poisoning from an internet resolver :: There is no internet connection to reach one.
+- A public website's JavaScript :: Hosts have no route to public websites.
+mistake: Assuming the cloud provider handles everything in serverless.
+mistake: Thinking that VLANs are equal to physical separation. They are logical controls and can be misconfigured.
+sum: On-premises gives control, and cloud shifts duties to the provider.
+sum: Serverless and microservices change, but do not remove, risk.
+sum: Air gaps and segmentation limit reach.
+ref: comptia-objectives r
+ref: nist-800-145 r
+ref: nist-800-144 s
+ref: nist-800-190 s
+ref: aws-shared s
+card: Name the four cloud deployment models. == Public, private, community and hybrid.
+card: How can an air-gapped network still be infected? == Through removable media or supply chain items crossing the gap.
+
+@lesson w8-2
+title: Weighing architecture: technical and business considerations
+domain: Domain 3: Security Architecture
+obj: 3.1
+level: Intermediate
+min: 120
+pre: w8-1
+out: Compare architectures using technical considerations.
+out: Compare architectures using business considerations.
+out: Make and defend a recommendation.
+why: There is no single best architecture. Security professionals advise on tradeoffs, and exam scenarios frequently ask which factor is driving a choice.
+plain: When buying a car, you weigh fuel, seats, price and who will service it. Choosing an architecture is the same, but the factors are availability, recovery, cost and legal requirements.
+tech: Technical considerations: availability is uptime. Resilience is the ability to withstand failure and recover. Proprietary versus open source affects transparency, support and vendor dependence. Usability affects whether people follow secure paths. Responsibility defines who manages what. Compute is the processing capacity needed. Power requirements matter for dense or remote sites. Ease of recovery is how readily a system can be restored.
+tech: Business considerations: data sovereignty means data is subject to the laws of the country where it is stored. Data classification decides how strongly it must be protected. Cost includes both up-front capital and ongoing operating expenses. Ownership asks who is accountable for the system and its data. Environmental requirements cover temperature, humidity and physical conditions. Scalability is the ability to grow or shrink with demand. Risk is the overall exposure that the organization is willing to accept.
+table: Comparing options | Consideration | On-premises | Public cloud
+| Availability | Depends on your investment | Multiple zones available
+| Responsibility | All yours | Shared with provider
+| Compute | Bought for peak | Scales on demand
+| Cost | Mainly capital expense | Mainly operating expense
+| Data sovereignty | Location is clear | Must select regions carefully
+| Scalability | Limited by hardware | Elastic
+term: Availability == How consistently a system is usable.
+term: Resilience == The ability to withstand and recover from disruption.
+term: Proprietary vs. open source == Closed vendor code compared with publicly available code.
+term: Usability == How easily people can use something correctly.
+term: Responsibility == Who is in charge of each security duty.
+term: Compute == Processing capacity.
+term: Power requirements == The electricity a design needs.
+term: Ease of recovery == How readily a system can be restored.
+term: Data sovereignty == Data being subject to the laws of where it is held.
+term: Data classification == Labeling data by sensitivity.
+term: Cost == Capital and operating expenses.
+term: Ownership == Accountability for a system or its data.
+term: Environmental requirements == Conditions a system needs, such as temperature.
+term: Scalability == The ability to grow or shrink capacity.
+term: Risk == Overall exposure weighed in a decision.
+eg: A European health company must keep patient data in the EU, so its cloud regions are chosen to meet that data sovereignty requirement.
+eg: A tool so awkward that staff bypass it has failed on usability, however strong it is on paper.
+walk: Build a decision matrix
+- List the options side by side.
+- List the factors that matter, such as availability, cost and sovereignty.
+- Weight each by importance to this organization.
+- Score the options and total them.
+- Write the recommendation and record the residual risk.
+lab: Write an architecture recommendation | 40 | Spreadsheet
+do: Scenario: a clinic with 40 staff stores patient records and has no IT department.
+do: Score on-premises, public cloud and SaaS across eight considerations from this lesson.
+do: Write a recommendation of up to 150 words, stating one tradeoff you accept.
+expect: A weighted table and a justified recommendation.
+explain: The conclusion matters less than showing your reasoning. Real decisions depend on weighting.
+pass: Your matrix uses at least eight considerations.
+pass: Your recommendation states a tradeoff.
+scenario: A Canadian company's contract says customer data must remain in Canada. A SaaS vendor stores data in several regions and cannot restrict it. Which consideration blocks this vendor?
+answer: Data sovereignty and location requirements. Unless the vendor can guarantee Canadian storage, the contract cannot be met, whatever the vendor's other strengths.
+q 3.1 mcq e | Business considerations | Which term means data is subject to the laws of the country where it is held?
++ Data sovereignty :: The legal jurisdiction follows the location.
+- Scalability :: This refers to capacity.
+- Compute :: This refers to processing.
+- Usability :: This refers to ease of use.
+q 3.1 mcq m | Technical considerations | Which factor most concerns a remote site that depends on a small generator?
++ Power requirements :: Available electricity limits what can run there.
+- Open source licensing :: This does not address the power constraint.
+- Data classification :: This is about sensitivity.
+- Community cloud membership :: This is about shared hosting.
+q 3.1 mcq m | Resilience versus availability | Which statement is most accurate?
++ Resilience is the ability to withstand failure and recover, which supports availability :: Resilience is a capability that helps maintain uptime.
+- Availability and resilience refer only to backups :: Both are broader.
+- Resilience applies only to on-premises systems :: It applies to every architecture.
+- Availability means data cannot be read by outsiders :: That is confidentiality.
+q 3.1 multi h | Tradeoffs | A startup expects rapid, unpredictable growth and has little capital. Which factors favour public cloud? Choose two.
++ Scalability :: Capacity can follow demand.
++ Cost model based on operating expense :: Little up-front spending is needed.
+- Physical control of all hardware :: Public cloud does not offer this.
+- A requirement for an air-gapped network :: Public cloud cannot be air-gapped.
+mistake: Choosing an architecture on cost alone.
+mistake: Forgetting that storage location has legal consequences.
+sum: Technical factors describe how a design behaves.
+sum: Business factors decide if it is acceptable.
+sum: A sound recommendation weighs both and states what risk remains.
+ref: comptia-objectives r
+ref: nist-800-145 r
+ref: gdpr s
+ref: pipeda s
+card: What is data sovereignty? == Data being subject to the laws of the place where it is stored.
+card: What does scalability mean? == The ability to grow or shrink capacity as demand changes.
+
+@lesson w8-3
+title: Secure infrastructure: zones, placement and Zero Trust architecture
+domain: Domain 3: Security Architecture
+obj: 3.2
+level: Intermediate
+min: 120
+pre: w8-2, w2-3
+out: Place security devices and define security zones.
+out: Explain how diversity reduces risk.
+out: Describe the elements of Zero Trust architecture.
+why: Where you put a control matters as much as which control you buy. An IDS watching the wrong link sees nothing, and a flat network lets a single compromise spread everywhere.
+plain: Think of an airport. There is a public hall, a secure area after screening and restricted zones for staff. Guards stand at the transitions, not randomly in the middle of the hall.
+tech: Device placement means putting each control where it can see or enforce the right traffic. A firewall sits at a boundary. An intrusion prevention system sits inline, while a detection sensor may watch a copy of traffic. Security zones group systems of similar trust and sensitivity, such as a screened subnet for public services, an internal zone and a restricted zone. Attack surface is reduced by removing exposure. Diversity means using different vendors, technologies or controls, so that one flaw does not defeat every layer.
+tech: In Zero Trust architecture, every request is evaluated. User authentication confirms who is asking, preferably with strong MFA. Device management checks device health, such as patch level and security software, and device inventory confirms that the device is known. Application access control grants access to specific applications, rather than to whole networks. The policy decision and enforcement functions apply these checks for each request.
+diagram: segmentation
+term: Device placement == Positioning security tools where they can see or enforce traffic.
+term: Security zones == Network areas grouped by trust level.
+term: Screened subnet == A network area for public-facing services, separated from the internal network.
+term: Attack surface == All the points where an attacker could get in.
+term: Diversity == Using different technologies or vendors to avoid shared weaknesses.
+term: Zero Trust architecture == A design in which every request is evaluated regardless of network location.
+term: User authentication == Verifying who is making a request.
+term: Device management == Keeping track of devices and their condition.
+term: Health == Whether a device meets security requirements such as patch level.
+term: Inventory == The record of known devices.
+term: Application access control == Granting access to specific applications instead of whole networks.
+eg: A public web server sits in a screened subnet, so if it is compromised, a second firewall still separates it from internal databases.
+eg: A company uses a firewall from one vendor at the edge and another internally, so one vendor's flaw does not open both.
+walk: Place controls for a small company
+- Identify the zones: internet, screened subnet, users, servers.
+- Place a firewall at each boundary.
+- Put public services in the screened subnet.
+- Place an inline IPS where blocking is needed, and sensors where visibility is needed.
+- Allow only the required flows between zones and deny the rest.
+lab: Design a segmented network | 40 | Drawing tool; Packet Tracer optional
+do: Draw a company with staff, guests, servers, a public website and a building-control system.
+do: Assign each group to a zone and give each a subnet from 10.0.0.0/16.
+do: Write the allowed flows between zones, with everything else denied.
+do: Mark where you would place a firewall, an IPS and a monitoring sensor.
+expect: A diagram in which guests cannot reach internal zones, and only required flows are allowed.
+explain: A short list of permitted flows is easier to protect than a long list of prohibitions.
+pass: Each group is in its own zone.
+pass: Guest and building-control traffic is isolated from user and server zones.
+scenario: An organization has one flat network. Ransomware on a single laptop spreads to its servers within minutes. Which architectural change would most directly limit this?
+answer: Segmentation into security zones with controlled traffic between them. Servers would be reachable only through the ports required, which limits lateral movement.
+q 3.2 mcq e | Security zones | Where should a public-facing web server usually be placed?
++ A screened subnet :: This separates it from internal systems.
+- The internal user network :: A compromise would then land among users.
+- The OT network :: This would expose control systems.
+- On the same subnet as the database :: This removes a layer of separation.
+q 3.2 mcq m | Device placement | A security team wants a tool to stop malicious traffic automatically. Where must it be placed?
++ Inline in the traffic path :: Only an inline device can block in real time.
+- On a mirrored port :: A mirror only receives a copy of traffic.
+- On a separate, unconnected network :: It would see nothing.
+- On a backup tape :: This is not a network location.
+q 3.2 mcq m | Zero Trust architecture | A managed laptop is out of date and fails a health check. What should a Zero Trust system do?
++ Deny or limit access until it is remediated :: Device health is part of the access decision.
+- Grant full access because the password was correct :: Authentication alone is not sufficient.
+- Grant access because the laptop is on the corporate network :: Location gives no trust.
+- Delete the user's account :: This is out of proportion.
+q 3.2 mcq h | Diversity | Why might an organization use firewalls from two vendors?
++ A vulnerability in one is less likely to affect the other :: Diversity avoids a single shared weakness.
+- To eliminate the need to patch :: Both still need patches.
+- To ensure identical configuration :: They will differ in practice.
+- Because one firewall cannot enforce any rules :: A single firewall can enforce rules.
+mistake: Placing a detection sensor where encrypted or irrelevant traffic is all it can see.
+mistake: Equating being inside the network with being trusted.
+sum: Put controls where they can see or enforce traffic.
+sum: Zones limit how far an attacker can move.
+sum: Zero Trust checks user, device and application for each request.
+ref: comptia-objectives r
+ref: nist-800-207 r
+ref: nist-800-41 s
+ref: nist-800-215 s
+ref: cisa-ztmm s
+card: What is a screened subnet? == A network area for public services, separated from the internal network.
+card: Why does an IPS have to be inline? == To block traffic, it must be in the traffic path.
+
+@lesson w8-4
+title: Secure access, identity management and failure modes
+domain: Domain 3: Security Architecture
+obj: 3.2
+level: Intermediate
+min: 120
+pre: w8-3, w3-3
+out: Choose remote access and secure communication options.
+out: Prevent privilege creep and use service accounts safely.
+out: Decide whether a device should fail open or fail closed.
+why: Remote work made access paths a primary target. Accounts tend to accumulate access over time, and a device's behaviour during failure can quietly decide what happens when you need it most.
+plain: A VPN is a private corridor. Out-of-band management is a separate service entrance used when the main entrance is blocked. Failure modes ask: when the electronic lock loses power, does the door stay locked or open?
+tech: Secure communication and access: a virtual private network (VPN) creates an encrypted path, and remote access lets users or admins reach systems from elsewhere. Tunneling encapsulates one protocol within another. User management controls accounts. User access should follow least privilege. End-to-end encrypted messaging means only the participants can decrypt content, not the service provider. Out-of-band management uses a separate path to manage devices, even if the main network is down. File transfer should use protected methods such as SFTP. Security Service Edge (SSE) delivers security functions from the cloud, including secure web gateway, cloud access security broker and Zero Trust network access.
+tech: Identity management: Group Managed Service Accounts (gMSAs) are a Windows feature that automatically manage long, rotating passwords for services. Least privilege access accounts have only the rights required, with separate admin accounts for admin work. Privilege creep is the build-up of permissions as people change roles without old access being removed.
+tech: Failure modes describe how a device behaves when it fails. Fail-closed blocks traffic, favouring security over availability. Fail-open allows traffic through, favouring availability. Inline security devices are chosen deliberately, based on what the organization values more. Note that life-safety systems, such as emergency exits, must allow people out.
+term: Virtual private network == An encrypted connection across another network (VPN).
+term: Remote access == Reaching systems from elsewhere.
+term: Tunneling == Encapsulating one protocol within another.
+term: User management == Creating, changing and removing accounts.
+term: User access == What accounts are allowed to reach.
+term: Least privilege == Giving only the access needed.
+term: End-to-end encrypted messaging == Messaging in which only participants hold the keys.
+term: Out-of-band management == Managing devices through a separate path.
+term: File transfer == Moving files, which should be done with protected methods.
+term: Security Service Edge == Cloud-delivered security for users and applications (SSE).
+term: gMSAs == Group Managed Service Accounts: Windows service accounts with automatic password management.
+term: Least privilege access accounts == Accounts limited to the rights required.
+term: Privilege creep == Access accumulating over time.
+term: Failure modes == How a device behaves when it fails.
+term: Fail-closed == A device blocks traffic when it fails.
+term: Fail-open == A device allows traffic when it fails.
+eg: An IT staff member moves through three departments and retains access to all three. An access review finds this privilege creep.
+eg: A hospital's inline device fails open, so clinical systems stay reachable, and the alert prompts urgent attention.
+walk: Choose a failure mode
+- Identify what the device protects.
+- Ask which is worse: downtime or unfiltered traffic?
+- For a payment system firewall, fail-closed usually protects data.
+- For a device whose failure would stop clinical care, fail-open may be chosen.
+- Document the decision and make sure failure triggers an alert.
+lab: Review account access | 30 | Your lab VM
+do: Run getent passwd and identify human accounts, usually with IDs of 1000 or more.
+do: Run groups for each account you made, and check which accounts have sudo.
+do: Remove sudo from an account that does not need it using sudo deluser labuser sudo, if it is a member.
+do: Run sudo -l as that user to verify what it can do.
+expect: A list of accounts and privileges, and a confirmed reduction in access.
+explain: This is an access review in miniature. Regular reviews are what stop privilege creep.
+pass: You listed each account's groups.
+pass: You verified that an unneeded privilege is gone.
+scenario: After a network outage, administrators cannot reach their switches to fix it, because management runs over the same failed network. What should have been in place?
+answer: Out-of-band management, a separate path to device consoles such as a dedicated management network or cellular link.
+q 3.2 mcq e | Failure modes | A firewall that blocks all traffic when it fails is said to do what?
++ Fail closed :: It prioritizes security over availability.
+- Fail open :: That allows traffic through.
+- Fail forward :: That is a change management term.
+- Fail over :: This means switching to a standby.
+q 3.2 mcq m | Privilege creep | An employee has retained access from three former roles. What is this?
++ Privilege creep :: Permissions have built up over time.
+- Key escrow :: That is storing keys for recovery.
+- Evasion :: That is misleading an AI model.
+- Fail-open :: That is a failure mode.
+q 3.2 mcq m | Service accounts | Which feature helps with long, automatically rotated passwords for Windows services?
++ gMSA :: Group Managed Service Accounts automate password management.
+- CRL :: That lists revoked certificates.
+- SNMP :: That is a monitoring protocol.
+- RTO :: That is a recovery metric.
+q 3.2 mcq h | Out-of-band management | Which best describes out-of-band management?
++ A separate path for administering devices :: It stays available when the production network is not.
+- Sending management traffic over the normal user VLAN :: This is in-band.
+- Backing up data to tape :: This is a data protection activity.
+- Encrypting a message end to end :: This protects message content.
+q 3.2 mcq m | SSE | What does Security Service Edge primarily deliver?
++ Cloud-delivered security for access to web, cloud and private applications :: It includes functions such as ZTNA and secure web gateways.
+- Uninterruptible power for branch offices :: This is a power function.
+- A physical mantrap for a data centre :: This is physical security.
+- Certificate revocation lists :: This belongs to PKI.
+mistake: Assuming a VPN grants appropriate access. It should still be limited by least privilege.
+mistake: Treating fail-open as always wrong. It is a tradeoff to be decided deliberately.
+sum: Protect remote paths with encryption and least privilege.
+sum: Review accounts to stop privilege creep.
+sum: Decide failure modes in advance.
+ref: comptia-objectives r
+ref: nist-800-77 r
+ref: ms-gmsa s
+ref: nist-800-215 s
+card: What is privilege creep? == Accumulating more access over time, usually through role changes.
+card: Fail-closed or fail-open: which favours availability? == Fail-open.

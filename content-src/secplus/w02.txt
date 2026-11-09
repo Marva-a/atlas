@@ -1,0 +1,334 @@
+# Week 2: networking fundamentals. Foundation material, not exam objectives.
+
+@lesson w2-1
+title: What a network is: LAN, WAN, topology and devices
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w1-3
+out: Define LAN, WAN, internet and intranet.
+out: Describe the job of a hub, switch, router, access point and gateway.
+out: Recognize star, mesh, bus and ring topologies.
+why: Almost every attack travels over a network, and almost every defense is placed somewhere on one. To decide where a firewall belongs, or how far an infection could spread, you first need to know how the pieces connect.
+plain: A network is two or more devices connected so they can exchange data. A LAN is like the internal mail system of one building: fast and local. A WAN connects distant buildings, like the postal service between cities. The internet is the worldwide network of networks.
+plain: Different devices have different jobs. A switch is the mail room inside one building, delivering each letter only to the right desk. A router is the post office that sends mail on to other cities. A hub is an old mail room that photocopies every letter and hands it to everyone.
+tech: A local area network (LAN) covers a limited area such as an office. A wide area network (WAN) spans large distances. The internet is the public global network that uses the Internet Protocol. An intranet is a private network service available only inside an organization.
+tech: A hub repeats incoming signals out of every port. A switch learns which device is on each port and forwards traffic only where it needs to go. A router moves traffic between different networks. A wireless access point (AP) connects Wi-Fi devices to a wired network. A gateway is the device that traffic passes through to leave the local network; on most home and office networks, the router is the default gateway.
+tech: Topology describes how a network is arranged. In a star, devices connect to a central switch. In a mesh, devices have multiple links to each other, giving redundancy. In the older bus and ring designs, devices shared a single line or passed data around a loop.
+diagram: network-map
+table: Network devices | Device | What it does | Security note
+| Hub | Repeats traffic to every port | Anyone connected can see all traffic, so hubs are obsolete
+| Switch | Forwards traffic to the right port on a LAN | Limits who sees traffic and can separate networks
+| Router | Moves traffic between networks | A natural place to control what crosses a boundary
+| Access point | Connects wireless devices to the network | Extends the network beyond the walls of the building
+| Gateway | The exit point from a local network | All outbound traffic can be observed here
+term: Network == Devices connected so that they can exchange data.
+term: LAN == Local area network: a network in one limited area.
+term: WAN == Wide area network: a network across long distances.
+term: Internet == The global public network of networks.
+term: Intranet == A private network service used only within an organization.
+term: Topology == The layout of how a network's devices connect.
+term: Hub == A device that repeats traffic to all of its ports.
+term: Switch == A device that forwards traffic within a LAN to the correct port.
+term: Router == A device that moves traffic between different networks.
+term: Access point == A device that connects wireless clients to a network.
+term: Default gateway == The address a device sends traffic to when the destination is on another network.
+eg: A home has one box that combines a router, a switch, an access point and a firewall, which is why these separate jobs are easy to confuse.
+eg: Bank branches connect to the head office over a WAN. If a branch is compromised, that WAN link is a path that attackers may try to follow.
+walk: Trace a message across the network
+- A laptop wants to print to a printer in the same office. The switch sends the data straight to the printer's port.
+- The same laptop now opens a website. The destination is not local, so the laptop sends the data to its default gateway.
+- The router forwards it out toward the internet, from router to router.
+- The reply follows the reverse journey and reaches the laptop through the switch or access point.
+lab: Map your own network | 30 | Paper or any drawing tool, and your router's label
+do: List every device connected to your home or office network that you are allowed to look at: phones, laptops, printers, televisions.
+do: Draw your network. Mark your internet connection, your router and each device. Note which devices use Wi-Fi and which use a cable.
+do: Label where the switch, access point and router functions are. Remember they may all be in one box.
+expect: A simple diagram showing devices, the gateway and the connection to the internet.
+explain: A network diagram is a core security artifact. Each extra device you found is part of what must be protected.
+pass: Your diagram shows the gateway, at least two devices and the internet connection.
+pass: You can state which device function moves data to other networks.
+scenario: An office still uses a hub to connect its computers. One computer is infected with software that records network traffic. Why is this worse than if the office used a switch?
+answer: A hub repeats all traffic to all ports, so the infected computer can see everyone's traffic. A switch sends traffic only to the intended port, so ordinary sniffing would see far less. Switching is not a complete defense, but a hub gives an attacker this visibility for free.
+q none mcq e | Router versus switch | Which device moves traffic between different networks?
++ Router :: Routers connect networks and decide where traffic goes next.
+- Switch :: A switch forwards traffic within one local network.
+- Hub :: A hub simply repeats signals to every port.
+- Access point :: An access point connects wireless devices to a network.
+q none mcq m | Default gateway | A device sends traffic to an address outside its local network. Where does it send that traffic first?
++ Its default gateway :: The default gateway is the exit from the local network.
+- Every device on the LAN :: Traffic for another network does not go to each local device.
+- The DNS server :: DNS translates names, but does not forward application traffic.
+- The nearest printer :: A printer is simply another local device.
+q none match e | Network scope | Match each term to its description.
+= LAN => One office or building
+= WAN => Multiple distant locations
+= Internet => The global public network
+= Intranet => An internal service for one organization
+why: These terms describe the reach and the audience of a network.
+q none tf e | Hubs | True or false: a switch sends traffic only to the correct port when it knows the destination.
++ True :: A switch learns which devices are on which ports so it can forward selectively.
+- False :: Sending traffic out of every port describes a hub.
+mistake: Calling the box at home a router and assuming that is all it does. It usually combines several functions.
+mistake: Treating an intranet as safe because it is internal. Internal networks are a common path for attackers after an initial compromise.
+sum: A LAN is local, a WAN spans distances, and the internet connects networks globally.
+sum: Switches work within a network, routers work between networks.
+sum: Network layout decides what an attacker can see and reach.
+ref: rfc-1122 r
+ref: mdn-web s
+ref: packet-tracer s
+card: What does a switch do that a hub does not? == It forwards traffic only to the port of the intended device.
+card: What is a default gateway? == The device that traffic goes through to leave the local network.
+
+@lesson w2-2
+title: Addresses: IP, IPv4, IPv6, public, private and MAC
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w2-1
+out: Read an IPv4 and IPv6 address and explain the parts.
+out: Identify private and public IPv4 ranges.
+out: Compare IP addresses and MAC addresses.
+why: IP addresses are the first thing analysts search for in logs and firewall rules. Knowing that 10.0.0.5 is private and 8.8.8.8 is public tells you straight away whether a connection stayed inside the organization or left it.
+plain: Devices need addresses, just as houses do. An IP address is like a street address: it says where a device is on a network and can change when the device moves. A MAC address is like a serial number stamped on the network hardware: it identifies the interface locally.
+plain: Private addresses are like internal office extensions. Thousands of companies can all have extension 101 because those numbers only work inside each company. Public addresses are like full phone numbers that must be unique worldwide.
+tech: An IPv4 address is 32 bits, written as four numbers from 0 to 255 separated by dots, such as 192.168.1.20. Each number represents one byte, also called an octet. IPv4 offers about 4.3 billion addresses, which is not enough for the world. IPv6 uses 128 bits written in hexadecimal, such as 2001:db8::1. Runs of zero groups can be shortened once with a double colon.
+tech: RFC 1918 reserves three IPv4 ranges for private use: 10.0.0.0 to 10.255.255.255, 172.16.0.0 to 172.31.255.255 and 192.168.0.0 to 192.168.255.255. These are not routed on the public internet. The range 127.0.0.0/8 is loopback, meaning the device itself, and 127.0.0.1 is the usual example. A device with an address starting 169.254 usually failed to reach a DHCP server and assigned itself a link-local address.
+tech: A MAC address, or media access control address, is a 48-bit identifier for a network interface, written as six pairs of hexadecimal digits such as 3c:22:fb:12:ab:9e. MAC addresses are used to deliver data on the local network segment and do not cross routers. Software can change a MAC address, so it is not proof of identity.
+table: Special IPv4 ranges | Range | Meaning | Reachable from the internet?
+| 10.0.0.0/8 | Private | No
+| 172.16.0.0/12 | Private (172.16 to 172.31) | No
+| 192.168.0.0/16 | Private | No
+| 127.0.0.0/8 | Loopback, this device | No
+| 169.254.0.0/16 | Link-local, often a DHCP failure | No
+table: IP versus MAC | Feature | IP address | MAC address
+| Identifies | A location on a network | A network interface
+| Length | 32 bits (IPv4) or 128 bits (IPv6) | 48 bits
+| Scope | Routed between networks | Local network segment only
+| Can it change? | Yes, often assigned automatically | Set at the factory, but can be changed in software
+term: IP address == A numeric address that identifies a device's location on a network.
+term: IPv4 == The 32-bit version of IP, written as four decimal numbers.
+term: IPv6 == The 128-bit version of IP, written in hexadecimal.
+term: Octet == A group of eight bits, one of the four numbers in an IPv4 address.
+term: Private IP address == An address from a reserved range that is not routed on the internet.
+term: Public IP address == A globally routable address.
+term: Loopback == An address that refers to the device itself, usually 127.0.0.1.
+term: MAC address == A 48-bit hardware identifier for a network interface.
+term: Hexadecimal == A base-16 number system that uses 0 to 9 and A to F.
+eg: A firewall log shows 10.4.2.8 connecting to 203.0.113.50. The first is internal and the second is external, so this is traffic leaving the organization.
+eg: Sign-in logs commonly record a public IP address, which is how unusual locations are spotted.
+walk: Classify an address in four questions
+- Is it 127.x.x.x? Then it is this device.
+- Does it start with 10, or 192.168, or 172 followed by 16 through 31? Then it is private.
+- Does it start with 169.254? Then it is link-local, and DHCP may have failed.
+- Otherwise, treat it as public. Now you know whether the traffic may have crossed the internet.
+lab: Read your own addresses | 30 | ipconfig on Windows, ip or ifconfig on Linux and macOS
+do: Windows: open Command Prompt and run ipconfig /all. Linux: run ip addr. macOS: run ifconfig.
+do: Find your IPv4 address, IPv6 address if any, your MAC or physical address, and your default gateway.
+do: Classify your IPv4 address using the walkthrough.
+do: In a browser, search for what is my IP and compare the public address it shows with your private one.
+expect: Your computer's own address is probably private, and the address the website reports is public and different.
+explain: The difference exists because your router translates private addresses to a public one using NAT, which you will study soon.
+pass: You recorded your IPv4 address, gateway and MAC address.
+pass: You correctly classified your address as private or public.
+scenario: A help desk analyst finds that a user's laptop has the address 169.254.17.8 and cannot reach anything. What is the most likely issue?
+answer: The laptop assigned itself a link-local address because it probably could not get an address from a DHCP server. The analyst should check the network connection and the DHCP service, not the websites the user is trying to reach.
+q none mcq e | Private addressing | Which address is private?
++ 192.168.40.7 :: 192.168.0.0/16 is reserved for private use.
+- 8.8.8.8 :: This is a public address.
+- 172.32.1.1 :: The private 172 range stops at 172.31, so this one is public.
+- 203.0.113.5 :: This is not within any of the three RFC 1918 private ranges.
+q none mcq m | MAC scope | Why does a MAC address not identify a device across the internet?
++ MAC addresses are only used on the local network segment and do not cross routers :: A router replaces the local delivery information at each hop.
+- MAC addresses are longer than IPv6 addresses :: At 48 bits, MAC addresses are shorter than 128-bit IPv6 addresses.
+- MAC addresses can only be used on Wi-Fi :: Wired and wireless interfaces both have MAC addresses.
+- MAC addresses are encrypted by default :: MAC addresses are not encrypted, and encryption is not the reason.
+q none mcq m | Loopback | A service is listening on 127.0.0.1 only. Which statement is true?
++ Only programs on the same device can reach it :: Loopback traffic stays on the device itself.
+- Anyone on the internet can reach it :: Loopback addresses are not reachable from other devices.
+- Only devices on the same LAN can reach it :: A LAN address would be needed for that.
+- It has failed to get a DHCP address :: A 169.254 address suggests that, not loopback.
+q none tf m | MAC trust | True or false: a MAC address is reliable proof of a device's identity.
+- True :: Software can change or spoof a MAC address.
++ False :: MAC addresses can be spoofed, so they should not be used as strong proof of identity.
+mistake: Assuming every address starting with 172 is private. Only 172.16 through 172.31 are.
+mistake: Trusting a MAC address as proof of a device's identity.
+sum: IPv4 uses 32 bits and IPv6 uses 128 bits.
+sum: Three IPv4 ranges are private and not routed on the internet.
+sum: MAC addresses work locally and IP addresses get data between networks.
+ref: rfc-791 r
+ref: rfc-1918 r
+ref: rfc-8200 s
+ref: ms-ipconfig s
+ref: man-ip s
+card: What are the three private IPv4 ranges? == 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16.
+card: What does a 169.254 address usually mean? == The device could not get an address from DHCP and assigned itself a link-local address.
+
+@lesson w2-3
+title: Subnet masks and basic subnetting
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w2-2
+out: Explain what a subnet mask and CIDR notation mean.
+out: Work out the network address, broadcast address and usable hosts for simple subnets.
+out: Decide whether two addresses are on the same subnet.
+why: Subnets are the basic building block of network segmentation, and segmentation limits how far an attacker can move. Firewall rules and logs are written with subnet notation, so you need to be able to read a range like 10.20.30.0/24 at a glance.
+plain: A subnet is a neighbourhood within a town. Part of an address says which neighbourhood, and the rest says which house. The subnet mask tells you where the neighbourhood part ends.
+plain: If two devices are in the same neighbourhood, they can talk directly. If they are in different neighbourhoods, they must go through a router, and that router is a place where the conversation can be checked or blocked.
+tech: A subnet mask marks which bits of an IP address are the network part. The mask 255.255.255.0 means the first 24 bits are the network and the last 8 bits identify the host. Classless Inter-Domain Routing (CIDR) notation writes the same thing as /24, which is the count of network bits.
+tech: Host bits equal 32 minus the prefix. The total number of addresses is 2 raised to the host bits. In a normal IPv4 subnet, two addresses are reserved: the first is the network address and the last is the broadcast address. Usable hosts therefore equal 2 raised to the host bits, minus 2.
+tech: To find a subnet with a mask that ends on an octet boundary, keep the network octets and set the rest. For 192.168.5.77/24, the network is 192.168.5.0, the broadcast is 192.168.5.255 and hosts run from .1 to .254. For prefixes in the middle of an octet, find the block size by subtracting the mask's last value from 256. For /26, the mask ends in 192, so the block size is 64 and networks start at 0, 64, 128 and 192.
+diagram: subnet-split
+table: Common subnets | Prefix | Mask | Total addresses | Usable hosts
+| /24 | 255.255.255.0 | 256 | 254
+| /25 | 255.255.255.128 | 128 | 126
+| /26 | 255.255.255.192 | 64 | 62
+| /27 | 255.255.255.224 | 32 | 30
+| /28 | 255.255.255.240 | 16 | 14
+| /30 | 255.255.255.252 | 4 | 2
+| /16 | 255.255.0.0 | 65,536 | 65,534
+| /8 | 255.0.0.0 | 16,777,216 | 16,777,214
+term: Subnet == A smaller network carved from a larger address range.
+term: Subnet mask == A value that shows which bits of an address identify the network.
+term: CIDR == Classless Inter-Domain Routing: writing a network with a prefix length, such as /24.
+term: Prefix length == The number of network bits, shown after the slash.
+term: Network address == The first address in a subnet, which identifies the subnet itself.
+term: Broadcast address == The last address in a subnet, used to reach all hosts in it.
+term: Host == Any device with an address on a network.
+eg: A company gives accounting 10.1.10.0/24 and guests 10.1.50.0/24. A router between them can block guests from reaching accounting.
+eg: A firewall rule that allows 203.0.113.0/28 is allowing exactly 16 addresses, so a single typo in the prefix can open access to far more.
+walk: Are 192.168.1.70 and 192.168.1.130 on the same /26?
+- A /26 has a block size of 64, so subnets in the last octet start at 0, 64, 128 and 192.
+- The address 192.168.1.70 falls in the block 64 to 127.
+- The address 192.168.1.130 falls in the block 128 to 191.
+- They are in different subnets, so traffic between them must go through a router.
+- Under a /24 mask, they would have been on the same subnet.
+lab: Subnet by hand | 40 | Pencil and paper; check using any free subnet calculator
+do: For 10.0.8.45/24, write the network, broadcast and usable host range.
+do: For 172.16.4.200/26, find the block size, network, broadcast and usable hosts.
+do: Decide whether 192.168.2.14/28 and 192.168.2.20/28 are on the same subnet.
+do: Design subnets for a small office: 50 staff devices, 20 guest devices and 10 servers, from 192.168.10.0/24.
+expect: 10.0.8.0, 10.0.8.255 and hosts .1 to .254. Then 172.16.4.192, 172.16.4.255 and hosts .193 to .254. The /28 pair are in different subnets (blocks 0 to 15 and 16 to 31). One valid office design is /26 for staff, /27 for guests and /28 for servers, without overlaps.
+explain: The block size tells you where each subnet starts. Separate subnets for staff, guests and servers create boundaries where traffic can be controlled.
+pass: Your first three answers match the expected ones.
+pass: Your office design gives each group enough usable addresses and no ranges overlap.
+scenario: Guests and staff share the subnet 10.5.0.0/24. A guest's infected phone begins probing staff laptops directly. What change reduces this risk at the network level?
+answer: Place guests in their own subnet, ideally on a separate VLAN, and route between the subnets through a firewall that blocks guest-to-staff traffic. On the same subnet, devices talk directly and no router has a chance to filter the traffic.
+q none mcq e | CIDR | How many usable hosts are in a /24 IPv4 subnet?
++ 254 :: A /24 has 256 addresses, minus the network and broadcast addresses.
+- 256 :: That is the total number, including the two reserved addresses.
+- 255 :: Two addresses are reserved, not one.
+- 24 :: The 24 is the number of network bits, not hosts.
+q none mcq m | Subnet boundaries | What is the network address of 192.168.1.130/26?
++ 192.168.1.128 :: A /26 has blocks of 64 and 130 falls in the block that starts at 128.
+- 192.168.1.0 :: That would be the network if the prefix were /24.
+- 192.168.1.64 :: That block ends at 127, so 130 is outside it.
+- 192.168.1.192 :: That block starts after 130.
+q none mcq h | Subnet size | A team needs 28 usable addresses and wants the smallest subnet that fits. Which prefix should it use?
++ /27 :: A /27 gives 30 usable hosts, which is the smallest size that holds 28.
+- /28 :: A /28 gives only 14 usable hosts.
+- /26 :: A /26 fits but is larger than necessary.
+- /30 :: A /30 gives only 2 usable hosts.
+q none tf m | Routing between subnets | True or false: two devices on different subnets need a router to communicate.
++ True :: Traffic between subnets is forwarded by a router or a layer 3 device.
+- False :: Direct delivery only works within a subnet.
+mistake: Forgetting to subtract the network and broadcast addresses when counting usable hosts.
+mistake: Copying a firewall rule with the wrong prefix. A /16 in place of a /24 allows 256 times as many addresses.
+sum: A mask or CIDR prefix separates the network part from the host part of an address.
+sum: Usable IPv4 hosts equal 2 raised to the host bits, minus 2.
+sum: Subnets create boundaries where traffic can be controlled.
+ref: rfc-4632 r
+ref: rfc-1918 s
+card: How do you calculate usable hosts in an IPv4 subnet? == 2 raised to the number of host bits, minus 2.
+card: What is the block size of a /26? == 64 addresses.
+
+@lesson w2-4
+title: DHCP, DNS, NAT and how a packet finds its way
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w2-3
+out: Explain what DHCP, DNS and NAT each do.
+out: Describe the steps from joining a network to loading a website.
+out: Use nslookup and traceroute to observe these services.
+why: Attackers abuse all three. Rogue DHCP can redirect traffic, DNS can be poisoned or used to hide data, and NAT shapes what logs can tell you. Before you can recognize those attacks, you need to know what normal looks like.
+plain: When you join a network, DHCP acts like a hotel front desk: it assigns you a room number, and tells you where the exit is and who to ask for directions. DNS is the phone book that turns a name such as example.com into a number. NAT is the company switchboard: many people inside share one outside number.
+plain: A packet is a small labelled parcel of data. Each router along the way reads the destination and passes the parcel closer to it, the way postal centres do.
+tech: The Dynamic Host Configuration Protocol (DHCP) gives a device its IP address, subnet mask, default gateway and DNS server. The exchange has four messages: Discover, Offer, Request and Acknowledge, often remembered as DORA. The address is leased for a limited time.
+tech: The Domain Name System (DNS) translates domain names into addresses. A resolver asks on your behalf and caches answers for a time set by the record's time to live (TTL). The resolver works from the root servers to the top-level domain servers to the domain's authoritative server. Common record types are A (IPv4), AAAA (IPv6), CNAME (an alias), MX (mail server), TXT (text, used for email security) and NS (name server).
+tech: Network Address Translation (NAT) rewrites addresses as traffic crosses a router. In the common form, many private addresses share one public address, with port numbers keeping conversations apart. Before a device can send to another on the local segment, it uses the Address Resolution Protocol (ARP) to find the matching MAC address.
+diagram: dns-lookup
+diagram: nat
+term: DHCP == Dynamic Host Configuration Protocol: automatically assigns network settings.
+term: DORA == Discover, Offer, Request, Acknowledge: the four steps of a DHCP exchange.
+term: DNS == Domain Name System: translates names into IP addresses.
+term: Resolver == The DNS server that looks up answers on a client's behalf.
+term: Authoritative server == The DNS server holding the official records for a domain.
+term: TTL == Time to live: how long a DNS answer may be cached.
+term: A record == A DNS record mapping a name to an IPv4 address.
+term: MX record == A DNS record that names a domain's mail servers.
+term: NAT == Network Address Translation: rewrites addresses as traffic crosses a router.
+term: ARP == Address Resolution Protocol: finds the MAC address for an IP address on the local network.
+term: Packet == A unit of data with addressing information.
+eg: A log shows many devices connecting from one public IP address. That is often NAT, so one address does not necessarily mean one computer.
+eg: Security teams watch DNS logs because malware has to look up where to connect, which can reveal infected hosts.
+walk: From joining Wi-Fi to loading a page
+- Your laptop joins Wi-Fi and uses DHCP to get an address, a gateway and a DNS server.
+- You type www.example.com. The laptop asks its DNS resolver for the address.
+- The destination is on another network, so the laptop uses ARP to find the gateway's MAC address.
+- The laptop sends the packet to the gateway. NAT replaces the private source address with a public one.
+- Routers across the internet forward the packet toward its destination, and the reply returns the same way.
+lab: Watch names and paths | 40 | nslookup, and tracert or traceroute
+do: Run nslookup example.com. Note the server that answered and the address returned.
+do: Run nslookup -type=mx example.com to view mail records, or use your own domain if you have one.
+do: Windows: run tracert example.com. Linux or macOS: run traceroute example.com. Each line is a router on the path.
+do: Note where the addresses change from private to public on the path.
+expect: DNS returns one or more addresses, and traceroute lists a series of hops. Some hops may show asterisks because those routers do not reply.
+explain: Traceroute shows the path because each hop reports back when a packet's hop limit expires. Asterisks do not by themselves mean failure. Only trace paths to ordinary public names like this, and do not scan or probe systems without permission.
+pass: You recorded the DNS answer and at least three traceroute hops.
+pass: You identified where the path leaves your private network.
+scenario: Users report that typing their bank's correct address takes them to a fake website, while typing the bank's real IP address works normally. Which service should be investigated first?
+answer: DNS. The name is resolving to the wrong address, and the direct IP works, so routing is fine. Likely causes include a poisoned cache or changed DNS settings. DHCP could matter too if it handed out a malicious DNS server, so check which DNS server clients are using.
+q none mcq e | DNS | What does DNS do?
++ Translates domain names into IP addresses :: DNS is the internet's naming system.
+- Assigns IP addresses to devices :: Assigning addresses is the job of DHCP.
+- Encrypts web traffic :: TLS encrypts web traffic.
+- Finds the MAC address for an IP address :: That is the job of ARP.
+q none order m | DHCP | Put the DHCP exchange in order.
+1. Discover
+2. Offer
+3. Request
+4. Acknowledge
+why: The client looks for a server, the server offers an address, the client asks for it and the server confirms.
+q none mcq m | NAT | Why might many office computers appear as a single address in a website's log?
++ NAT translates their private addresses to one public address :: Many private hosts commonly share a public address through NAT.
+- They all have the same MAC address :: Each interface has its own MAC, and MACs do not reach websites anyway.
+- DNS gave them all the same private address :: DNS does not assign addresses to clients.
+- The website's firewall merged them :: The translation happens at the office's router.
+q none match m | Network services | Match each protocol to its function.
+= DHCP => Assigns network configuration
+= DNS => Resolves names to addresses
+= NAT => Translates private to public addresses
+= ARP => Finds a MAC address on the local network
+why: Four services run almost invisibly every time a device goes online.
+mistake: Mixing up DNS and DHCP. DNS answers what address a name has, while DHCP gives a device its own settings.
+mistake: Assuming that a public IP in a log identifies one person. NAT may be hiding many users behind it.
+sum: DHCP configures a device, and DNS finds addresses from names.
+sum: NAT lets many private devices share a public address.
+sum: Packets travel from router to router toward their destination.
+ref: rfc-2131 r
+ref: rfc-1034 r
+ref: rfc-3022 s
+ref: rfc-826 s
+ref: mdn-domain s
+ref: ms-tracert s
+ref: ms-nslookup s
+ref: man-traceroute s
+card: What are the four DHCP steps? == Discover, Offer, Request, Acknowledge.
+card: What does an MX record identify? == The mail servers for a domain.
+also: 8 | The internet and the apps on it

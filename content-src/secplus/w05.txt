@@ -1,0 +1,506 @@
+# Week 5: Domain 1.0 General Security Concepts.
+
+@lesson w5-1
+title: The core ideas: CIA, AAA, non-repudiation, Zero Trust and defense in depth
+domain: Domain 1: General Security Concepts
+obj: 1.1
+level: Beginner
+min: 120
+pre: w4-4
+out: Apply confidentiality, integrity and availability to a real situation.
+out: Separate authentication, authorization and accounting, and explain non-repudiation.
+out: Describe defense in depth, least privilege and Zero Trust principles.
+why: These ideas are the vocabulary of the entire field. Every control you will study protects confidentiality, integrity or availability, and many exam scenarios simply ask which of those was harmed.
+plain: Think of your medical records. Confidentiality means strangers cannot read them. Integrity means nobody can quietly change your blood type. Availability means the doctor can open them when you are in the emergency room.
+plain: AAA is airport security. Authentication checks your passport, authorization checks that your ticket lets you board this flight, and accounting records that you boarded. Non-repudiation is a signed receipt: you cannot later claim it was not you.
+plain: Zero Trust is like a hospital where your badge is checked at every door, not only at the entrance. Being inside the building earns no automatic trust.
+tech: The CIA triad is confidentiality, integrity and availability. Encryption and access control protect confidentiality. Hashes and digital signatures detect changes, which supports integrity. Redundancy and backups support availability.
+tech: AAA stands for authentication, authorization and accounting. Authentication proves identity. Authorization grants permissions. Accounting records what was done. Non-repudiation means someone cannot credibly deny having performed an action, and is commonly achieved through digital signatures tied to a private key that only that person controls.
+tech: Defense in depth layers different controls so that one failure does not lead to total compromise. Least privilege gives each user or process only the access needed, for only as long as needed. NIST SP 800-207 describes Zero Trust as moving defenses away from network location and toward users, assets and resources. Principles include verifying each request, assuming breach, granting per-session least privilege and using device and context signals in decisions.
+tech: In the Zero Trust architecture, a Policy Decision Point (PDP) decides whether to allow access, and a Policy Enforcement Point (PEP) carries out that decision between the subject and the resource. These terms come from NIST SP 800-207 and are useful even though the current exam list focuses on the principles.
+diagram: aaa
+diagram: defense-layers
+diagram: zero-trust
+table: Commonly confused pairs | Term | What it answers | Example
+| Authentication | Who are you? | Password plus a phone prompt
+| Authorization | What may you do? | Permission to approve payments
+| Accounting | What did you do? | A log showing who approved a payment
+| Integrity | Has it changed? | A hash that no longer matches
+| Non-repudiation | Can you deny doing it? | A digitally signed contract
+term: Confidentiality == Keeping information from people who should not see it.
+term: Integrity == Making sure data is not changed without authorization, or that changes are detected.
+term: Availability == Making sure systems and data can be used when needed.
+term: Non-repudiation == Assurance that someone cannot deny having performed an action.
+term: Defense in depth == Using multiple layers of different controls.
+term: Least privilege == Giving only the minimum access needed to do a task.
+term: Zero Trust principles == Never granting trust from location alone: verify each request, limit access and assume breach.
+term: Policy Decision Point == The Zero Trust component that decides whether to allow access.
+term: Policy Enforcement Point == The Zero Trust component that enforces that decision.
+eg: Ransomware encrypting a hospital's files harms availability. If the attackers also leak the files, confidentiality is harmed too.
+eg: A company requires a badge at the door, a firewall at the network edge, MFA at sign-in and encryption on disks. Each layer covers failure in another. That is defense in depth.
+walk: Identify which part of CIA was harmed
+- Ask: did someone see what they should not? That is confidentiality.
+- Ask: was something altered, added or deleted without permission? That is integrity.
+- Ask: could people not use it when they needed it? That is availability.
+- Remember that a single incident can harm more than one.
+- Choose the control that addresses the harm you identified.
+lab: Build a CIA and control map | 35 | A table in any editor
+do: Choose a service you use, such as online banking.
+do: List two things that would harm each of confidentiality, integrity and availability.
+do: Add one control for each harm, and label which layer of defense in depth it belongs to.
+do: Add one example of accounting, and state what would provide non-repudiation.
+expect: A six-row table of harms with matching controls across more than one layer.
+explain: Mapping harm to control is the core skill. If all your controls sit in one layer, you have found a gap.
+pass: Every CIA element has two harms and controls.
+pass: Your controls cover at least three layers.
+scenario: A hospital's patient records were altered by an unknown party, but no record was viewed by outsiders and the system stayed online. Which CIA element was affected, and which control best detects this?
+answer: Integrity was affected, since data was changed without authorization. File integrity monitoring or cryptographic hashes would detect the change. Confidentiality was not harmed in this description, and availability was not affected.
+q 1.1 mcq e | CIA triad | A denial-of-service attack takes a shopping site offline. Which element is directly harmed?
++ Availability :: Users cannot use the service when they need it.
+- Confidentiality :: No information was disclosed in this scenario.
+- Integrity :: No data was changed in this scenario.
+- Non-repudiation :: This concerns denying actions, which is not involved here.
+q 1.1 mcq m | Non-repudiation | A company needs to prove that a specific manager approved a contract, in a way the manager cannot convincingly deny. What provides this?
++ A digital signature created with the manager's private key :: Only the holder of the private key can create it, which supports non-repudiation.
+- A shared team password :: A shared credential cannot tie the action to one person.
+- Full disk encryption :: This protects stored data but does not prove who acted.
+- A symmetric key known to both parties :: Either party could have produced the result, so it cannot prove which did.
+q 1.1 mcq m | AAA | Which activity is accounting?
++ Recording which files a user accessed and when :: Accounting tracks activity.
+- Checking a user's password :: That is authentication.
+- Granting a user access to a folder :: That is authorization.
+- Encrypting a user's laptop :: That is a data protection control.
+q 1.1 mcq h | Zero Trust principles | An employee is on the office network and has already signed in. Under Zero Trust, what should happen when the employee requests a sensitive application?
++ The request is evaluated on identity, device condition and context before access :: Zero Trust grants no trust based on network location.
+- Access is granted because the employee is on the internal network :: Location alone must not grant trust.
+- Access is granted because the employee signed in earlier today :: Access decisions are made per session and per resource.
+- The firewall is turned off for trusted users :: This removes a layer of defense.
+q 1.1 multi m | Defense in depth | Which arrangements show defense in depth? Choose two.
++ Firewall at the edge, plus EDR on endpoints :: Different layers protect against different failures.
++ MFA at sign-in, plus least-privilege permissions :: Each limits the damage if the other fails.
+- Two identical firewalls with the same rule set, as the only control :: Duplication of one control type gives redundancy, not layered defense.
+- One strong password on the administrator account :: This is a single control.
+mistake: Confusing integrity with non-repudiation. Integrity is about whether data changed. Non-repudiation is about whether someone can deny an action.
+mistake: Equating Zero Trust with a product. It is a set of principles and an architecture.
+sum: CIA describes what security protects.
+sum: AAA proves who you are, sets what you may do and records what you did.
+sum: Defense in depth and least privilege limit the damage from any single failure.
+ref: comptia-objectives r
+ref: nist-800-207 r
+ref: cisa-ztmm s
+ref: nist-glossary s
+card: What does CIA stand for? == Confidentiality, integrity and availability.
+card: Which control supports non-repudiation? == Digital signatures tied to a private key that only one person controls.
+also: 15 | Zero trust in plain words
+
+@lesson w5-2
+title: Security controls: categories and types
+domain: Domain 1: General Security Concepts
+obj: 1.1
+level: Beginner
+min: 120
+pre: w5-1
+out: Classify any control by category and by type.
+out: Explain why one control can have more than one type.
+out: Recommend a compensating control when the preferred control is not possible.
+why: Exam questions regularly give a control and ask you to classify it. In real work, classification shows gaps, such as an organization with plenty of prevention and no way of detecting when prevention fails.
+plain: Category describes how a control is carried out: through technology, management decisions, people's daily routines or physical things. Type describes what the control is trying to achieve: stop it, discourage it, notice it, fix it, tell people what to do, or stand in when something else cannot be used.
+plain: Take a house. The fence is physical, and it is preventive and deterring. The camera is physical or technical, and detective. The rule that the last person locks up is directive. Repairing a broken lock is corrective.
+tech: The four control categories are technical (also called logical), which are implemented in technology such as firewalls and encryption; managerial (also called administrative), which are decisions and documentation such as policies and risk assessments; operational, which are carried out by people, such as security guards or awareness training; and physical (also called environmental), such as locks, fences and fire suppression.
+tech: The six control types are preventive (stops an event), deterring (discourages an attempt), detective (identifies an event), corrective (restores after an event), compensating (an alternative when the primary control is not feasible) and directive (tells people what to do, such as a policy).
+tech: Category and type are separate questions, so each control has both. Context can change the type. A guard who physically stops someone is preventive, while one simply watching monitors is detective.
+table: Control examples | Control | Category | Main type
+| Firewall rule blocking a port | Technical | Preventive
+| Warning sign about cameras | Physical | Deterring
+| Log review by an analyst | Operational | Detective
+| Restoring from backup | Technical or operational | Corrective
+| Fire suppression system | Physical | Corrective
+| Acceptable use policy | Managerial | Directive
+| Network isolation for an unpatchable machine | Technical | Compensating
+| Security guard at a door | Operational | Preventive and deterring
+term: Technical control == A control carried out by technology. Also called a logical control.
+term: Managerial control == A control based on policy, oversight and risk decisions. Also called administrative.
+term: Operational control == A control carried out by people following a routine.
+term: Physical control == A tangible control, such as a lock or fence. Environmental controls such as fire suppression are grouped here.
+term: Preventive == Designed to stop an event from happening.
+term: Deterring == Designed to discourage someone from trying.
+term: Detective == Designed to identify that something happened.
+term: Corrective == Designed to fix things and restore after an event.
+term: Compensating == An alternative used when the primary control cannot be applied.
+term: Directive == Tells people what they must do, such as a policy.
+eg: An old medical device cannot be patched. The hospital isolates it on its own network segment and monitors traffic. That is a compensating control.
+eg: A company's backups are corrective, the alert that ransomware began is detective, and the rule forbidding personal USB drives is directive.
+walk: Classify a control in two steps
+- Read: guards check badges at the data centre entrance.
+- Category: who or what carries it out? People following a routine, so operational. A physical barrier would be physical.
+- Type: what does it aim to achieve? Stopping entry, so preventive, and their presence also deters.
+- Write both answers. Exams may ask for either one.
+lab: Audit a control set | 35 | A table in any editor
+do: List ten controls you see at work, school or home, physical and digital.
+do: Classify each by category and by type.
+do: Count your types and find the type you have least of.
+do: Propose one control to fill that gap.
+expect: A table with both classifications and a gap identified.
+explain: Many organizations are heavy in preventive controls and light on detective ones. If prevention fails silently, nobody knows.
+pass: Each of your ten controls has both a category and a type.
+pass: You identified a gap and proposed a control.
+scenario: A manufacturer runs a critical machine on an unsupported operating system that cannot be patched or replaced for two years. Which type of control is most appropriate, and what might it look like?
+answer: A compensating control. Patching is the primary control but is not feasible, so the company could place the machine on an isolated segment, allow only required traffic and monitor it closely. This is not a permanent fix, and the risk should be recorded.
+q 1.1 mcq e | Control categories | A company publishes a policy forbidding password sharing. Which control category is this?
++ Managerial :: Policies are a management decision.
+- Technical :: No technology enforces this by itself.
+- Physical :: This is not a tangible barrier.
+- Operational :: Operational controls are carried out by people as a routine, while writing policy is managerial.
+q 1.1 mcq m | Control types | A sign says that the premises are under video surveillance. Which type of control is the sign?
++ Deterring :: The sign aims to discourage an attempt.
+- Detective :: The sign itself detects nothing; a camera recording would.
+- Corrective :: The sign does not restore anything.
+- Compensating :: It does not stand in for another control.
+q 1.1 mcq m | Compensating control | A system cannot support MFA, so administrators must connect through a monitored jump server with session recording. What type of control is this?
++ Compensating :: It provides alternative protection because the primary control is not feasible.
+- Directive :: A directive control instructs people but does not technically substitute.
+- Deterring :: Its purpose is not just to discourage.
+- Corrective :: It does not repair damage after an event.
+q 1.1 match m | Control types | Match each control to its main type.
+= Restoring a server from backup => Corrective
+= An intrusion detection alert => Detective
+= A locked server room door => Preventive
+= A mandatory procedure document => Directive
+why: Ask what each control aims to accomplish.
+q 1.1 mcq h | Category and type | Which option correctly classifies security awareness training that teaches staff to report phishing?
++ Operational category, with preventive and detective effects :: People carry it out, it helps stop attacks and it encourages reports of them.
+- Physical category, corrective type :: It is not a tangible control and does not restore systems.
+- Technical category, deterring type :: Training is delivered and carried out by people.
+- Managerial category, compensating type :: It is not substituting for an unavailable control.
+mistake: Mixing up category and type. Ask how it is done, and then what it aims to do.
+mistake: Calling every alternative control compensating. A compensating control exists because the primary one is not feasible.
+sum: Categories are technical, managerial, operational and physical.
+sum: Types are preventive, deterring, detective, corrective, compensating and directive.
+sum: One control has a category and can have more than one type.
+ref: comptia-objectives r
+ref: nist-800-53 r
+ref: nist-glossary s
+card: Name the four control categories. == Technical (logical), managerial (administrative), operational and physical (environmental).
+card: Name the six control types. == Preventive, deterring, detective, corrective, compensating, directive.
+
+@lesson w5-3
+title: Change management and its effect on security
+domain: Domain 1: General Security Concepts
+obj: 1.2
+level: Beginner
+min: 120
+pre: w5-2
+out: Follow a change from request to documentation.
+out: Identify the security impact of a technical change.
+out: Choose between backing out and failing forward.
+why: Unplanned changes cause outages and open security gaps. Many incidents begin with an undocumented firewall exception or a rushed update. Good change management turns risky work into controlled work.
+plain: Think of road works. Someone asks permission, planners check what roads will be affected, and they set a time when traffic is light. They also plan what to do if it goes wrong, then update the maps when it is finished. Change management applies the same discipline to technology.
+tech: In the business process, an owner is accountable for the change. Stakeholders are the people affected. An impact analysis estimates what could go wrong, including security effects. Test results show that the change worked in a safe environment. A Change Advisory Board (CAB) reviews significant changes through an approval process. Standard operating procedures (SOPs) describe how routine work is done.
+tech: A maintenance window is a period agreed in advance when work can happen with minimal disruption. Backout planning is the prepared way to return to the earlier state. Fail forward is the alternative: when going back is riskier or impossible, you fix the problem and keep moving ahead, such as after a database migration that cannot be cleanly reversed.
+tech: Technical implications include: changing allow lists or deny lists, so that a new application is not blocked or a dangerous one permitted; restricted activities, meaning actions that are prohibited during the work; downtime; a service restart or application restart; legacy applications, which may break under new settings; and dependencies, where changing one component affects another.
+tech: After the change, documentation must catch up: updating diagrams and updating policies and procedures. Version control tracks each revision of code, configurations and documents so that you can see who changed what and return to a previous state.
+table: A change record | Stage | Key question | Security angle
+| Request and ownership | Who is accountable? | Clear responsibility
+| Impact analysis | What could break? | Does this expose anything or remove a control?
+| Testing | Did it work in a safe place? | Do the test results include security checks?
+| CAB approval | Should we proceed? | Security represented at the review
+| Implementation | Is it in the maintenance window? | Restricted activities followed
+| Backout or fail forward | What if it goes wrong? | The system is not left half-protected
+| Documentation | Are records current? | Diagrams and procedures match reality
+term: Change Advisory Board == A group that reviews and approves significant changes (CAB).
+term: Approval process == The formal steps to authorize a change.
+term: Ownership == The person accountable for a change or asset.
+term: Stakeholders == The people affected by a change.
+term: Impact analysis == Assessing what a change could affect.
+term: Test results == Evidence from trying the change in a non-production environment.
+term: Backout planning == Preparing the steps to return to the earlier state.
+term: Fail forward == Fixing and continuing when going back is not practical.
+term: Maintenance window == An agreed period for carrying out changes.
+term: SOP == Standard operating procedure: documented steps for routine work.
+term: Allow lists and deny lists == Lists of items explicitly permitted or blocked.
+term: Restricted activities == Actions that are forbidden during a change or by a role.
+term: Downtime == A period when a service is not available.
+term: Service restart == Restarting a background service so that a change takes effect.
+term: Application restart == Restarting an application so that a change takes effect.
+term: Legacy applications == Older software that may not support modern settings.
+term: Dependencies == Other components that a system needs in order to work.
+term: Updating diagrams == Revising network or system drawings to match the changed environment.
+term: Updating policies and procedures == Revising documents so they describe how things now work.
+term: Version control == Tracking each revision so changes can be reviewed or reversed.
+eg: A firewall upgrade needs a service restart, so the team schedules it in a maintenance window, and prepares to restore the old configuration if VPN users cannot connect.
+eg: Stronger TLS settings break a legacy application. Because dependencies were not analyzed beforehand, the application fails during peak hours.
+walk: Take a firewall rule through change management
+- The application owner requests a new rule allowing database access from one subnet.
+- The security team analyzes the impact and checks for a narrower alternative.
+- The rule is tested in staging, and the test results are attached.
+- The CAB approves it for Saturday's maintenance window, with a backout plan to remove the rule.
+- The engineer implements it, checks that it works and updates the network diagram and version-controlled configuration.
+lab: Write a change request | 35 | Text editor, and git in your lab VM
+do: Write a change request to enable a host firewall on your VM. Include owner, stakeholders, impact, test plan, window and backout plan.
+do: In your VM, install git and run git init in a new folder.
+do: Save your firewall settings to a text file, then commit it with git add and git commit.
+do: Change the file, commit again, and use git log and git diff to see what changed.
+expect: A complete change record, and a repository that shows two versions and exactly what differed.
+explain: Version control gives you a tamper-evident history and an easy route back, which is why it applies to configurations as well as to code.
+pass: Your request includes all listed elements, including a backout plan.
+pass: git log shows two commits.
+scenario: An update has been applied to a database and has already converted records to a new format. A bug appears, but reverting would lose an hour of transactions. What approach best applies?
+answer: Fail forward. Reverting would cause data loss, so the better path is a fix that moves forward, provided that the risk is understood and approved. Normally, the backout plan would be used, but here going back would be more damaging.
+q 1.2 mcq e | Backout planning | What is the main purpose of a backout plan?
++ To return to the earlier state if a change fails :: It is the prepared route back.
+- To decide who approves a change :: Approval is handled by the CAB and approval process.
+- To record the change in the diagram :: That is documentation.
+- To schedule the work :: Scheduling is the role of the maintenance window.
+q 1.2 mcq m | Change management | A team wants to deploy an urgent patch that needs a service restart during business hours, and it has not been reviewed. What should happen first in a mature organization?
++ It follows the emergency change route with an owner, impact analysis and approval :: Urgency changes the speed, and the discipline should remain.
+- The patch is deployed immediately, and no record is needed :: Skipping records is how undocumented risk builds up.
+- The firewall is disabled for the update :: This creates additional exposure.
+- The system is decommissioned :: This is out of proportion to the situation.
+q 1.2 mcq m | Dependencies | After TLS settings are hardened on a server, an old reporting tool stops connecting. What did the change process most likely miss?
++ Identifying dependencies and legacy applications :: The impact analysis should have found this reliance on older settings.
+- A CAB meeting agenda :: An agenda would not reveal the technical dependency.
+- Reducing the maintenance window :: Timing did not cause the incompatibility.
+- Enabling more deny lists :: A deny list is unrelated.
+q 1.2 order m | Change process | Put these steps in order.
+1. Request the change and assign an owner
+2. Analyze the impact
+3. Test and collect results
+4. Obtain CAB approval
+5. Implement during the maintenance window
+6. Update diagrams and procedures
+why: Each step uses the output of the one before, and documentation closes the change.
+q 1.2 mcq h | Application allow list | A company uses application allow listing. A new version of an approved application is deployed by hash, and it now fails to run. What change was missed?
++ Updating the allow list to include the new version :: The new version has a new hash, which is not yet on the list.
+- Restarting the DNS service :: DNS does not determine whether an application is allowed to run.
+- Changing the network diagram :: Diagrams document systems but do not affect execution.
+- Removing the backout plan :: This would only remove a safety net.
+mistake: Treating documentation as optional cleanup. Out-of-date diagrams mislead responders during an incident.
+mistake: Always assuming a change can be reversed. Some cannot, and that should be identified before you start.
+sum: Changes need an owner, an impact analysis, testing and approval.
+sum: Plan a backout or a fail-forward approach before starting.
+sum: Updated documentation and version control keep records true.
+ref: comptia-objectives r
+ref: nist-800-53 s
+ref: nist-800-40 s
+card: What is fail forward? == Fixing a problem and moving ahead because reversing would be riskier or impossible.
+card: Who reviews and approves significant changes? == The Change Advisory Board.
+
+@lesson w5-4
+title: Cryptography: encryption, hashing, salting and signatures
+domain: Domain 1: General Security Concepts
+obj: 1.3
+level: Intermediate
+min: 120
+pre: w5-1, w3-3
+out: Compare symmetric and asymmetric encryption, and choose for a use case.
+out: Distinguish encryption, hashing, salting and obfuscation.
+out: Explain digital signatures and key exchange.
+why: Cryptography protects data on disks, on networks and in signatures. Most failures are not broken mathematics. They are poor choices of algorithm, weak key handling or using the wrong tool, such as encrypting passwords when they should be hashed.
+plain: Encryption is a lockbox: with the key you can get the original back. Hashing is a blender: you can make a smoothie from fruit, but cannot turn it back. If two people blend the same fruit, they get the same smoothie, which is how you can check that something has not changed.
+plain: In symmetric encryption, both people share the same key, like a shared house key. In asymmetric encryption, there is a pair: a public key that anyone can use to lock a box, and a private key that only you can use to open it.
+tech: Symmetric algorithms use one shared key and are fast, so they are used for bulk data. The Advanced Encryption Standard (AES) is the main example, with key lengths of 128, 192 or 256 bits. Asymmetric algorithms use a public and private key pair, and are slower, so they are used for key exchange and signatures. RSA and elliptic curve cryptography (ECC) are examples. ECC gets comparable strength from much shorter keys. For the same algorithm, a longer key length generally makes brute force harder.
+tech: Key exchange solves the problem of agreeing on a shared key over an open network. Diffie-Hellman, including its elliptic curve form, lets two parties derive a shared secret without ever sending it. TLS uses asymmetric methods to agree on a key, and symmetric encryption for the session. That is the transport/communication use of encryption. Forward secrecy uses temporary keys, so stealing a long-term key later cannot unlock past sessions.
+tech: A hashing algorithm produces a fixed-length digest from any input. It is one-way, and any small change in the input yields a very different digest. SHA-256 is a current choice, whereas MD5 and SHA-1 are considered broken for collision resistance. A salt is a random value added to each password before hashing, so identical passwords produce different hashes and pre-computed rainbow tables are defeated. Passwords should be stored with slow, purpose-built functions such as bcrypt, scrypt or Argon2.
+tech: A digital signature is made by hashing a message and signing that hash with the sender's private key. Anyone can verify it with the sender's public key, which gives integrity, authentication of origin and non-repudiation. Obfuscation makes something hard to understand without protecting it mathematically. Steganography, hiding data within other data, and code minification are examples. Obfuscation is not encryption.
+tech: Encryption can be applied at different levels: full disk (the entire drive), partition, volume (a logical storage unit), file, database, or an individual record. The narrower the level, the more precisely you can control access, and the more there is to manage. Protocols such as TLS, IPsec and SSH apply encryption in transit.
+tech: Cryptographic tools include the Trusted Platform Module (TPM), a chip in a computer that stores keys and supports full disk encryption; the hardware security module (HSM), a dedicated device that protects keys at scale; key management systems, which handle generating, storing and rotating keys; and the secure enclave, an isolated processor area that protects sensitive operations.
+diagram: crypto
+diagram: salted-hash
+diagram: digital-signature
+diagram: key-exchange
+table: Encryption, hashing and more | Technique | Reversible? | Uses a key? | Main purpose
+| Symmetric encryption | Yes | One shared key | Fast confidentiality for bulk data
+| Asymmetric encryption | Yes | Public and private pair | Key exchange and signatures
+| Hashing | No | No | Detecting change and storing passwords
+| Salting | Not applicable | No, it uses a random value | Makes each password hash unique
+| Digital signature | Verifiable | Private key signs, public key verifies | Integrity, origin, non-repudiation
+| Obfuscation | Yes, with effort | Not necessarily | Making something hard to read
+term: Symmetric encryption == Encryption using the same key to encrypt and decrypt.
+term: Asymmetric encryption == Encryption using a matched public and private key pair.
+term: AES == Advanced Encryption Standard: the main symmetric algorithm in use today.
+term: RSA == A widely used asymmetric algorithm.
+term: ECC == Elliptic curve cryptography: asymmetric cryptography with shorter keys.
+term: Key length == The size of a key in bits.
+term: Algorithms == The defined mathematical procedures that perform encryption or hashing.
+term: Key exchange == A method for two parties to agree on a shared key.
+term: Diffie-Hellman == A key exchange method that derives a shared secret without sending it.
+term: Forward secrecy == A property that protects past sessions if a long-term key is later stolen.
+term: Hashing algorithm == A one-way function that produces a fixed-length digest.
+term: Salting == Adding a unique random value to a password before hashing.
+term: Digital signature == A hash signed with a private key, verifiable with the matching public key.
+term: Obfuscation == Making information hard to understand without cryptographic protection.
+term: Steganography == Hiding data inside other data, such as an image.
+term: Full disk encryption == Encrypting an entire drive.
+term: Partition == A defined section of a physical disk that can be encrypted separately.
+term: Volume == A logical storage area that can be encrypted as a unit.
+term: File encryption == Encrypting individual files.
+term: Database encryption == Encrypting data at the database level.
+term: Record encryption == Encrypting individual records or fields.
+term: Transport encryption == Encrypting communication as it travels across a network.
+term: Protocols == Agreed rules for communication, such as TLS, IPsec and SSH.
+term: TPM == Trusted Platform Module: a chip that stores keys on a device.
+term: HSM == Hardware security module: a dedicated device for protecting keys.
+term: Tools == Cryptographic tools include TPMs, HSMs, key management systems and secure enclaves.
+term: Secure enclave == An isolated processor area for sensitive operations.
+eg: BitLocker can use a laptop's TPM, so the drive decrypts only on the original hardware in its expected state.
+eg: When a password database leaks, salted bcrypt hashes make cracking far slower than unsalted MD5.
+walk: Choose the right tool
+- Need to keep a large file secret and get it back? Use symmetric encryption, such as AES.
+- Need to share a key with someone you have never met? Use asymmetric key exchange.
+- Need to store passwords? Use a salted, slow hash such as Argon2, not encryption.
+- Need to detect whether a download changed? Compare a SHA-256 hash.
+- Need to prove who approved something? Use a digital signature.
+lab: Hash, salt and encrypt | 40 | OpenSSL and sha256sum in your lab VM
+do: Run echo -n hello | sha256sum, then echo -n Hello | sha256sum, and compare the results.
+do: Run openssl passwd -6 -salt abc mysecret and again with -salt xyz, and compare the two results.
+do: Create a file and run openssl enc -aes-256-cbc -pbkdf2 -in file.txt -out file.enc, then decrypt it using -d.
+do: Run openssl genrsa -out priv.pem 2048 and openssl rsa -in priv.pem -pubout -out pub.pem. Sign a file with openssl dgst -sha256 -sign priv.pem -out sig file.txt and verify it using -verify pub.pem -signature sig.
+do: Change the file and verify again.
+expect: A one-letter change alters the whole hash. Different salts give different results. Decryption returns the original. Verification succeeds until the file changes.
+explain: You have just seen one-way hashing, the salt's effect, reversible encryption and a signature that detects tampering. Only use practice keys here.
+pass: You observed different hashes from a single changed letter.
+pass: Verification failed after you changed the signed file.
+scenario: A developer proposes encrypting user passwords with AES and storing the key on the same server, so that passwords can be recovered for users. What should be recommended?
+answer: Do not store passwords in a reversible form. Use a salted, slow password hashing function such as Argon2 or bcrypt, and provide password reset instead of recovery. If an attacker obtains the server, the key would decrypt every password.
+q 1.3 mcq e | Symmetric versus asymmetric | Which statement is true about symmetric encryption?
++ The same key encrypts and decrypts :: That is the defining feature.
+- It uses a public and private key pair :: That describes asymmetric encryption.
+- It cannot be used for large files :: Symmetric encryption is well suited to bulk data.
+- It is one-way and cannot be reversed :: That describes hashing.
+q 1.3 mcq m | Hashing versus encryption | An organization needs to verify that a downloaded file has not changed. What should it use?
++ A SHA-256 hash comparison :: A matching digest shows the file is unchanged.
+- AES encryption :: Encryption provides confidentiality, not a simple integrity check.
+- Obfuscation :: Obfuscation does not verify anything.
+- A longer password :: A password has no bearing on file integrity.
+q 1.3 mcq m | Salting | What is the main benefit of salting password hashes?
++ Identical passwords produce different hashes :: Unique salts defeat pre-computed tables.
+- Hashes can be reversed more easily :: Salting does not make hashes reversible.
+- Passwords no longer need to be long :: Weak passwords remain weak.
+- The salt must be kept as secret as a private key :: Salts are normally stored with the hash and need not be secret.
+q 1.3 mcq h | Digital signatures | Which key does a sender use to create a digital signature?
++ The sender's private key :: Only the signer holds it, so the signature proves origin.
+- The sender's public key :: Public keys verify signatures.
+- The recipient's public key :: This would be used to encrypt data for the recipient.
+- A shared symmetric key :: A shared key cannot prove which party acted.
+q 1.3 match m | Encryption levels | Match each need to the most suitable level of encryption.
+= A stolen laptop must be unreadable => Full disk
+= One sensitive document must be protected => File
+= A credit card column in a table must be protected => Record
+= Web traffic must be protected => Transport/communication
+why: Match the scope of the threat to the scope of the protection.
+q 1.3 mcq m | Tools | Which device is designed to protect and manage cryptographic keys for many servers?
++ HSM :: A hardware security module is dedicated to protecting keys at scale.
+- TPM :: A TPM is a chip that serves one device.
+- NIC :: A NIC connects a device to a network.
+- SIEM :: A SIEM collects and analyzes events.
+mistake: Saying passwords should be encrypted. They should be salted and hashed with a slow function.
+mistake: Treating obfuscation as if it were encryption.
+mistake: Thinking the public key encrypts a digital signature. The private key signs, and the public key verifies.
+sum: Symmetric is fast and uses one key, and asymmetric uses a key pair.
+sum: Hashing is one-way, and salting makes password hashes unique.
+sum: Signatures give integrity, proof of origin and non-repudiation.
+ref: comptia-objectives r
+ref: nist-800-175b r
+ref: nist-fips-197 s
+ref: nist-fips-180 s
+ref: owasp-password r
+ref: nist-800-57 s
+ref: openssl-docs s
+ref: ms-bitlocker s
+card: Which key signs and which key verifies a digital signature? == The private key signs, and the public key verifies.
+card: Why is ECC attractive? == It offers comparable strength using much shorter keys.
+also: 9 | Protecting traffic and data
+
+@lesson w5-5
+title: Public key infrastructure and certificates
+domain: Domain 1: General Security Concepts
+obj: 1.3
+level: Intermediate
+min: 120
+pre: w5-4
+out: Explain how a certificate chain is validated.
+out: Compare CRL and OCSP, and self-signed and third-party certificates.
+out: Generate a certificate signing request.
+why: Certificates are how you know you are talking to your real bank and not an impostor. When a certificate expires or a key is stolen, services go down or trust breaks. PKI failures are a common cause of outages as well as attacks.
+plain: A certificate is an ID card for a website or person. A certificate authority is the government office that issues it. You trust the ID because you trust the office. Public key infrastructure is the whole system of offices, ID cards and lists of cancelled cards.
+tech: Public key infrastructure (PKI) is the set of people, policies and systems that create, manage and revoke certificates. A certificate binds a public key to an identity and is signed by a certificate authority (CA). The private key stays secret with the owner. The public key may be shared. Key escrow means a trusted third party holds a copy of a key so that it can be recovered, for example if an employee leaves or loses it. Escrowed keys need strict controls.
+tech: A root of trust is the starting point that is trusted by default. Browsers and operating systems ship with root CA certificates. A root CA usually signs an intermediate CA, and the intermediate CA signs end-entity certificates. To validate, the client checks the chain up to a trusted root, the name, the validity dates and the revocation status.
+tech: To request a certificate, you generate a key pair and create a certificate signing request (CSR), which contains the public key and identifying details. The CA verifies the request and returns a signed certificate. The private key is never sent. A wildcard certificate covers all first-level subdomains of a domain, such as *.example.com. A Subject Alternative Name (SAN) lists additional names. A third-party certificate comes from a public CA and is broadly trusted. A self-signed certificate is signed by its own key, and clients will not trust it automatically, so it suits internal testing.
+tech: Revocation is used when a certificate must be withdrawn early, for example because its key was stolen. A certificate revocation list (CRL) is a signed list of revoked serial numbers that a client downloads. The Online Certificate Status Protocol (OCSP) lets a client ask about one certificate in real time. OCSP stapling lets the server attach a recent signed OCSP response.
+diagram: pki
+table: Revocation compared | Feature | CRL | OCSP
+| How it works | Download a list of revoked serial numbers | Ask about one certificate
+| Freshness | As current as the last published list | Near real time
+| Network cost | Can be large | Small for each query
+term: PKI == Public key infrastructure: the system for issuing and managing certificates.
+term: Public key == The widely shared half of a key pair.
+term: Private key == The secret half of a key pair.
+term: Key escrow == A trusted party holding a copy of a key for recovery.
+term: Certificate authorities == Organizations that sign and issue certificates (CAs).
+term: Root of trust == The starting point that a system trusts by default.
+term: Intermediate CA == A CA authorized by a root to issue certificates.
+term: CSR == Certificate signing request: a request containing a public key and identity details.
+term: Wildcard certificate == A certificate valid for all first-level subdomains of a domain.
+term: Self-signed certificate == A certificate signed by its own private key.
+term: Third-party certificate == A certificate issued by an external, public CA.
+term: CRL == Certificate revocation list: a published list of revoked certificates.
+term: OCSP == Online Certificate Status Protocol: real-time certificate status lookup.
+term: OCSP stapling == A server providing a recent signed OCSP response.
+eg: A website's certificate expires over a weekend, so browsers warn all visitors and sales stop. Many organizations now automate renewal.
+eg: A company runs an internal CA and installs its root on company devices, so that internal sites are trusted without a public CA.
+walk: How your browser trusts a site
+- The server sends its certificate and any intermediate certificates.
+- The browser checks that the name matches the address and that the certificate is within its dates.
+- It verifies each signature up the chain until it reaches a root it already trusts.
+- It checks revocation status using OCSP or CRL data.
+- If all pass, the handshake continues. If not, you see a warning.
+lab: Create a CSR and read a chain | 40 | OpenSSL in your lab VM, and a browser
+do: Run openssl req -new -newkey rsa:2048 -nodes -keyout lab.key -out lab.csr and enter example lab values.
+do: Run openssl req -in lab.csr -noout -text and find the public key and subject.
+do: Make a self-signed certificate: openssl x509 -req -in lab.csr -signkey lab.key -days 30 -out lab.crt.
+do: Run openssl x509 -in lab.crt -noout -issuer -subject -dates and note that issuer and subject match.
+do: In a browser, view a major site's certificate chain and identify its root and intermediate.
+expect: The CSR shows the details without the private key. The issuer and subject of your self-signed certificate match. The public site shows a chain of two or more.
+explain: Matching issuer and subject is the mark of self-signing. A public site's chain reaches a root already in your browser, so it is trusted automatically.
+pass: You generated a CSR and inspected it.
+pass: You identified the root and intermediate of a real site.
+scenario: A web server's private key is stolen, but its certificate has 200 days of validity remaining. What should be done, and how will clients learn of it?
+answer: Revoke the certificate, generate a new key pair and CSR, and install a new certificate. Clients learn through OCSP or by receiving an updated CRL. Simply replacing the certificate is not enough, because the attacker could still present the old one with the stolen key.
+q 1.3 mcq e | CRL | What is a CRL?
++ A published list of revoked certificates :: A CRL names certificates that should no longer be trusted.
+- A request sent to get a new certificate :: That is a CSR.
+- A chip that stores keys :: That describes a TPM.
+- A type of symmetric key :: A CRL is not a key.
+q 1.3 mcq m | CSR | What does a CSR contain?
++ The public key and identifying information :: The CA signs these after verification.
+- The private key and a password :: The private key must never leave its owner.
+- A list of revoked certificates :: That is a CRL.
+- The CA's root private key :: Nobody outside the CA should ever have this.
+q 1.3 mcq m | Wildcard | A certificate for *.example.com is valid for which name?
++ mail.example.com :: A wildcard covers one level of subdomain.
+- a.b.example.com :: A wildcard does not normally cover multiple subdomain levels.
+- example.org :: This is a different domain.
+- mail.example.net :: This is a different domain.
+q 1.3 mcq h | Key escrow | Why would an organization use key escrow?
++ To recover encrypted data if a key is lost or its holder leaves :: A controlled copy of the key permits recovery.
+- To replace the need for certificates :: Escrow is about storing keys and does not replace certificates.
+- To speed up TLS handshakes :: Escrow is unrelated to speed.
+- To publish private keys so anyone can verify signatures :: Private keys must not be published.
+q 1.3 order m | Certificate lifecycle | Put these certificate steps in order.
+1. Generate a key pair
+2. Create a CSR
+3. CA verifies and signs the certificate
+4. Install the certificate on the server
+5. Revoke if the key is compromised
+why: The key pair must exist first. The CSR carries the public key to the CA, and revocation is a later safeguard.
+mistake: Thinking a CSR contains the private key. It contains only the public key and identity details.
+mistake: Assuming that when a certificate is replaced, it no longer matters. A compromised certificate should also be revoked.
+sum: PKI binds public keys to identities through trusted CAs.
+sum: Clients validate the chain, name, dates and revocation.
+sum: CRLs are downloaded lists, and OCSP is a real-time lookup.
+ref: comptia-objectives r
+ref: rfc-5280 r
+ref: rfc-6960 s
+ref: openssl-docs s
+card: What is the difference between CRL and OCSP? == A CRL is a downloaded list, and OCSP is a real-time query about one certificate.
+card: Is a private key included in a CSR? == No. A CSR contains the public key and identity details.

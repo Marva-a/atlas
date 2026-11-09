@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 13: find the odd connection in flow logs · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 13: find the odd connection in flow logs</h1>
+<p class="eyebrow">Day 38 · Week 6 · Advanced · about 120 min</p>
+<p>You will read real flow logs from your cluster or tailnet and find a connection that should not be there, the way an analyst does.</p>
+<p><strong>By the end, you can:</strong> Investigate a set of flow logs and identify the connection that does not fit the expected pattern.</p>
+<h2>Why it matters to a designer</h2>
+<p>Reading data like an analyst moves you from knowing terms to understanding the work. You will see what information is missing, which is exactly where product design adds value: context, grouping and links to policy.</p>
+<h2>Key ideas</h2>
+<ul><li>This is the first advanced lesson. You will judge real data yourself rather than follow a guide.</li><li>Plant a problem first: in your cluster, add a small pod that calls the database directly, or in your tailnet, connect from a device that should not reach a server.</li><li>An analyst asks: Is this normal? Who owns this source? What policy allowed it? Has it happened before? What else did this source talk to?</li><li>Most raw logs answer only “what” and “when”. The “who owns it” and “should it” answers come from other systems: labels, owners, policies. Joining them is the design opportunity.</li><li>Write down every question you had and where you found the answer, or whether you could not.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>baseline</strong></td><td>What normal traffic looks like, used to spot unusual activity.</td></tr><tr><td><strong>anomaly</strong></td><td>Something that differs from the baseline.</td></tr><tr><td><strong>context</strong></td><td>Extra information that helps judge an event, such as owner or policy.</td></tr><tr><td><strong>enrichment</strong></td><td>Adding context to raw events automatically.</td></tr><tr><td><strong>triage</strong></td><td>Quickly deciding how urgent an event is and what to do next.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Re-read what your flow logs contain. &mdash; <a href="https://docs.tigera.io/calico/latest/observability/view-flow-logs">View flow logs</a> (Calico Documentation)</p><span class="step__min">10 min</span></div><div class="step"><p>Plant one odd connection in your cluster or tailnet, and generate some normal traffic around it.</p><span class="step__min">25 min</span></div><div class="step"><p>Find it in the flow logs without looking at what you planted. Time yourself. &mdash; <a href="https://tailscale.com/kb/1219/network-flow-logs">Network flow logs</a> (Tailscale Docs)</p><span class="step__min">30 min</span></div><div class="step"><p>Re-read how to use flow logs to check that a rule blocks what you meant. &mdash; <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html">Logging IP traffic using VPC Flow Logs</a> (AWS)</p><span class="step__min">10 min</span></div><div class="step"><p>Write notes: each question you asked, where you found the answer, and what context was missing.</p><span class="step__min">30 min</span></div><div class="step"><p>List three kinds of enrichment that would have made you faster.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Skip building dashboards or queries in a SIEM. Raw logs and careful notes are enough.</p>
+<h2>Check yourself</h2><ul><li>What questions does an analyst ask about an unusual connection?</li><li>What context was missing from the raw flow logs?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Is it normal for this source? Who owns it? Which policy allowed it? Has it happened before? What else did this source do? Is the destination sensitive?</li><li>Usually ownership (which team or person), purpose (what the service is), the policy that allowed or denied it, and history. Raw logs show only addresses, ports, times and verdicts.</li></ul>
+<p><a href="../../index.html#lesson/38">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

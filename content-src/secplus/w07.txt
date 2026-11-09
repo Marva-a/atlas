@@ -1,0 +1,447 @@
+# Week 7: Domain 2.0, part 2.
+
+@lesson w7-1
+ref: owasp-threat s
+title: Types of vulnerabilities and attack surfaces
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.4
+level: Intermediate
+min: 120
+pre: w6-4
+out: Name the major vulnerability types and attack surfaces.
+out: Explain race conditions and unsafe code practices.
+out: Recognize shadow IT, rogue devices and stale credentials.
+why: You cannot fix a weakness you cannot name. This list is effectively a checklist of the places where real organizations get hurt, and many have nothing to do with sophisticated hacking.
+plain: A vulnerability is any weak spot. Some are like a door with an old lock nobody makes keys for: unsupported products. Some are like a door the landlord does not know exists: shadow IT. Some are a key taped next to the lock: hardcoded secrets.
+tech: System weaknesses: unsupported products no longer receive vendor fixes. Unpatched systems have fixes available that were not applied. Obsolete systems are outdated and may be past useful life. Unmanaged systems are not tracked by IT, so they miss updates and monitoring. Open ports and services expose functionality that may not be needed. Operating system (OS) based vulnerabilities are flaws in the OS itself. Virtualization vulnerabilities include VM escape, where code breaks out of a guest into the host, and resource reuse between VMs.
+tech: Application weaknesses: a race condition happens when the result depends on the timing of events. In a time-of-check (TOC) to time-of-use (TOU) flaw, a system checks something, and the thing changes before it is used. A malicious update delivers harmful code through a normal update channel. Code weaknesses include hardcoded secrets, such as a password written into source code, and unsafe exception handling, which can expose internal details or leave a system in an insecure state when errors happen.
+tech: A zero-day is a vulnerability unknown to the vendor or with no fix available. Cryptographic vulnerabilities include weak algorithms, short keys and poor key handling. Unmanaged or stale credentials are accounts and passwords left active after they are no longer needed. Rogue devices are unauthorized devices attached to a network. Shadow IT is technology used without IT's knowledge or approval.
+tech: Other surfaces: wireless and low-powered communications, which often have weak security; large language models (LLMs), which accept natural language input and can be manipulated; identity providers, where one compromise can open access to many applications; mobile devices, which face loss, sideloading (installing apps from outside the official store) and jailbreaking or rooting; misconfiguration, among the most common causes of breaches; public repositories where code and secrets are accidentally published; and public object storage, such as cloud buckets left open.
+table: Similar-sounding terms | Term | Meaning
+| Unpatched | A fix exists but was not applied
+| Unsupported | The vendor no longer provides fixes
+| Zero-day | No fix exists yet, or the vendor is unaware
+| Unmanaged | IT does not track or administer it
+| Rogue device | An unauthorized device on the network
+| Shadow IT | Unapproved software or services in use
+term: Unsupported products == Products no longer receiving vendor fixes.
+term: Unpatched systems == Systems missing available fixes.
+term: Obsolete systems == Outdated systems past their useful life.
+term: Unmanaged systems == Systems not tracked or administered by IT.
+term: Ports and services == Listening network entry points and the software behind them.
+term: Applications == Software programs, which may contain their own flaws.
+term: Race conditions == Flaws where the outcome depends on timing.
+term: TOC == Time-of-check: when a condition is verified.
+term: TOU == Time-of-use: when the checked item is actually used.
+term: Malicious update == Harmful code delivered through an update channel.
+term: Code == Source code, which can contain security weaknesses.
+term: Hardcoded secrets == Passwords or keys written directly into code.
+term: Unsafe exception handling == Handling errors in a way that leaks information or fails insecurely.
+term: Operating system vulnerabilities == Flaws in the OS (OS-based).
+term: Virtualization == Running VMs, which adds risks such as VM escape.
+term: VM escape == Code in a guest VM breaking out to affect the host.
+term: Zero-day == A flaw that has no available fix.
+term: Cryptographic vulnerabilities == Weak algorithms, short keys or poor key handling.
+term: Stale credentials == Unmanaged accounts or passwords left active when no longer needed.
+term: Rogue devices == Unauthorized devices connected to a network.
+term: Shadow IT == Technology used without IT's approval.
+term: Wireless and low-powered communications == Radio links, often with weaker security.
+term: LLMs == Large language models: AI systems that generate text.
+term: Identity providers == Services that authenticate users for many applications.
+term: Sideloading == Installing apps from outside the official store.
+term: Jailbreaking == Removing a mobile OS's restrictions.
+term: Misconfiguration == A system set up incorrectly or insecurely.
+term: Public repositories == Publicly visible code stores.
+term: Public object storage == Cloud file storage that anyone can access.
+eg: A developer pushes code containing a cloud key to a public repository, and automated scanners find it within minutes.
+eg: A department signs up for an online file-sharing app with a corporate card. That is shadow IT, and IT cannot protect what it does not know about.
+walk: Tell apart three common findings
+- A server has a patch available but it has not been installed: unpatched.
+- An old OS gets no more patches from its maker: unsupported.
+- A new attack hits a flaw for which no patch exists: zero-day.
+- Each needs a different response: patch, replace or compensate, and detect or isolate.
+lab: Audit a sample configuration | 35 | A text editor, and your lab VM
+do: In your VM, create a file named app.py containing the line DB_PASSWORD = "Summer2026!".
+do: Run grep -rni password . in that folder and see the result.
+do: Rewrite the code to read the password from an environment variable, then repeat the search.
+do: List every port your VM has open using sudo ss -tuln, and write a reason for each.
+do: Delete the practice file when finished.
+expect: grep finds the hardcoded password, and the rewritten version no longer contains the secret itself.
+explain: This is what automated secrets scanning does at scale. Removing a secret from code is only half of the job, since a secret that was ever exposed must also be rotated.
+pass: Your search found the secret before the fix and not after.
+pass: Each open port has a stated reason or a plan to close it.
+scenario: A review finds a Windows server running a version that Microsoft no longer supports. It cannot be replaced for a year. What is the vulnerability type, and what should be done meanwhile?
+answer: An unsupported product. Because no patches are coming, the organization should apply compensating controls such as isolation, strict firewall rules and increased monitoring, and record the risk until the replacement happens.
+q 2.4 mcq e | Shadow IT | A team uses an unapproved cloud app to share files. What is this?
++ Shadow IT :: It is technology used without IT's approval.
+- A zero-day :: A zero-day is a flaw with no fix.
+- A race condition :: This is a timing flaw in software.
+- An access vestibule :: This is a physical entry control.
+q 2.4 mcq m | Zero-day | Which best describes a zero-day vulnerability?
++ A flaw that has no available vendor fix :: Defenders have had no time to patch.
+- A flaw that was patched last year :: That would be an unpatched or fixed flaw.
+- A vulnerability that scores 0.0 in CVSS :: That would mean no severity.
+- A misconfigured firewall rule :: This is misconfiguration.
+q 2.4 mcq h | Race conditions | A program checks that a user may open a file, then opens it. Between those steps, the file is swapped for a sensitive one. What is this?
++ A time-of-check to time-of-use race condition :: The resource changed between the check and its use.
+- A buffer overflow :: That involves writing past a memory boundary.
+- A hardcoded secret :: No embedded credential is involved.
+- Directory traversal :: That manipulates file paths in requests.
+q 2.4 mcq m | Stale credentials | Why are accounts of former contractors a serious risk?
++ They can give attackers valid access without needing to exploit anything :: Unmanaged or stale credentials still work.
+- They slow down the file server :: Performance is not the concern.
+- They prevent patches being applied :: They have no such effect.
+- They use too much storage :: Storage is not the issue.
+q 2.4 multi m | Attack surfaces | Which are examples of misconfiguration or exposure? Choose two.
++ A cloud bucket left open to the public :: Public object storage is a common exposure.
++ A cloud key committed to a public repository :: This exposes a secret.
+- A fully patched and monitored server :: This is not a weakness in itself.
+- An approved laptop using disk encryption :: This is a protective control.
+mistake: Confusing unpatched with unsupported. One has a fix waiting, and the other will never get one.
+mistake: Removing a leaked secret from code but not rotating it.
+sum: Weaknesses include software, configuration, people and processes.
+sum: Timing flaws, hardcoded secrets and misconfiguration recur constantly.
+sum: Anything unknown to IT cannot be protected by IT.
+ref: comptia-objectives r
+ref: owasp-top10 r
+ref: owasp-secrets s
+ref: aws-s3-block s
+ref: nist-800-124 s
+card: What is the difference between unpatched and unsupported? == Unpatched means a fix exists but was not applied, and unsupported means no fixes are being produced.
+card: What is a TOC/TOU flaw? == A race condition where something changes between when it is checked and when it is used.
+
+@lesson w7-2
+title: Indicators of malicious activity: malware, physical and social engineering
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.5
+level: Intermediate
+min: 120
+pre: w7-1
+out: Tell malware types apart by their behaviour.
+out: Recognize physical attacks.
+out: Identify types of social engineering from a scenario.
+why: Scenario questions describe symptoms and ask what is happening. Being able to go from a symptom to a named attack is exactly the skill an analyst uses each day.
+plain: Malware is software built to do harm. Different kinds behave differently, the way a pickpocket, an arsonist and a blackmailer are all criminals but act differently. Social engineering skips the technology altogether and tricks the person.
+tech: Ransomware encrypts data and demands payment. A trojan looks legitimate but hides harmful functions. A worm spreads by itself across networks. A virus attaches to a file and needs someone to run it. Spyware collects information secretly. Adware displays unwanted advertising. A rootkit hides itself and others deep in the system, often with high privileges. A keylogger records keystrokes. A logic bomb waits for a condition, such as a date or an account being deleted. Fileless malware runs in memory or through built-in tools, leaving few files on disk.
+tech: Physical attacks include tailgating (following an authorized person through a door), shoulder surfing (watching someone enter information), skimming (a hidden device reads card data) and forced entry (breaking in).
+tech: Social engineering attacks include phishing by email, spear phishing aimed at a specific person, whaling aimed at senior executives, smishing by text message, vishing by voice, and quishing using QR codes. Impersonation is pretending to be someone trusted. A deepfake is AI-generated audio or video that imitates a real person.
+table: Malware by behaviour | Malware | Key behaviour | Clue in a scenario
+| Virus | Attaches to files, needs a user to run it | Spread when an infected file was opened
+| Worm | Spreads itself | Fast spread across hosts with no user action
+| Trojan | Disguised as something useful | User installed a free utility
+| Ransomware | Encrypts and demands payment | Files inaccessible and a ransom note
+| Spyware | Secretly gathers information | Data quietly leaving the device
+| Adware | Shows unwanted adverts | Pop-ups and browser changes
+| Rootkit | Hides deep in the system | Tools report nothing, but behaviour is abnormal
+| Keylogger | Records typing | Credentials stolen with no other trace
+| Logic bomb | Triggers on a condition | Damage occurs on a date or event
+| Fileless malware | Lives in memory or built-in tools | PowerShell activity, no files on disk
+term: Malware attacks == Attacks that use malicious software.
+term: Ransomware == Malware that encrypts data and demands payment.
+term: Trojan == Malware disguised as legitimate software.
+term: Worm == Malware that spreads by itself.
+term: Virus == Malware that attaches to files and needs to be run.
+term: Spyware == Malware that secretly collects information.
+term: Adware == Software that displays unwanted adverts.
+term: Rootkit == Malware that hides deep in the operating system.
+term: Keylogger == Software or hardware that records keystrokes.
+term: Logic bomb == Malicious code that activates on a specific condition.
+term: Fileless malware == Malware that runs in memory or through built-in tools.
+term: Tailgating == Following an authorized person through a secured door.
+term: Shoulder surfing == Watching someone enter private information.
+term: Skimming == Illicitly capturing card data with a hidden device.
+term: Forced entry == Physically breaking into a location.
+term: Phishing == Fraudulent messages that trick people into giving something up.
+term: Spear phishing == Phishing aimed at a specific person or group.
+term: Whaling == Phishing aimed at senior executives.
+term: Smishing == Phishing by text message.
+term: Vishing == Phishing by voice call.
+term: Quishing == Phishing using a QR code.
+term: Impersonation == Pretending to be a trusted person.
+term: Deepfake == AI-generated media that imitates a real person.
+eg: An employee receives a call in the CEO's cloned voice asking for a wire transfer. It combines vishing, impersonation and a deepfake.
+eg: A logic bomb written by a departing developer deletes records once the developer's account has been removed.
+walk: Identify malware from symptoms
+- Symptom: thousands of hosts infected in an hour, and no one clicked anything. That suggests a worm.
+- Symptom: a user downloaded a free PDF tool, and later data left the host. That suggests a trojan.
+- Symptom: security tools show nothing, but the system behaves abnormally. Consider a rootkit.
+- Symptom: damage appeared at midnight on the last day of the month. Consider a logic bomb.
+lab: Classify attack scenarios | 35 | Paper, and CISA ransomware guidance
+do: Read the prevention section of the #StopRansomware guide.
+do: Write ten one-sentence attack scenarios that use different attack names from this lesson.
+do: Swap the labels out, wait an hour and then classify them from memory.
+do: For three of them, write the indicator a defender would see first.
+expect: At least eight of ten correctly classified, and three defender indicators.
+explain: Writing scenarios forces you to focus on the distinguishing behaviour, which is what the exam tests.
+pass: You classified at least eight of your ten.
+pass: You named a first indicator for three scenarios.
+scenario: A finance employee receives a text message with a link about a suspended bank account. Later the same day, an executive is targeted by an email carefully written around a real upcoming acquisition. Name the two attacks.
+answer: The first is smishing, since it arrives by SMS. The second is whaling: spear phishing tailored to a senior executive.
+q 2.5 mcq e | Malware types | Which malware spreads without user action?
++ Worm :: Worms replicate on their own.
+- Virus :: A virus needs an infected file to be run.
+- Trojan :: A trojan relies on the user installing it.
+- Adware :: Adware does not generally self-replicate.
+q 2.5 mcq m | Social engineering | A caller claims to be from IT and asks for a password reset code. What is this attack?
++ Vishing :: It is social engineering by voice.
+- Smishing :: Smishing is by text message.
+- Quishing :: Quishing uses QR codes.
+- Tailgating :: Tailgating is physical.
+q 2.5 mcq m | Logic bomb | A script deletes payroll files on the first day after its author's account is disabled. What is this?
++ Logic bomb :: It triggers on a condition.
+- Keylogger :: A keylogger records typing.
+- Worm :: Nothing indicates it spreads.
+- Adware :: It displays adverts.
+q 2.5 mcq h | Fileless malware | Antivirus finds no malicious files, but PowerShell is making repeated outbound connections and running code in memory. What is the most likely malware type?
++ Fileless malware :: It operates in memory and through built-in tools.
+- Adware :: Adware displays adverts and is usually visible.
+- A virus attached to a document :: This would normally leave file-based evidence.
+- Skimming :: This is a card-data attack.
+q 2.5 match m | Physical attacks | Match each description to the attack.
+= Following a colleague through a badge door => Tailgating
+= Watching a PIN being typed => Shoulder surfing
+= A hidden card reader on an ATM => Skimming
+= Breaking a door lock => Forced entry
+why: Each describes how the physical barrier was defeated.
+mistake: Mixing up virus and worm. Ask whether it needs a person to run it.
+mistake: Thinking whaling is simply big phishing. It targets senior leaders.
+sum: Identify malware by what it does.
+sum: Physical attacks defeat barriers and observation.
+sum: Social engineering varies by channel and target.
+ref: comptia-objectives r
+ref: cisa-ransomware r
+ref: cisa-phishing s
+ref: mitre-attack s
+card: What distinguishes a worm from a virus? == A worm spreads by itself, while a virus needs a person to run an infected file.
+card: What is quishing? == Phishing that uses a QR code.
+
+@lesson w7-3
+ref: owasp-authn s
+title: Network, application and credential attacks, and indicators of compromise
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.5
+level: Intermediate
+min: 120
+pre: w7-2, w3-2
+out: Explain network, application and credential attacks.
+out: Recognize indicators of compromise in logs.
+out: Distinguish commonly confused attacks such as spraying and brute force.
+why: This is where the networking foundation pays off. Attacks such as on-path, DNS poisoning and credential stuffing only make sense once you understand how normal traffic works. Indicators are how you know something has already happened.
+plain: Network attacks intercept or flood the road. Application attacks trick the program into doing something it should not, like handing a waiter a note that reads and also bring me everyone's wallet. Credential attacks try to obtain the keys. Indicators of compromise are fingerprints left at the scene.
+tech: Network attacks: distributed denial of service (DDoS) overwhelms a target from many sources. A protocol downgrade forces a weaker protocol version. Rogue devices or access points attract traffic. Sniffing captures traffic. Spoofing fakes a source identity such as an IP or MAC address. An on-path attack places the attacker between two parties. Domain Name System (DNS) attacks include cache poisoning, which inserts false records into a resolver, so users are directed to the wrong address.
+tech: Application attacks: injection places untrusted input into a command or query. In SQL injection, input changes a database query. A buffer overflow writes past the end of a memory area. A replay attack resends captured valid data. Privilege escalation gains higher rights than granted. Forgery tricks a system into making or accepting a request, such as cross-site request forgery. Directory traversal uses paths like ../ to reach files outside the intended folder.
+tech: Credential attacks: password spraying tries a few common passwords against many accounts, avoiding lockouts. Brute force tries many passwords against an account. User enumeration works out which usernames exist, for example from different error messages. Replay reuses captured credentials or tokens. Multifactor authentication (MFA) bypass includes push fatigue, SIM swapping and token theft.
+tech: Indicators of compromise (IOCs) include a known malicious file hash, Internet Protocol (IP) address or domain; malicious processes; file system artifacts; a suspicious timestamp, which may have been altered; log manipulation or missing logs; excessive resource consumption; plaintext strings found in malware or memory; account lockout; impossible travel, such as sign-ins from two distant countries within minutes; and concurrent sessions from different places.
+diagram: on-path
+diagram: sql-injection
+diagram: ddos
+table: Commonly confused | Attack | Pattern
+| Brute force | Many passwords, one account
+| Password spraying | One or a few passwords, many accounts
+| Sniffing | Listening to traffic
+| Spoofing | Faking an identity
+| On-path | Sitting in the middle and relaying
+| Replay | Resending captured valid data
+term: Network attacks == Attacks targeting traffic or network services.
+term: DDoS == Distributed denial of service: overwhelming a target from many sources.
+term: Protocol downgrade == Forcing use of an older, weaker protocol.
+term: Rogue == An unauthorized device or access point on a network.
+term: Sniffing == Capturing network traffic.
+term: Spoofing == Faking a source identity.
+term: On-path == An attacker positioned between two communicating parties.
+term: DNS attacks == Attacks that abuse the Domain Name System.
+term: Cache poisoning == Inserting false data into a DNS cache.
+term: Application attacks == Attacks that abuse software.
+term: Injection == Inserting untrusted input into a command or query.
+term: Buffer overflow == Writing data beyond a memory area's limit.
+term: Replay == Resending captured valid data.
+term: Privilege escalation == Gaining more rights than were granted.
+term: Forgery == Producing a fake request or credential that is accepted as real.
+term: Directory traversal == Using path sequences to reach files outside the allowed folder.
+term: Credential attacks == Attacks aimed at obtaining or guessing login details.
+term: Password spraying == Trying common passwords across many accounts.
+term: Brute force == Trying many passwords against an account.
+term: User enumeration == Determining which usernames exist.
+term: MFA bypass == Getting around multifactor authentication, such as through push fatigue.
+term: Indicators of compromise == Evidence that a system may have been breached.
+term: Hash == A file fingerprint used to identify known malware.
+term: IP address == A network address that can act as an indicator.
+term: Domain == A name that can act as an indicator.
+term: Malicious processes == Harmful programs running on a host.
+term: File system artifacts == Traces left on disk, such as new files.
+term: Timestamp == Recorded time on an event or file, which can be altered.
+term: Log manipulation == Changing or deleting logs to hide activity.
+term: Excessive resource consumption == Unusually high CPU, memory, disk or bandwidth use.
+term: Plaintext strings == Readable text found in malware or memory.
+term: Account lockout == An account disabled after repeated failures.
+term: Impossible travel == Sign-ins from locations too far apart for the time between them.
+term: Concurrent sessions == Simultaneous sessions from one account, which may be suspicious.
+eg: Hundreds of accounts each have one failed login at 03:00 with the same password. That is password spraying rather than brute force.
+eg: A web log shows the path /download?file=../../etc/passwd. That is a directory traversal attempt.
+walk: Analyze a suspicious login log
+- Note the account, the source IP and the time for each entry.
+- Many accounts with few failures each suggests spraying.
+- One account with many failures suggests brute force.
+- A success after failures needs immediate attention.
+- Sign-ins from two countries minutes apart are impossible travel.
+lab: Find the attack in a log | 40 | Text editor and grep in your lab VM
+do: In your VM, save lines of a sample log: five lines with the same password failure on different usernames, plus a line containing ' OR 1=1-- in a URL, plus a line with ../../etc/passwd.
+do: Use grep to find each of the two web attack patterns.
+do: Use cut and sort -u to count the usernames in the failure lines.
+do: Label each line with the attack name and the IOC it represents.
+expect: You locate each pattern and name it: spraying, SQL injection and directory traversal.
+explain: Real investigations use the same simple text tools. Patterns are recognizable once you know what they mean.
+pass: You used grep to isolate each pattern.
+pass: You correctly named each attack.
+scenario: A sign-in log shows one user's successful login from Vancouver at 09:00 and another from Frankfurt at 09:12, with an MFA prompt approved at 09:11 following dozens of denied prompts. What is likely happening?
+answer: Impossible travel suggests that someone else is using the account. The many denied prompts followed by an approval suggest MFA fatigue, a type of MFA bypass. The account should be contained and its sessions revoked.
+q 2.5 mcq e | Password attacks | An attacker tries one common password against thousands of accounts. What is this?
++ Password spraying :: It spreads attempts widely, so it avoids lockouts.
+- Brute force :: Brute force targets one account with many passwords.
+- Replay :: Replay reuses captured data.
+- Buffer overflow :: This is a memory attack.
+q 2.5 mcq m | Web attacks | A URL contains ../../etc/passwd. What is being attempted?
++ Directory traversal :: The path sequences attempt to leave the intended folder.
+- SQL injection :: There is no database query syntax here.
+- DDoS :: There is only one request.
+- Vishing :: This is a voice attack.
+q 2.5 mcq m | Injection | Which log entry most suggests SQL injection?
+> GET /search?q=shoes HTTP/1.1
+> GET /item?id=7' OR '1'='1 HTTP/1.1
+> GET /logo.png HTTP/1.1
++ The second request :: The quoted condition is trying to alter a database query.
+- The first request :: This is an ordinary search.
+- The third request :: This is an image request.
+- None of them :: The second line shows a classic pattern.
+q 2.5 mcq h | Indicators of compromise | Which of these is the strongest evidence of an attempt to hide activity?
++ Security log entries are missing for a two-hour period :: Log manipulation is an indicator of concealment.
+- A patch was installed on schedule :: This is normal maintenance.
+- A user changed a password as required :: This is expected.
+- CPU use was normal :: This provides no indication of concealment.
+q 2.5 match m | Network attacks | Match each description to its attack.
+= False DNS answers in a resolver => Cache poisoning
+= Traffic captured for later reading => Sniffing
+= Forged source address => Spoofing
+= Flood from many machines => DDoS
+why: Focus on what the attacker does to the traffic.
+q 2.5 mcq h | MFA bypass | A user gets dozens of push requests overnight and eventually approves one to stop the noise. What is this?
++ MFA fatigue, a form of MFA bypass :: Repeated prompts wear down the user.
+- Password spraying :: That is an attempt at the password step.
+- Skimming :: That is a card-reader attack.
+- A race condition :: That is a timing flaw in software.
+mistake: Swapping spraying and brute force. Remember: spraying goes wide, brute force goes deep.
+mistake: Treating one IOC as proof. Corroborate with other evidence.
+sum: Learn what each attack does to traffic, software or credentials.
+sum: Look for patterns such as many accounts versus many attempts.
+sum: IOCs are clues that need context and corroboration.
+ref: comptia-objectives r
+ref: cisa-ddos r
+ref: owasp-injection r
+ref: owasp-mitm s
+ref: cf-dns-poison s
+ref: owasp-overflow s
+ref: owasp-traversal s
+ref: owasp-csrf s
+ref: owasp-forgot s
+card: Spraying or brute force: one password, many accounts? == Password spraying.
+card: What is impossible travel? == Sign-ins from locations too far apart for the time between them.
+
+@lesson w7-4
+title: Threats and weaknesses in AI systems
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.6
+level: Intermediate
+min: 120
+pre: w7-3
+out: Explain each AI threat named by the objective.
+out: Distinguish prompt injection from jailbreaking and poisoning from evasion.
+out: Recommend controls for using AI safely.
+why: AI tools now have access to company data and can take actions. That creates new ways for information to leak and for systems to be manipulated, and it is a dedicated objective on this exam.
+plain: An AI model is like a very well-read assistant who is eager to please, sometimes confidently wrong, and cannot reliably tell the difference between your instructions and instructions written on a note someone has passed it. Most AI risks follow from these characteristics.
+tech: Model manipulation means altering a model's behaviour, through its training data, its weights or how it is deployed. Poisoning corrupts training data so that a model learns wrong or hidden behaviour. Evasion crafts inputs that cause a trained model to misclassify, such as altering malware to slip past a detector. These attack different stages: poisoning happens during training, and evasion happens when the model is in use.
+tech: Prompt injection supplies input that overrides a model's intended instructions. It can be direct, typed by a user, or indirect, hidden in a document or web page that the model later reads. Jailbreaking is a form of manipulation aimed at bypassing a model's safety restrictions to obtain prohibited output. Injection usually targets the application's instructions, and jailbreaking usually targets its safety rules.
+tech: Data loss happens when people paste sensitive information into AI tools, or when a model reveals data from its context. Privacy concerns include training on personal data and the difficulty of deleting it. Hallucinations are confident but false outputs. Bias is systematically unfair output that often reflects training data. Explainability is the ability to understand why a model produced a result, and its absence makes decisions hard to audit. Ethical considerations cover fairness, accountability and appropriate human oversight.
+tech: Session hijacking in an AI context means taking over a user's or agent's session, for example through a stolen token, gaining access to its conversation history and permissions. Code execution risk arises when an application runs code that a model generated or that an attacker induced it to produce, so outputs must be treated as untrusted, and run only in a sandbox.
+tech: Controls include limiting data the model can reach, giving AI agents least privilege, validating outputs, requiring human approval for sensitive actions, using data loss prevention, logging interactions and having an approved list of AI tools.
+table: AI threats compared | Threat | When it occurs | What it does
+| Poisoning | Training | Corrupts what the model learns
+| Evasion | Use | Fools a trained model with crafted input
+| Prompt injection | Use | Overrides intended instructions
+| Jailbreaking | Use | Bypasses safety restrictions
+| Model manipulation | Training or deployment | Alters how a model behaves
+| Hallucinations | Use | Produces false output without any attacker
+term: Model manipulation == Altering a model's behaviour through its data, weights or deployment.
+term: Poisoning == Corrupting training data.
+term: Prompt injection == Input that overrides a model's intended instructions.
+term: Data loss == Sensitive information leaving through AI use.
+term: Bias == Systematically unfair output.
+term: Explainability == The ability to understand why a model produced a result.
+term: Hallucinations == Confident but false output.
+term: Jailbreaking == Bypassing a model's safety restrictions.
+term: Evasion == Crafting inputs to make a model misclassify.
+term: Privacy == Protecting personal information, including in AI training and use.
+term: Ethical considerations == Fairness, accountability and human oversight in AI use.
+term: Session hijacking == Taking over an authenticated session.
+term: Code execution == Running code generated or induced through an AI system.
+eg: A support bot summarizes a customer's email. Hidden text in the email tells it to include other customers' data. That is indirect prompt injection.
+eg: An employee pastes confidential source code into a public chatbot to debug it. That is data loss, even though no attacker was involved.
+walk: Assess an AI assistant before approving it
+- What data can it read? Limit it to what is necessary.
+- What actions can it take? Require approval for sensitive actions.
+- What happens to prompts? Check data retention and training terms.
+- Is its output used without review? Validate it before use.
+- Who is accountable for its decisions? Name an owner and log its activity.
+lab: Assess an AI tool's risks | 35 | OWASP Top 10 for LLM Applications and any AI tool's policy pages
+do: Read the OWASP Top 10 for LLM Applications overview.
+do: Choose an AI assistant and find its terms on data retention and use for training.
+do: Build a table with each of the 13 threats in this lesson, whether it applies to that tool, and one control.
+do: Do not paste personal or confidential information into any tool as part of this lab.
+expect: A completed risk table with a control for each applicable threat.
+explain: The value here is seeing that AI risk is largely about data, permissions and trust in outputs, all of which you already know how to reason about.
+pass: Your table covers all 13 threats.
+pass: Each applicable threat has a control.
+scenario: An AI agent reads incoming supplier invoices and can issue payments. An attacker sends an invoice with hidden text saying to pay a new account immediately. What is the attack, and which two controls matter most?
+answer: Indirect prompt injection. The most important controls are least privilege for the agent and mandatory human approval for payments. Treating document content as untrusted also helps.
+q 2.6 mcq e | Hallucinations | A model states a made-up legal case confidently. What is this?
++ A hallucination :: It is false output presented confidently.
+- Poisoning :: Nothing suggests the training data was attacked.
+- Evasion :: This describes misleading a classifier.
+- Session hijacking :: No session was taken over.
+q 2.6 mcq m | Poisoning versus evasion | An attacker changes samples in a spam filter's training set so future spam is marked as safe. What is this?
++ Poisoning :: The training data was corrupted.
+- Evasion :: Evasion crafts an input at inference time.
+- Jailbreaking :: This targets safety restrictions.
+- Explainability :: This is a property of models, and not an attack.
+q 2.6 mcq m | Prompt injection | A chatbot reads a web page containing hidden text telling it to reveal its system instructions. What is this?
++ Indirect prompt injection :: The malicious instruction arrived through content the model processed.
+- Hallucination :: The problem is outside instructions, not a false output.
+- Bias :: This is unfair output.
+- Data poisoning of a training set :: The content was read during use, not training.
+q 2.6 multi m | AI controls | Which controls reduce risk from an AI agent that can send email? Choose two.
++ Require human approval for external messages :: A person checks actions with real impact.
++ Give the agent only the permissions it needs :: Least privilege limits the damage.
+- Remove all logging :: Logs are needed for investigation.
+- Let it read every mailbox for better accuracy :: This greatly increases exposure.
+q 2.6 mcq h | Code execution | An application automatically runs scripts produced by an LLM on its server. What is the primary risk?
++ An attacker can steer the model into producing code that runs with the application's privileges :: Model output must be treated as untrusted.
+- The model will become biased :: This does not address the execution issue.
+- The server will lose its IP address :: There is no such connection.
+- The model will be unable to explain itself :: Explainability is a separate matter.
+q 2.6 match h | AI terminology | Match each scenario to its AI threat.
+= Tiny image changes cause misclassification => Evasion
+= User persuades a model to ignore its safety rules => Jailbreaking
+= A hiring model favours one group unfairly => Bias
+= Staff paste client data into a public AI tool => Data loss
+why: Note whether an attacker is involved and at what stage the problem appears.
+mistake: Treating prompt injection and jailbreaking as identical. They overlap, but they target different things.
+mistake: Assuming that a confident answer is an accurate one.
+sum: AI risks affect training, use and the systems connected to a model.
+sum: Treat model input and output as untrusted.
+sum: Least privilege and human approval limit damage from AI agents.
+ref: comptia-objectives r
+ref: nist-ai-100-2 r
+ref: owasp-llm r
+ref: nist-ai-rmf s
+card: At what stage does poisoning happen? == During training.
+card: At what stage does evasion happen? == During use, against an already trained model.
+also: 51 | AI agents, delegated access and approvals

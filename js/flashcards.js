@@ -1,0 +1,631 @@
+// Flashcards: the retrieval check on Today, the Flashcards view, and the card editor.
+// Handlers return a CSS selector to focus after the view re-renders (or nothing).
+import * as store from './store.js';
+import { esc, announce, today, testMode, plural } from './ui.js';
+import { formatShort } from './dates.js';
+import { getDayContext, getWeek } from './plan.js';
+import {
+  scheduleAll, dueCards, pickInterleaved, nextState, RATINGS, RATING_LABELS, SRS_RULE, BOX_DAYS, recallSummary, recallState, HELD_GAP_DAYS, shownWeek,
+} from './srs.js';
+
+export const RETRIEVAL_SIZE = 3;
+const TYPE_LABELS = { recall: 'Quick recall', explain: 'Explain it' };
+const FILTERS = {
+  unlocked: 'Taught so far',
+  due: 'Due today',
+  shaky: 'Needs another look',
+  unverified: 'Not checked yet',
+  verified: 'Checked by you',
+  locked: 'Not taught yet',
+  retired: 'Archived',
+  all: 'All cards',
+};
+
+// Transient UI state (not saved).
+const ui = {
+  reveal: null, // { cardId, context, response } once the answer is shown
+  drafts: {}, // `${context}:${cardId}` → explanation typed so far
+  filter: 'unlocked',
+  week: 'all',
+  editing: null, // card id, or 'new'
+  form: null, // values typed into the card form
+  formErrors: [],
+  message: null,
+  open: new Set(), // folded sections you opened
+};
+
+function currentSchedule() {
+  const d = store.getData();
+  return scheduleAll(d.cards, d.cardReviews, today(), store.getSettings());
+}
+
+function verificationBadge(card) {
+  if (card.verified) return '<span class="tag tag--verified">Checked by you</span>';
+  if (card.source === 'seed') return '<span class="tag tag--unverified">Written by Claude, not checked by you yet</span>';
+  if (card.source === 'pack') return '<span class="tag tag--unverified">From a course update, not checked by you yet</span>';
+  return '<span class="tag tag--unverified">Not checked yet</span>';
+}
+
+function boxLabel(state) {
+  return state.box === 0 ? 'New' : `Level ${state.box} of 5`;
+}
+
+function ratingHint(state, rating, date) {
+  const next = nextState(state, rating, date);
+  return next.due === date ? 'back later today' : `back ${formatShort(next.due)}`;
+}
+
+// ─── Card face (shared by the retrieval check and the study queue) ───────────
+
+function cardFaceHtml(card, sched, context, positionLabel) {
+  const date = today();
+  const key = `${context}:${card.id}`;
+  const revealed = ui.reveal && ui.reveal.cardId === card.id && ui.reveal.context === context;
+  const headingId = `card-front-${context}`;
+
+  let body;
+  if (!revealed) {
+    body = card.type === 'explain'
+      ? `
+        <div class="field">
+          <label for="explain-${context}">Explain it in your own words</label>
+          <textarea id="explain-${context}" data-draft="${esc(key)}" rows="5" maxlength="${store.RESPONSE_MAX}" aria-describedby="explain-${context}-hint">${esc(ui.drafts[key] ?? '')}</textarea>
+          <span class="hint" id="explain-${context}-hint">Write before you look. Your explanation is saved with your rating, so you can see how it improves.</span>
+        </div>
+        <button type="button" class="button--primary" data-action="card-reveal" data-id="${esc(card.id)}" data-context="${context}">Compare with the reference answer</button>`
+      : `<button type="button" class="button--primary" data-action="card-reveal" data-id="${esc(card.id)}" data-context="${context}">Show answer</button>`;
+  } else {
+    const yours = card.type === 'explain'
+      ? `<div class="answer answer--yours">
+           <h4>Your explanation</h4>
+           <p>${ui.reveal.response.trim() ? esc(ui.reveal.response) : '<em>You didn\'t write anything this time.</em>'}</p>
+         </div>`
+      : '';
+    body = `
+      <div class="answers">
+        ${yours}
+        <div class="answer">
+          <h4 id="card-answer-${context}" tabindex="-1">${card.type === 'explain' ? 'An example answer' : 'Answer'}</h4>
+          <p>${esc(card.back)}</p>
+        </div>
+      </div>
+      <fieldset class="ratings">
+        <legend>How well did you know it?</legend>
+        <div class="rating-row">
+          ${RATINGS.map((r) => `
+            <button type="button" class="rating rating--${r}" data-action="card-rate" data-id="${esc(card.id)}" data-rating="${r}" data-context="${context}">
+              <span class="rating__label">${RATING_LABELS[r]}</span>
+              <span class="rating__hint">${esc(ratingHint(sched.state, r, date))}</span>
+            </button>`).join('')}
+        </div>
+      </fieldset>`;
+  }
+
+  return `
+    <article class="flashcard" aria-labelledby="${headingId}">
+      <p class="meta">${positionLabel ? `${esc(positionLabel)} · ` : ''}Week ${shownWeek(card) ?? '–'} · ${TYPE_LABELS[card.type]} · ${boxLabel(sched.state)}</p>
+      <ul class="tags" aria-label="Card status"><li>${verificationBadge(card)}</li></ul>
+      <h3 class="flashcard__front" id="${headingId}" tabindex="-1">${esc(card.front)}</h3>
+      ${body}
+      <p class="meta reference">Source to check: ${esc(card.reference || 'none given')}</p>
+    </article>`;
+}
+
+// ─── Retrieval check on Today ────────────────────────────────────────────────
+
+/** How many cards are due now and when the next one is, for the Learn page. */
+export function dueSummary() {
+  const d = store.getData();
+  const sched = currentSchedule();
+  return { due: dueCards(d.cards, sched).length, next: nextDueAfter(d.cards, sched, today()) };
+}
+
+/** How many retrieval-check cards are still to do today (0 means the warm-up has nothing left). */
+export function retrievalRemaining() {
+  const date = today();
+  const d = store.getData();
+  const sched = currentSchedule();
+  const doneToday = new Set(
+    d.cardReviews.filter((r) => r.date === date && r.context === 'retrieval').map((r) => r.cardId),
+  );
+  const candidates = dueCards(d.cards, sched).filter((c) => !sched.get(c.id).reviewedToday);
+  return Math.min(RETRIEVAL_SIZE - doneToday.size, candidates.length);
+}
+
+/** The 3-card retrieval check at the start of each Today session. */
+export function retrievalHtml() {
+  const date = today();
+  const d = store.getData();
+  const sched = currentSchedule();
+  const doneToday = new Set(
+    d.cardReviews.filter((r) => r.date === date && r.context === 'retrieval').map((r) => r.cardId),
+  );
+  const remaining = RETRIEVAL_SIZE - doneToday.size;
+  const due = dueCards(d.cards, sched);
+  const candidates = due.filter((c) => !sched.get(c.id).reviewedToday);
+
+  let body;
+  if (remaining > 0 && candidates.length) {
+    const [card] = pickInterleaved(candidates, remaining);
+    body = cardFaceHtml(card, sched.get(card.id), 'retrieval', `Question ${doneToday.size + 1} of ${Math.min(RETRIEVAL_SIZE, doneToday.size + candidates.length)}`);
+  } else if (doneToday.size) {
+    const ratings = d.cardReviews.filter((r) => r.date === date && r.context === 'retrieval');
+    const counts = RATINGS.map((r) => [r, ratings.filter((x) => x.rating === r).length]).filter(([, n]) => n);
+    const more = due.length;
+    body = `
+      <p class="status-ok" id="retrieval-done" tabindex="-1">Warm-up done: ${plural(doneToday.size, 'question', 'questions')} (${counts.map(([r, n]) => `${RATING_LABELS[r]}: ${n}`).join(', ')}).</p>
+      ${more ? `<p class="meta">${plural(more, 'more card is', 'more cards are')} due. <a href="#learn/cards">Review them in Flashcards</a>.</p>` : ''}`;
+  } else {
+    const next = nextDueAfter(d.cards, sched, date);
+    body = `<p class="meta">No warm-up questions today.${next ? ` The next ones come up ${esc(formatShort(next))}. A card first comes up the day after the plan teaches its topic.` : ''}</p>`;
+  }
+
+  return `
+    <section class="section" aria-labelledby="retrieval-heading">
+      <h2 id="retrieval-heading" tabindex="-1">Warm-up</h2>
+      <p class="meta">Try to answer from memory first, then read. Getting it wrong still helps.</p>
+      ${body}
+    </section>`;
+}
+
+// ─── Flashcards view ─────────────────────────────────────────────────────────
+
+function nextDueAfter(cards, sched, date) {
+  const upcoming = cards
+    .filter((c) => !c.retired)
+    .map((c) => sched.get(c.id).due)
+    .filter((due) => due > date)
+    .sort();
+  return upcoming[0] ?? null;
+}
+
+function cardFormHtml(card) {
+  const f = ui.form ?? {
+    type: card?.type ?? 'recall',
+    front: card?.front ?? '',
+    back: card?.back ?? '',
+    week: card ? (card.week ?? '') : String(defaultWeek() ?? ''),
+    topic: card?.topic ?? '',
+    reference: card?.reference ?? '',
+    verified: false,
+  };
+  const isNew = !card;
+  const errors = ui.formErrors.length
+    ? `<div class="error-summary" role="alert" tabindex="-1" id="card-form-errors">
+         <h3>Please fix this before saving</h3>
+         <ul>${ui.formErrors.map((e) => `<li>${esc(e)}</li>`).join('')}</ul>
+       </div>`
+    : '';
+  return `
+    <form id="card-form" class="card-form" data-card-id="${esc(card?.id ?? 'new')}" novalidate>
+      <h3 id="card-form-heading" tabindex="-1">${isNew ? 'Add a card' : 'Edit card'}</h3>
+      ${errors}
+      <fieldset>
+        <legend>Card type</legend>
+        <div class="choice-group">
+          <label class="choice"><input type="radio" name="card-type" value="recall" ${f.type === 'recall' ? 'checked' : ''}> Recall (question → answer)</label>
+          <label class="choice"><input type="radio" name="card-type" value="explain" ${f.type === 'explain' ? 'checked' : ''}> Explain it (type, then compare)</label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="card-front">Question or prompt</label>
+        <textarea id="card-front" name="front" rows="2" maxlength="${store.CARD_TEXT_MAX}">${esc(f.front)}</textarea>
+      </div>
+      <div class="field">
+        <label for="card-back">Answer</label>
+        <textarea id="card-back" name="back" rows="4" maxlength="${store.CARD_TEXT_MAX}">${esc(f.back)}</textarea>
+      </div>
+      <div class="field">
+        <label for="card-week">First shows up in week</label>
+        <select id="card-week" name="week" aria-describedby="card-week-hint">
+          <option value="" ${f.week === '' ? 'selected' : ''}>Any time (no week)</option>
+          ${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((w) => `<option value="${w}" ${String(f.week) === String(w) ? 'selected' : ''}>Week ${w}</option>`).join('')}
+        </select>
+        <span class="hint" id="card-week-hint">It stays out of your reviews until that week starts, then mixes in with earlier weeks.</span>
+      </div>
+      <div class="field">
+        <label for="card-topic">Topic (optional)</label>
+        <input type="text" id="card-topic" name="topic" value="${esc(f.topic)}" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="card-reference">Source to check against</label>
+        <input type="text" id="card-reference" name="reference" value="${esc(f.reference)}" maxlength="${store.REFERENCE_MAX}" aria-describedby="card-reference-hint">
+        <span class="hint" id="card-reference-hint">Where to check it, for example "RFC 7636" or "NIST SP 800-63B-4".</span>
+      </div>
+      ${isNew ? `
+        <label class="check" for="card-verified">
+          <input type="checkbox" id="card-verified" name="verified" ${f.verified ? 'checked' : ''}>
+          <span>I've checked this against the source</span>
+        </label>` : ''}
+      <div class="button-row">
+        <button type="submit" class="button--primary">${isNew ? 'Add card' : 'Save changes'}</button>
+        <button type="button" data-action="card-cancel">Cancel</button>
+      </div>
+    </form>`;
+}
+
+function defaultWeek() {
+  const ctx = getDayContext(today(), store.getSettings());
+  if (ctx.kind === 'study') return ctx.week.number;
+  if (ctx.kind === 'rest' && ctx.calendarWeek) return ctx.calendarWeek;
+  return null;
+}
+
+function historyHtml(card, sched) {
+  const reviews = [...sched.reviews].sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
+  if (!reviews.length) return '';
+  const label = card.type === 'explain' ? 'Your explanations and answers' : 'Your answers';
+  return `
+    <details>
+      <summary>${esc(label)} (${reviews.length})</summary>
+      <ol class="history">
+        ${reviews.map((r) => `
+          <li>
+            <strong>${esc(formatShort(r.date))}</strong> · ${RATING_LABELS[r.rating]}${r.testMode ? ' <span class="tag tag--test">Test</span>' : ''}
+            ${card.type === 'explain' ? `<p>${r.response.trim() ? esc(r.response) : '<em>Nothing written</em>'}</p>` : ''}
+          </li>`).join('')}
+      </ol>
+    </details>`;
+}
+
+function cardRowHtml(card, sched) {
+  if (ui.editing === card.id) return `<li class="card-row">${cardFormHtml(card)}</li>`;
+  const date = today();
+  let when;
+  if (card.retired) when = 'Archived';
+  else if (!sched.unlocked) when = `First shows ${formatShort(sched.unlock)}`;
+  else if (sched.isDue) when = 'Due today';
+  else when = `Next due ${formatShort(sched.due)}`;
+  const shortFront = card.front.length > 70 ? `${card.front.slice(0, 67)}…` : card.front;
+  return `
+    <li class="card-row card-row--card">
+      <p class="card-row__front">${esc(card.front)}</p>
+      <p class="meta">Week ${shownWeek(card) ?? '–'} · ${TYPE_LABELS[card.type]} · ${boxLabel(sched.state)} · <strong>${esc(when)}</strong>${sched.due && when.startsWith('Due') && sched.due < date ? ` (since ${esc(formatShort(sched.due))})` : ''}</p>
+      ${card.verified ? '<span class="flag flag--ok">Checked</span>' : '<span class="flag">Not checked</span>'}
+      <details class="card-row__more" data-cards-group="row-${esc(card.id)}" ${ui.open.has(`row-${card.id}`) ? 'open' : ''}>
+      <summary>Manage<span class="visually-hidden">: ${esc(shortFront)}</span></summary>
+      <ul class="tags" aria-label="Card status"><li>${verificationBadge(card)}</li></ul>
+      <p class="meta reference">Source to check: ${esc(card.reference || 'none given')}</p>
+      <div class="button-row">
+        <button type="button" class="button--small" data-action="card-edit" data-id="${esc(card.id)}" aria-label="Edit: ${esc(shortFront)}">Edit</button>
+        ${card.verified
+          ? `<button type="button" class="button--small" data-action="card-unverify" data-id="${esc(card.id)}" aria-label="Mark as not checked: ${esc(shortFront)}">Mark as not checked</button>`
+          : `<button type="button" class="button--small" data-action="card-verify" data-id="${esc(card.id)}" aria-label="Mark as checked: ${esc(shortFront)}">Mark as checked</button>`}
+        ${card.retired
+          ? `<button type="button" class="button--small" data-action="card-restore" data-id="${esc(card.id)}" aria-label="Restore: ${esc(shortFront)}">Restore</button>`
+          : `<button type="button" class="button--small button--danger" data-action="card-retire" data-id="${esc(card.id)}" aria-label="Archive: ${esc(shortFront)}">Archive</button>`}
+      </div>
+      ${historyHtml(card, sched)}
+      </details>
+    </li>`;
+}
+
+function matchesFilter(card, sched) {
+  if (ui.week !== 'all' && String(card.week ?? 'none') !== ui.week) return false;
+  switch (ui.filter) {
+    case 'unlocked': return sched.unlocked && !card.retired;
+    case 'due': return sched.isDue;
+    case 'shaky': return sched.unlocked && !card.retired && recallState(sched.reviews) === 'shaky';
+    case 'unverified': return !card.verified && !card.retired;
+    case 'verified': return card.verified;
+    case 'locked': return !sched.unlocked && !card.retired;
+    case 'retired': return card.retired;
+    default: return true;
+  }
+}
+
+/** Remembers which folded sections of Flashcards you opened. Returns true when the event was for one of them. */
+export function handleCardsToggle(event) {
+  const key = event.target?.dataset?.cardsGroup;
+  if (!key) return false;
+  if (event.target.open) ui.open.add(key);
+  else ui.open.delete(key);
+  return true;
+}
+
+export function flashcardsView() {
+  const date = today();
+  const d = store.getData();
+  const sched = currentSchedule();
+  const due = dueCards(d.cards, sched);
+
+  let study;
+  if (due.length) {
+    const [card] = due;
+    study = cardFaceHtml(card, sched.get(card.id), 'study', `${plural(due.length, 'card', 'cards')} due`);
+  } else {
+    const next = nextDueAfter(d.cards, sched, date);
+    const s = store.getSettings();
+    study = !s.courseStart && !s.testDate.enabled
+      ? '<p id="study-done" tabindex="-1">No cards are due. Cards unlock as the 60-day course teaches each topic, and any you add yourself appear here.</p>'
+      : `<p class="status-ok" id="study-done" tabindex="-1">Nothing due today.${next ? ` Next card due ${esc(formatShort(next))}.` : ''}</p>`;
+  }
+
+  return `
+    <h1 id="day-heading" tabindex="-1">Flashcards</h1>
+
+    <section class="section" aria-labelledby="study-heading">
+      <h2 id="study-heading">Due today</h2>
+      ${study}
+    </section>
+
+    <details class="card card--quiet" data-cards-group="how" ${ui.open.has('how') ? 'open' : ''}>
+      <summary id="rule-heading">How it works</summary>
+      <p>${esc(SRS_RULE[0])} ${esc(SRS_RULE[1])}</p>
+      <p class="meta">Gaps: ${BOX_DAYS.map((days, i) => `level ${i + 1} = ${plural(days, 'day', 'days')}`).join(' · ')}. A new card first comes up the day after the plan day that teaches it, so you are never asked about something you have not met yet. Cards you add come up from the first day of their week.</p>
+    </details>
+
+    <p class="meta flashcards-manage-link">Add, edit, check or archive cards in <a href="#settings/content">Settings → Content</a>.</p>`;
+}
+
+/**
+ * The card manager (Settings → Content): browse, filter, add, edit, check and archive cards.
+ * It is housekeeping, so it lives in Settings and the Flashcards page stays about reviewing.
+ */
+export function cardManagerHtml() {
+  const date = today();
+  const d = store.getData();
+  const sched = currentSchedule();
+  const active = d.cards.filter((c) => !c.retired);
+  const unlocked = active.filter((c) => sched.get(c.id).unlocked).length;
+  const unverified = active.filter((c) => !c.verified).length;
+  const retired = d.cards.length - active.length;
+  const shown = d.cards
+    .filter((c) => matchesFilter(c, sched.get(c.id)))
+    .sort((a, b) => (a.week ?? 0) - (b.week ?? 0) || a.createdAt.localeCompare(b.createdAt));
+
+  const weekOptions = ['all', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'none'];
+
+  return `
+    <section class="card" aria-labelledby="cards-heading">
+      <h2 id="cards-heading" tabindex="-1">Your flashcards (${active.length})</h2>
+      <p class="meta">${plural(active.length, 'card', 'cards')}: ${unlocked} taught so far, ${active.length - unlocked} not taught yet, ${unverified} not checked by you yet${retired ? `, ${retired} archived` : ''}.</p>
+      ${ui.message ? `<p class="status-ok" id="cards-message" tabindex="-1">${esc(ui.message)}</p>` : ''}
+      <div class="filters">
+        <div class="field">
+          <label for="card-filter">Show</label>
+          <select id="card-filter">
+            ${Object.entries(FILTERS).map(([v, l]) => `<option value="${v}" ${ui.filter === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label for="card-week-filter">Week</label>
+          <select id="card-week-filter">
+            ${weekOptions.map((w) => `<option value="${w}" ${ui.week === w ? 'selected' : ''}>${w === 'all' ? 'All weeks' : w === 'none' ? 'No week' : `Week ${w}`}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      ${ui.editing === 'new'
+        ? cardFormHtml(null)
+        : '<div class="button-row"><button type="button" data-action="card-add">Add a card</button></div>'}
+      <p class="meta" aria-live="polite">${plural(shown.length, 'card', 'cards')} shown.</p>
+      ${emptyListHtml(shown.length, unlocked, active.length - unlocked, d.cards, sched, date)}
+      <ul class="card-list">
+        ${shown.map((c) => cardRowHtml(c, sched.get(c.id))).join('')}
+      </ul>
+    </section>`;
+}
+
+/**
+ * Why the list is empty, when the filter that is on has nothing in it. Before the plan has taught anything,
+ * "Taught so far" is empty on purpose, so say when cards start and offer a look at what is coming.
+ */
+function emptyListHtml(count, taught, upcoming, cards, sched, date) {
+  if (count || ui.filter !== 'unlocked' || taught || !upcoming) return '';
+  const next = nextDueAfter(cards, sched, date);
+  return `
+    <div class="empty-state">
+      <p>None yet. A card first comes up the day after the plan teaches its topic${next ? `; your first ones come up ${esc(formatShort(next))}` : ''}.</p>
+      <div class="button-row"><button type="button" class="button--small" data-action="cards-show-upcoming">Preview upcoming cards (${upcoming})</button></div>
+    </div>`;
+}
+
+// ─── What you can recall (on Progress) ───────────────────────────────────────
+
+const RECALL_WORDS = {
+  held: 'recalled after 7+ days',
+  recent: 'recalled, short gap',
+  shaky: 'needs another look',
+  new: 'not tried yet',
+};
+
+/** Evidence of learning from your flashcard ratings: by week, and the cards that need another look. */
+export function recallProgressHtml() {
+  const date = today();
+  const d = store.getData();
+  const r = recallSummary(d.cards, d.cardReviews, date, store.getSettings());
+  const t = r.totals;
+  let body;
+  if (!t.total) {
+    const next = nextDueAfter(d.cards, currentSchedule(), date);
+    body = `<p>Nothing to show yet. Once the plan has taught a topic, its flashcards come up in the warm-up${next ? ` (the first ones on ${esc(formatShort(next))})` : ''}, and this shows what you can recall and what needs another look.</p>`;
+  } else {
+    const order = ['held', 'recent', 'shaky', 'new'];
+    const parts = (row) => order.filter((k) => row[k]).map((k) => `<span class="recall-key"><span class="swatch swatch--${k}" aria-hidden="true"></span>${row[k]} ${esc(RECALL_WORDS[k])}</span>`).join(' ');
+    // Decorative: the words beside it say the same.
+    const bar = (row) => `<div class="recall-bar" aria-hidden="true">${order.filter((k) => row[k]).map((k) => `<span class="swatch--${k}" style="flex-grow:${row[k]}"></span>`).join('')}</div>`;
+    const weekName = (w) => (w ? `Week ${w}: ${getWeek(w)?.title ?? ''}` : 'No week');
+    const shaky = r.shaky.slice(0, 5);
+    body = `
+      <p><strong>${t.held} of ${plural(t.total, 'card', 'cards')}</strong> you have met so far ${t.held === 1 ? 'was' : 'were'} recalled after a gap of ${HELD_GAP_DAYS} days or more.${t.shaky ? ` ${plural(t.shaky, 'card needs', 'cards need')} another look.` : ''}</p>
+      <ul class="recall-weeks">
+        ${r.rows.map((row) => `<li><p class="recall-weeks__name"><strong>${esc(weekName(row.week))}</strong> <span class="meta">${plural(row.total, 'card', 'cards')}</span></p>${bar(row)}<p class="recall-weeks__keys meta">${parts(row)}</p></li>`).join('')}
+      </ul>
+      ${shaky.length ? `
+        <h3>Needs another look</h3>
+        <p class="meta">Your last answer was "Not yet" or "Hard". That is normal: these come back sooner, and each try makes them stick.</p>
+        <ul class="recall-shaky">
+          ${shaky.map(({ card, last, due }) => `<li>${esc(card.front)}<br><span class="meta">Last: ${RATING_LABELS[last.rating]} on ${esc(formatShort(last.date))} · ${due <= date ? 'due now' : `back ${esc(formatShort(due))}`}</span></li>`).join('')}
+        </ul>
+        <p><a href="#settings/content" data-action="cards-show-shaky">See ${r.shaky.length > shaky.length ? `all ${r.shaky.length}` : 'them'} in your card list</a></p>` : ''}
+      <details>
+        <summary>What these words mean</summary>
+        <ul>
+          <li><strong>Recalled after 7+ days</strong>: you answered "Got it" or "Easy" after not seeing it for ${HELD_GAP_DAYS} days or more. It is the best sign this app has that you will remember it, but it is still your own rating, not a test of whether you can use it.</li>
+          <li><strong>Recalled, short gap</strong>: you got it last time, but not yet after a week's gap.</li>
+          <li><strong>Needs another look</strong>: your last answer was "Not yet" or "Hard".</li>
+          <li><strong>Not tried yet</strong>: the plan has taught it, but you have not answered it yet.</li>
+        </ul>
+        <p class="meta">These come from your own ratings, so they are only as honest as the ratings. Archived cards and cards for topics not taught yet are not counted.</p>
+      </details>`;
+  }
+  return `
+    <section class="card" aria-labelledby="recall-heading">
+      <h2 id="recall-heading">What you can recall</h2>
+      <p class="meta">From your own flashcard ratings, not from time spent.${r.anyTest ? ' Includes test data (delete it in Settings).' : ''}</p>
+      ${body}
+    </section>`;
+}
+
+// ─── Events ──────────────────────────────────────────────────────────────────
+
+function readCardForm(form) {
+  const week = form.querySelector('#card-week').value;
+  return {
+    type: form.querySelector('input[name="card-type"]:checked')?.value,
+    front: form.querySelector('#card-front').value,
+    back: form.querySelector('#card-back').value,
+    week: week === '' ? null : Number(week),
+    topic: form.querySelector('#card-topic').value,
+    reference: form.querySelector('#card-reference').value,
+    verified: form.querySelector('#card-verified')?.checked ?? false,
+  };
+}
+
+/** Click handlers. Each returns the selector to focus after re-rendering. */
+export const cardActions = {
+  'card-reveal': (el) => {
+    const { id, context } = el.dataset;
+    const key = `${context}:${id}`;
+    const textarea = document.getElementById(`explain-${context}`);
+    const response = textarea ? textarea.value : '';
+    ui.drafts[key] = response;
+    ui.reveal = { cardId: id, context, response };
+    return `#card-answer-${context}`;
+  },
+  'card-rate': (el) => {
+    const { id, rating, context } = el.dataset;
+    const response = ui.reveal?.cardId === id ? ui.reveal.response : '';
+    const result = store.addCardReview({
+      cardId: id, date: today(), rating, response, context, testMode: testMode(),
+    });
+    ui.reveal = null;
+    delete ui.drafts[`${context}:${id}`];
+    if (!result.ok) return null;
+    const after = currentSchedule().get(id);
+    announce(`Saved: ${RATING_LABELS[rating]}. ${after.due === today() ? 'You will see it again today.' : `Next due ${formatShort(after.due)}.`}${result.saved ? '' : ' Warning: this browser blocked saving.'}`);
+    // Focus the next card, or the completion message.
+    if (context === 'retrieval') return `#card-front-retrieval, #retrieval-done, #retrieval-heading`;
+    return '#card-front-study, #study-done';
+  },
+  'cards-show-upcoming': () => {
+    ui.filter = 'locked';
+    return '#card-filter';
+  },
+  /** From Progress: open Flashcards with the cards that need another look listed. */
+  'cards-show-shaky': () => {
+    ui.filter = 'shaky';
+    ui.week = 'all';
+    ui.open.add('manage');
+    return null;
+  },
+  'card-add': () => {
+    ui.editing = 'new';
+    ui.form = null;
+    ui.formErrors = [];
+    ui.message = null;
+    return '#card-form-heading';
+  },
+  'card-edit': (el) => {
+    ui.editing = el.dataset.id;
+    ui.form = null;
+    ui.formErrors = [];
+    ui.message = null;
+    return '#card-form-heading';
+  },
+  'card-cancel': () => {
+    const id = ui.editing;
+    ui.editing = null;
+    ui.form = null;
+    ui.formErrors = [];
+    return id && id !== 'new' ? `[data-action="card-edit"][data-id="${id}"]` : '[data-action="card-add"]';
+  },
+  'card-verify': (el) => {
+    store.setCardVerified(el.dataset.id, true);
+    announce('Marked as checked.');
+    return `[data-action="card-unverify"][data-id="${el.dataset.id}"], #cards-heading`;
+  },
+  'card-unverify': (el) => {
+    store.setCardVerified(el.dataset.id, false);
+    announce('Marked as not checked.');
+    return `[data-action="card-verify"][data-id="${el.dataset.id}"], #cards-heading`;
+  },
+  'card-retire': (el) => {
+    store.setCardRetired(el.dataset.id, true);
+    announce('Card archived. It will not come up for review.');
+    return `[data-action="card-restore"][data-id="${el.dataset.id}"], #cards-heading`;
+  },
+  'card-restore': (el) => {
+    store.setCardRetired(el.dataset.id, false);
+    announce('Card back in your reviews.');
+    return `[data-action="card-retire"][data-id="${el.dataset.id}"], #cards-heading`;
+  },
+};
+
+/** Handles the card form submit. Returns the selector to focus. */
+export function submitCardForm(form) {
+  const values = readCardForm(form);
+  const id = form.dataset.cardId;
+  const result = id === 'new' ? store.addCard(values) : store.updateCard(id, values);
+  if (!result.ok) {
+    ui.form = { ...values, week: values.week ?? '' };
+    ui.formErrors = result.problems;
+    return '#card-form-errors';
+  }
+  ui.editing = null;
+  ui.form = null;
+  ui.formErrors = [];
+  ui.message = id === 'new' ? 'Card added.' : 'Card saved.';
+  announce(ui.message);
+  return '#cards-message';
+}
+
+/** Handles change events on the Flashcards view. Returns a selector, or null if not handled. */
+export function handleCardChange(target) {
+  if (target.id === 'card-filter') {
+    ui.filter = target.value;
+    return '#card-filter';
+  }
+  if (target.id === 'card-week-filter') {
+    ui.week = target.value;
+    return '#card-week-filter';
+  }
+  return null;
+}
+
+/** Keeps typed text across re-renders (explanations and the card form). */
+export function handleCardInput(target) {
+  if (target.dataset.draft) ui.drafts[target.dataset.draft] = target.value;
+  const form = target.closest('#card-form');
+  if (form) {
+    const values = readCardForm(form);
+    ui.form = { ...values, week: values.week ?? '' };
+  }
+}
+
+export function resetCardMessages() {
+  ui.message = null;
+}
+
+/**
+ * Opens the add-card form filled in from a resource note or a lesson question, so it can become a card
+ * through the normal card flow. The card starts unverified; you check it, edit it and save it yourself.
+ */
+export function startCardDraft({ front = '', back, week, topic, reference }) {
+  ui.editing = 'new';
+  ui.form = {
+    type: 'recall', front: String(front).slice(0, store.CARD_TEXT_MAX), back: String(back).slice(0, store.CARD_TEXT_MAX), week: week ? String(week) : '', topic, reference, verified: false,
+  };
+  ui.formErrors = [];
+  ui.message = null;
+}

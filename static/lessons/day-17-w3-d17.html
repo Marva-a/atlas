@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 6: write and test an access policy · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 6: write and test an access policy</h1>
+<p class="eyebrow">Day 17 · Week 3 · Intermediate · about 120 min</p>
+<p>You will write a real access policy for a fictional 20-person startup in your tailnet, and write tests that prove it does what you meant.</p>
+<p><strong>By the end, you can:</strong> Write an access policy rule from a stated requirement and test that it produces the intended allow/deny result.</p>
+<h2>Why it matters to a designer</h2>
+<p>Admins fear changing access rules because a mistake can lock people out or open production to everyone. Tests that run before a change goes live are one of the best answers, and they are a strong idea for your case study 1 design.</p>
+<h2>Key ideas</h2>
+<ul><li>Policy file: in Tailscale, all rules live in one text file (in a format called HuJSON). Admins edit it in the console or keep it in git.</li><li>Groups are defined once (“group:eng”: [list of people]) and then used in rules. Tag owners say who may apply a tag to a machine.</li><li>Tests are statements like “alice can reach tag:prod:22” and “bob cannot reach tag:prod:22”. If a change breaks a test, Tailscale refuses to save it.</li><li>A test is a promise written down: it turns “I think contractors can’t reach production” into something the system checks every time.</li><li>Write rules from the company’s point of view first, in plain words, then translate. The gap between the two is exactly where the design opportunity is.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>policy file</strong></td><td>The single file that holds all of a tailnet’s access rules.</td></tr><tr><td><strong>HuJSON</strong></td><td>A version of JSON that allows comments and trailing commas, used by Tailscale.</td></tr><tr><td><strong>tag owner</strong></td><td>The person or group allowed to apply a tag to machines.</td></tr><tr><td><strong>ACL test</strong></td><td>A check, saved with the policy, that a given user can or cannot reach something.</td></tr><tr><td><strong>regression</strong></td><td>A change that breaks something that used to work.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Design the fictional company on paper: 20 people in 4 groups (eng, design, sales, contractors) and 4 kinds of machine (prod, staging, wiki, design files).</p><span class="step__min">20 min</span></div><div class="step"><p>Use the syntax reference to write groups, tag owners and rules for that company in your tailnet’s policy file. &mdash; <a href="https://tailscale.com/kb/1337/policy-syntax">Syntax reference for the tailnet policy file</a> (Tailscale Docs)</p><span class="step__min">40 min</span></div><div class="step"><p>Write at least six tests: three “can reach” and three “cannot reach”. Save, then change one rule to make a test fail and read the error. &mdash; <a href="https://tailscale.com/kb/1068/acl-tags">Group devices with tags</a> (Tailscale)</p><span class="step__min">30 min</span></div><div class="step"><p>Write notes as a designer: what was hard to read, what the error said, and what you wished the editor showed you before saving.</p><span class="step__min">30 min</span></div>
+<h2>Skip or skim</h2><p>Skip SSH rules, auto approvers and posture conditions today. Exercise 7 covers posture.</p>
+<h2>Check yourself</h2><ul><li>What does an ACL test protect against?</li><li>What was the most confusing moment of writing the policy, and what would have helped?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Against accidental changes that open or close access by mistake. The test fails before the change is saved, so the admin finds out in the editor, not from an angry colleague or an attacker.</li><li>A good answer names a concrete moment, such as not knowing who a group contains or not seeing what a rule would change, and an idea such as a preview of who can reach what.</li></ul>
+<p><a href="../../index.html#lesson/17">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 11: a local cluster with Calico · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 11: a local cluster with Calico</h1>
+<p class="eyebrow">Day 31 · Week 5 · Intermediate · about 120 min</p>
+<p>You will run a small Kubernetes cluster on your laptop with Calico and deploy a demo app, so pods, services and namespaces become real things you can see.</p>
+<p><strong>By the end, you can:</strong> Set up a local Kubernetes cluster with Calico and apply a basic network policy.</p>
+<h2>Why it matters to a designer</h2>
+<p>Platform engineers live in terminals and YAML. Doing their setup once, slowly and with notes, gives you empathy for their work and a true sense of what is hard, which you will need for case study 2 interviews.</p>
+<h2>Key ideas</h2>
+<ul><li>kind runs a whole Kubernetes cluster inside Docker on your laptop. It is free and you can delete it at any time.</li><li>kubectl is the command-line tool for talking to the cluster: kubectl get pods shows what is running.</li><li>Calico installs as pods in the cluster itself and then controls networking for all other pods.</li><li>A demo app with three or four small services is enough. Many Kubernetes tutorials have one; any simple web plus backend works.</li><li>Take notes as a designer: where you waited, what failed, which error messages helped and which did not.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>kind</strong></td><td>Kubernetes in Docker: a tool for running a cluster on your laptop.</td></tr><tr><td><strong>kubectl</strong></td><td>The command-line tool for controlling a Kubernetes cluster.</td></tr><tr><td><strong>YAML</strong></td><td>A text format used to describe Kubernetes objects.</td></tr><tr><td><strong>deploy</strong></td><td>To start an app on a cluster.</td></tr><tr><td><strong>CNI</strong></td><td>Container network interface: the plug-in that gives pods networking, here Calico.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Install kind and create a cluster, following the quick start. &mdash; <a href="https://kind.sigs.k8s.io/docs/user/quick-start/">kind: Quick Start</a> (kind)</p><span class="step__min">15 min</span></div><div class="step"><p>Install Calico on kind, following the guide step by step. &mdash; <a href="https://docs.tigera.io/calico/latest/getting-started/kubernetes/kind">Installing Calico on kind</a> (Calico Documentation)</p><span class="step__min">25 min</span></div><div class="step"><p>Deploy a small demo app with at least two services in its own namespace. Check it with kubectl get pods and get services.</p><span class="step__min">35 min</span></div><div class="step"><p>Draw your real cluster: namespaces, pods, labels and services, using kubectl output.</p><span class="step__min">25 min</span></div><div class="step"><p>Write designer notes: three moments of confusion and one thing a visual tool could have shown you.</p><span class="step__min">20 min</span></div>
+<h2>Skip or skim</h2><p>Skip cloud clusters, Helm charts and Calico Enterprise features. A local cluster with a small app is the goal.</p>
+<h2>Check yourself</h2><ul><li>What do kind, kubectl and Calico each do in your setup?</li><li>What would a platform engineer need from a visual tool that the terminal did not give you?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>kind runs the cluster in Docker on your laptop, kubectl lets you control and inspect it, and Calico provides pod networking and enforces network policies.</li><li>For example: a map of which services talk to which, the labels on each pod, and a clear view of what is allowed or blocked, without running many commands.</li></ul>
+<p><a href="../../index.html#lesson/31">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

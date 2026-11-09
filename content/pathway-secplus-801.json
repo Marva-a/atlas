@@ -1,0 +1,58 @@
+{
+ "schema": "identity-lab-coach.pathway.v1",
+ "createdOn": "2026-11-09",
+ "note": "Registers the Security+ pathway so it appears beside the other pathways. Its course text lives in the secplus-*.json files and loads on demand, so it is not copied into your saved data.",
+ "pathway": {
+  "id": "secplus-801",
+  "title": "Security+ for Product Designers — CompTIA SY0-801",
+  "summary": "One 16-week pathway with two outcomes: readiness for Security+ V8 and the ability to apply security knowledge as a Senior Product Designer. Every official objective, labs and two timed mock exams, with design exercises inside the lessons where they truly apply. Independent of CompTIA.",
+  "forWho": "Product designers preparing for Security+ SY0-801, including those with no IT background, with about 9 to 13 hours in most weeks. Questions are AI-written, so read the policy note on the pathway's first page.",
+  "order": 4,
+  "coreDays": []
+ },
+ "lessons": [
+  {
+   "id": "secplus-start",
+   "order": 1,
+   "level": "basics",
+   "title": "Start here: how Security+ for Product Designers works",
+   "plannedMinutes": 15,
+   "inOneSentence": "This pathway has its own pages for lessons, labs, design exercises, knowledge checks, mock exams and two separate progress measures.",
+   "youCanNow": "Open the pathway, understand how it tracks technical mastery and design competency separately, and decide whether its AI-written material suits you.",
+   "whyItMattersToADesigner": "Each security concept is connected directly to how it appears in products and how you would design for it, so exam preparation and professional practice build on each other.",
+   "keyIdeas": [
+    "The first four weeks are foundations and are not exam domains.",
+    "Each lesson has six parts: learn the concept, technical deep dive, see it in real products, apply it as a Product Designer, test your understanding, then review.",
+    "Security+ mastery and design competency are measured separately. Neither can raise the other.",
+    "The practice questions are AI-written and are not authorized by CompTIA. Read CompTIA's policy on the pathway's first page before relying on them."
+   ],
+   "words": [
+    {
+     "term": "SY0-801",
+     "meaning": "The exam code for CompTIA Security+ version 8."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Open the pathway from Learn → Pathways and read its first page, including the policy note.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Open the progress dashboard to see how the two measures work.",
+     "minutes": 5,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Nothing to skip. This is a short orientation.",
+   "checkYourself": [
+    "Why does finishing all 16 weeks not mean that you are ready for the exam?",
+    "Why doesn't passing a question about OAuth show that you can design an OAuth experience?"
+   ],
+   "lookFor": [
+    "Readiness in this pathway depends on demonstrated results: objective status, mock exam scores and performance-based practice.",
+    "Knowing a concept and designing for it are different skills, which is why they are assessed separately."
+   ]
+  }
+ ]
+}

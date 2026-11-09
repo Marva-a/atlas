@@ -1,0 +1,308 @@
+# Week 4: operating systems and security fundamentals. Foundation material, not exam objectives.
+
+@lesson w4-1
+title: The command line, users, groups and file permissions
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w1-2
+out: Move around and inspect files in Windows and Linux command lines.
+out: Read Linux permission strings and describe Windows permissions at a basic level.
+out: Explain why least access at the file level matters.
+why: Security tools, logs and incident response work often happen at a command line. A single wrong permission can expose a whole database, so you need to be able to read one quickly.
+plain: A graphical desktop lets you point at things. A command line lets you ask for things in words, which is faster, repeatable and scriptable. Permissions are the locks on each file: they say who can open it, change it or run it.
+tech: On Linux, a shell such as bash reads commands. Useful commands include pwd (where am I), ls -l (list files), cd (change directory), cat (show a file), grep (search text), sudo (run as an administrator) and chmod (change permissions). On Windows, Command Prompt and PowerShell are the shells. PowerShell works with objects, using commands such as Get-Process and Get-Service.
+tech: Linux permissions appear as a string such as -rwxr-x---. After the first character, there are three groups of three, for the owner, the group and everyone else. Read is r, write is w and execute is x. In numeric form, r is 4, w is 2, x is 1, so 750 means rwxr-x---. Windows uses access control lists (ACLs) that grant permissions such as Read and Full Control to users and groups. The icacls command shows them.
+table: Reading permissions | Number | Letters | Meaning
+| 7 | rwx | Read, write and execute
+| 6 | rw- | Read and write
+| 5 | r-x | Read and execute
+| 4 | r-- | Read only
+| 0 | --- | No access
+term: Command line == A text interface for giving instructions to a computer.
+term: Shell == The program that reads and runs commands, such as bash or PowerShell.
+term: sudo == A Linux command that runs another command with elevated privileges.
+term: chmod == A Linux command that changes file permissions.
+term: ACL == Access control list: a list of who can do what with a resource.
+term: Read, write, execute == The three basic Linux file permissions.
+term: PowerShell == Microsoft's command shell and scripting language.
+eg: A configuration file with database passwords is set to 644, so every user on the server can read it. Setting it to 600 limits it to the owner.
+eg: Administrators use sudo so that each privileged command is logged against a named person.
+walk: Read -rw-r----- for report.txt
+- The first dash means it is a regular file. A d would mean a directory.
+- The next three characters, rw-, mean the owner can read and write.
+- The next three, r--, mean the group can only read.
+- The last three, ---, mean everyone else has no access.
+- In numbers, this is 640.
+lab: Practise commands in your VM | 45 | Your Ubuntu lab VM
+do: Open a terminal in your VM. Run pwd, then ls -l in your home directory.
+do: Create a file with echo hello > test.txt, then run ls -l test.txt and write down its permissions.
+do: Run chmod 600 test.txt and look at the permissions again.
+do: Run sudo adduser labuser to make a new account, switch using su - labuser, and try cat on your file using its full path. Type exit afterwards.
+do: Optional on Windows: run icacls on a file in your own Documents folder.
+expect: After chmod 600, the listing shows -rw------- and the other account gets Permission denied.
+explain: The kernel checks each access against the file's owner, group and mode. Your file stayed private even though the other user was logged in to the same machine.
+pass: You changed a file's permissions and verified the result with ls -l.
+pass: You saw Permission denied from the second account.
+scenario: A web application's folder has permissions 777. What does that allow, and what should an administrator consider instead?
+answer: 777 gives read, write and execute to the owner, the group and everyone else, so any account on the server, including a compromised service, can change or run those files. Give the minimum instead, for example restricting write access to the account that needs it.
+q none mcq e | Linux permissions | What does the number 7 mean in a Linux permission?
++ Read, write and execute :: 4 plus 2 plus 1 equals 7.
+- Read only :: Read only is 4.
+- Write only :: Write only is 2.
+- No access :: No access is 0.
+q none mcq m | Linux permissions | What does chmod 640 give the group?
++ Read only :: The middle digit is 4, which means read.
+- Read and write :: That would be 6 in the middle digit.
+- Full control :: That would be 7.
+- No access :: That would be 0.
+q none match e | Commands | Match each command to its use.
+= pwd => Show the current directory
+= grep => Search text for a pattern
+= chmod => Change file permissions
+= sudo => Run a command with elevated rights
+why: These commands are used constantly when investigating Linux systems.
+q none tf m | Windows permissions | True or false: Windows uses access control lists to grant permissions on files.
++ True :: NTFS permissions are stored as access control lists.
+- False :: ACLs are the standard Windows permission mechanism.
+mistake: Fixing a problem with chmod 777. It may seem to work, because it removes the protection that caused the error.
+mistake: Reading the three permission groups in the wrong order. It is always owner, group, others.
+sum: The command line makes work faster, repeatable and auditable.
+sum: Linux permissions apply to owner, group and others.
+sum: Grant only the access that is needed.
+ref: ubuntu-cli r
+ref: man-chmod r
+ref: ms-icacls s
+ref: ms-powershell s
+card: What does chmod 750 mean? == Owner rwx, group r-x, others no access.
+card: Which command changes Linux file permissions? == chmod.
+
+@lesson w4-2
+title: Processes, services, logs and software updates
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w4-1
+out: Inspect and manage processes and services.
+out: Find and read basic system logs on Windows and Linux.
+out: Explain why patching matters and how it is done safely.
+why: Logs are the story of what happened on a system, and most investigations are built from them. Patching closes the holes that attackers rely on most. These two habits sit at the centre of defensive work.
+plain: Logs are a diary the computer keeps for itself. Each entry has a time, what happened and usually who did it. A patch is a repair sent out by a software maker, and installing it closes a known weakness, like fixing a broken lock.
+tech: On Linux, systemctl status shows a service, ps aux lists processes, and kill ends one. Logs are stored in /var/log, and systemd's journal is read with journalctl. On Windows, Task Manager and Get-Service show running software, and Event Viewer shows logs grouped as Application, Security and System.
+tech: Useful Windows Security event IDs include 4624 (successful logon), 4625 (failed logon) and 4688 (new process created, when that auditing is enabled). Accurate time is essential for connecting events across systems, which is why Network Time Protocol (NTP) matters.
+tech: Patch management means finding available updates, testing them, deploying them in order of risk, verifying they worked and recording it all. Automatic updates suit personal devices. Businesses often test first, because an update can break other software.
+term: Log == A time-stamped record of an event.
+term: Event Viewer == The Windows tool for reading system logs.
+term: journalctl == The Linux command for reading the systemd journal.
+term: systemctl == The Linux command that manages services.
+term: Event ID == A number identifying a type of Windows event.
+term: NTP == Network Time Protocol: keeps device clocks in sync.
+term: Patch == An update that fixes a software problem.
+term: Patch management == The process of finding, testing, deploying and verifying updates.
+eg: Hundreds of failed logons followed by one success on the same account is a classic sign of password guessing.
+eg: Attackers often clear logs to hide their tracks, so organizations forward logs to a separate system.
+walk: Investigate a failed sign-in on Linux
+- Open a terminal in your lab VM.
+- Run sudo grep -i "fail" /var/log/auth.log. On some distributions, the file is /var/log/secure.
+- Read each result's timestamp, username and source.
+- Count repeated attempts, and check whether a success follows.
+- Note the time and compare it with any other evidence.
+lab: Read your system's diary | 35 | Event Viewer, or journalctl in your VM
+do: Linux VM: try su with a wrong password, then run sudo journalctl -n 30 and find the failure.
+do: Windows: open Event Viewer, then Windows Logs, then System, and open a recent entry. The Security log needs an administrator account.
+do: Check for pending updates: run sudo apt update in the VM or open Windows Update.
+do: List one thing you would verify before applying an update to a business-critical system.
+expect: You find your deliberate failed attempt with a timestamp and account name, and see any pending updates.
+explain: Causing a known event and finding it teaches you what an entry looks like before you need to find one under pressure.
+pass: You located the event you caused and recorded its time and account.
+pass: You identified whether updates were pending.
+scenario: A server shows no failed logons in its log for the past month, but the log file is unusually small and starts only yesterday. What should an analyst suspect?
+answer: The log may have been cleared or rotated. A gap that begins recently can be a sign of tampering, so the analyst should check log forwarding to central storage and look for evidence of log clearing.
+q none mcq e | Logs | Which Windows tool is used to read system logs?
++ Event Viewer :: Event Viewer displays Application, Security and System logs.
+- Task Manager :: Task Manager shows running processes.
+- Regedit :: Regedit edits the registry.
+- Notepad :: Notepad is a text editor and cannot open event logs properly.
+q none mcq m | Event IDs | Which Windows event ID records a failed logon?
++ 4625 :: 4625 records a failed logon attempt.
+- 4624 :: 4624 is a successful logon.
+- 4688 :: 4688 records process creation.
+- 7045 :: 7045 records a new service being installed.
+q none order m | Patch management | Put the patching steps in order.
+1. Identify available updates
+2. Test in a non-production environment
+3. Deploy, highest risk first
+4. Verify and record the result
+why: Testing before deployment reduces the chance of an outage, and verification proves the fix took effect.
+q none mcq m | Time synchronization | Why is NTP important in investigations?
++ Consistent clocks let events on different systems be placed in correct order :: Investigators need reliable timestamps to reconstruct a timeline.
+- It encrypts log files :: NTP synchronizes time and does not encrypt logs.
+- It stops attackers from signing in :: NTP has no such role.
+- It compresses old logs :: Compression is done by other tools.
+mistake: Assuming a successful sign-in is harmless. Stolen credentials also produce successful sign-ins.
+mistake: Keeping logs only on the machine that produced them, where an intruder can delete them.
+sum: Processes and services show what is running.
+sum: Logs record who did what and when, and depend on accurate time.
+sum: Patching closes known weaknesses and should be tested and verified.
+ref: nist-800-92 r
+ref: nist-800-40 r
+ref: man-journalctl s
+ref: ms-eventlog s
+ref: ms-4624 s
+card: What is Windows event ID 4624? == A successful logon.
+card: What is Windows event ID 4625? == A failed logon.
+
+@lesson w4-3
+title: Hardening, endpoint protection and basic firewalls
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w4-2
+out: Explain system hardening and give concrete steps.
+out: Describe what endpoint protection does.
+out: Write basic host firewall rules.
+why: Most systems ship with more enabled than they need. Hardening removes what an attacker could otherwise use. Firewalls then limit who can reach what remains.
+plain: Hardening a computer is like preparing a house before going on a long trip. Lock the doors you do not use, remove the spare key from under the mat and take valuables out of the window. A firewall is a guard at the door with a list of who may enter.
+tech: Hardening reduces attack surface. Typical steps are removing unused software and accounts, disabling unneeded services and ports, changing default passwords, applying updates, enabling logging, and requiring strong authentication. Published baselines such as the Center for Internet Security benchmarks list specific settings.
+tech: Endpoint protection covers software on devices. Antivirus looks for known malicious patterns and behaviour. Host-based firewalls control traffic on the device itself. A firewall evaluates rules in order, commonly by source, destination, port and protocol, and ends with an implicit deny that blocks anything not allowed.
+table: A simple host firewall policy | Order | Action | Port | Source | Reason
+| 1 | Allow | TCP 22 | Admin subnet only | Remote management
+| 2 | Allow | TCP 443 | Any | The public website
+| 3 | Deny | Any | Any | Everything else
+term: Hardening == Reducing a system's attack surface through secure configuration.
+term: Attack surface == All the points where an attacker could try to get in.
+term: Baseline == An approved, documented secure configuration.
+term: Antivirus == Software that detects and removes malicious code.
+term: Host-based firewall == A firewall running on the device it protects.
+term: Implicit deny == The rule that anything not explicitly allowed is blocked.
+term: Default credentials == Usernames and passwords set by a manufacturer.
+eg: A new camera still has the manufacturer's default admin password. Attackers scan for exactly that.
+eg: A database server's firewall permits connections only from the application servers, so a compromised laptop cannot reach it directly.
+walk: Harden a new Linux server
+- Install updates.
+- Create a named admin account and disable direct root login over SSH.
+- Remove software and services the server does not need.
+- Allow only the required ports in the firewall.
+- Turn on logging and forward logs elsewhere.
+lab: Configure a host firewall in your VM | 40 | ufw in your Ubuntu lab VM
+do: Run sudo ufw status to see the current state.
+do: Run sudo ufw default deny incoming, then sudo ufw allow from 127.0.0.1 to any port 22 proto tcp.
+do: Run sudo ufw enable and then sudo ufw status numbered.
+do: Run sudo ss -tuln and compare what is listening with what the firewall allows.
+do: Restore your snapshot, or run sudo ufw disable, when finished.
+expect: The status shows default deny for incoming traffic and your single allow rule.
+explain: Default deny means that a service you forget about remains unreachable. Allow rules then state exactly what is intended.
+pass: Your rule list shows default deny and the single allow rule.
+pass: You can explain implicit deny in a sentence.
+scenario: A team installs a new web server with all default features and leaves FTP enabled, though nothing uses it. Which hardening step addresses this, and why?
+answer: Disable or remove unneeded services. An unused FTP service adds attack surface and transmits credentials in clear text, while providing no benefit.
+q none mcq e | Hardening | Which action is an example of hardening?
++ Disabling services that are not needed :: Removing what is unneeded reduces attack surface.
+- Installing extra games :: Additional software increases attack surface.
+- Keeping default passwords :: Default credentials should always be changed.
+- Turning off logging :: Logging is needed for detection.
+q none mcq m | Implicit deny | A firewall has allow rules for ports 80 and 443 and no other rules. What happens to traffic on port 23, assuming implicit deny?
++ It is blocked :: Traffic that matches no allow rule is denied.
+- It is allowed :: Implicit deny blocks what is not allowed.
+- It is redirected to port 80 :: Firewalls do not redirect by default.
+- It is logged and then allowed :: Implicit deny does not permit the traffic.
+q none tf e | Default credentials | True or false: changing default passwords is part of hardening.
++ True :: Default credentials are widely known and easily found.
+- False :: Leaving them unchanged is a common and serious weakness.
+q none multi m | Attack surface | Which actions reduce a server's attack surface? Choose two.
++ Closing unused ports :: Fewer open ports means fewer ways in.
++ Removing unused software :: Less software means fewer possible vulnerabilities.
+- Adding more administrator accounts :: More privileged accounts increase risk.
+- Exposing the management interface to the internet :: This increases exposure.
+mistake: Allowing all traffic so that troubleshooting is easier and forgetting to remove the rule.
+mistake: Treating antivirus as sufficient on its own.
+sum: Hardening removes what is not needed.
+sum: Baselines define what good configuration looks like.
+sum: Firewalls apply rules in order and should deny by default.
+ref: nist-800-123 r
+ref: cis-benchmarks r
+ref: ubuntu-ufw s
+ref: ms-defender-fw s
+ref: nist-800-41 s
+card: What is implicit deny? == Anything not explicitly allowed is blocked.
+card: What is attack surface? == All the points where an attacker could try to enter or affect a system.
+
+@lesson w4-4
+title: Threats, authentication, authorization and safe labs
+domain: Foundations
+obj: none
+level: Beginner
+min: 120
+pre: w4-3
+out: Tell apart a threat, a vulnerability and a risk.
+out: Separate authentication from authorization and name the factor types.
+out: Follow the rules for safe, legal practice.
+why: These are the most frequently confused words in security. Getting them right now makes the exam domains easier. Safe lab habits matter too, because testing without permission can be illegal, however good the intent.
+plain: A vulnerability is an unlocked window. A threat is a burglar in the area. Risk is the chance that a burglar comes through that window, combined with how much it would cost you. Authentication is showing your ID at the door. Authorization is the list that says which rooms you may enter.
+tech: A threat is anything that could cause harm. A vulnerability is a weakness that could be exploited. An exploit is the method that takes advantage of a vulnerability. Risk combines likelihood and impact. Authentication verifies identity, using something you know (a password), something you have (a phone or security key) or something you are (a fingerprint). Using two different factor types is multifactor authentication. Authorization then decides what an authenticated identity may do.
+tech: Lab safety rules: practise only on your own systems or on platforms that give explicit permission. Keep malware samples and attack tools in isolated VMs. Use snapshots. Never scan a network or a website without written authorization, even out of curiosity. In Canada and many other countries, unauthorized access to a computer is a crime.
+table: Commonly confused | Term | Means | Example
+| Vulnerability | A weakness | An unpatched web server
+| Threat | Something that could cause harm | A ransomware group
+| Risk | Likelihood combined with impact | The chance and cost of that server being encrypted
+| Authentication | Proving who you are | Entering a password and code
+| Authorization | Deciding what you may do | Being allowed to view payroll
+term: Threat == Anything that could cause harm to a system or organization.
+term: Vulnerability == A weakness that could be exploited.
+term: Exploit == A technique or code that takes advantage of a vulnerability.
+term: Risk == The combination of how likely harm is and how bad it would be.
+term: Authentication == Verifying an identity.
+term: Authorization == Deciding what an identity is allowed to do.
+term: MFA == Multifactor authentication: using two or more different factor types.
+term: Authorized testing == Security testing with explicit permission from the system's owner.
+eg: Two passwords are not MFA, because both are something you know. A password and a code from an app is MFA.
+eg: A student scans a company's website out of curiosity and receives a legal complaint. Good intentions do not replace permission.
+walk: Classify a security sentence
+- Read: an old server runs software with a known flaw, and criminals are actively targeting that flaw.
+- The old software is the vulnerability.
+- The criminals are the threat.
+- The chance and cost of them succeeding is the risk.
+- Applying the patch removes the vulnerability and so reduces the risk.
+lab: Set your lab rules and test your VM's isolation | 30 | Your VM and a written checklist
+do: Write a one-page lab policy covering what you may test, where malware may be opened, and how you reset.
+do: Confirm your VM's network mode and that you have a recent snapshot.
+do: In the VM, ping your host computer's address and note the result.
+do: Enable MFA on one personal account of your own that offers it, and note the factors used.
+expect: A written policy and confirmed knowledge of how your VM connects to anything else.
+explain: Isolation only helps if you know exactly what the VM can reach. A written policy prevents one curious moment from becoming a legal or practical problem.
+pass: Your written lab policy names what is and is not permitted.
+pass: You verified your VM's network mode and snapshot.
+scenario: A colleague signs in with the correct password and a phone code, but gets Access Denied when opening the finance folder. Did authentication or authorization fail?
+answer: Authorization failed. The sign-in succeeded, so the system knows who the colleague is. The permissions for the finance folder then denied access.
+q none mcq e | Threat, vulnerability, risk | An unpatched server is an example of which?
++ A vulnerability :: It is a weakness that could be exploited.
+- A threat :: A threat is what might exploit the weakness.
+- A risk :: Risk also includes likelihood and impact.
+- A control :: A control reduces risk.
+q none mcq m | Authentication factors | Which combination is multifactor authentication?
++ A password and a code from a hardware token :: This combines something you know and something you have.
+- A password and a PIN :: Both are something you know.
+- Two different passwords :: Both are something you know.
+- A username and a password :: A username is an identifier, and there is just one factor.
+q none mcq m | Authentication versus authorization | A user logs in successfully but cannot open a payroll report. What was denied?
++ Authorization :: The user's identity was confirmed, but the permission was missing.
+- Authentication :: Authentication succeeded at login.
+- Accounting :: Accounting records activity, and does not grant access.
+- Encryption :: Encryption is not what controls this decision.
+q none tf e | Legal practice | True or false: scanning a website you do not own is fine as long as you do not damage anything.
+- True :: Testing without authorization can be illegal and against a provider's terms.
++ False :: You need explicit permission, regardless of intent.
+mistake: Using threat, vulnerability and risk as if they were the same word.
+mistake: Believing that good intentions make unauthorized testing acceptable.
+sum: A vulnerability is a weakness, a threat could exploit it and risk combines likelihood and impact.
+sum: Authentication proves who, and authorization decides what.
+sum: Practise only where you have explicit permission.
+ref: nist-glossary r
+ref: nist-800-63 s
+ref: nmap-legal r
+card: Which factor type is a fingerprint? == Something you are.
+card: Authentication or authorization: which happens first? == Authentication, then authorization.
+also: 2 | Who you are and what you may do

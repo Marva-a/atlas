@@ -1,0 +1,205 @@
+# Performance-based practice: original Atlas exercises, not reproductions of CompTIA's exam interface.
+
+@pbq firewall-rules
+title: Decide firewall actions
+kind: grid
+obj: 4.1, 3.2
+min: 15
+lesson: w10-1
+intro: Policy: the public may reach the web server (10.0.1.10) only over HTTPS. Administrators on 10.0.9.0/24 may use SSH to the web server. The web server may reach the database (10.0.2.20) on TCP 3306. Nothing else is allowed. Decide what the firewall should do with each connection.
+why: Allow only what the policy states and deny the rest. Good rule sets are short, specific and end with a deny.
+cols: Source | Destination | Service
+choices: Allow | Deny
+| 203.0.113.44 | 10.0.1.10 | TCP 443 | Allow | The public may reach the site over HTTPS.
+| 203.0.113.44 | 10.0.1.10 | TCP 22 | Deny | SSH is limited to the admin subnet.
+| 10.0.9.15 | 10.0.1.10 | TCP 22 | Allow | This host is in the admin subnet.
+| 10.0.1.10 | 10.0.2.20 | TCP 3306 | Allow | The application needs its database.
+| 203.0.113.44 | 10.0.2.20 | TCP 3306 | Deny | The database must never face the internet.
+| 10.0.1.10 | 203.0.113.99 | TCP 25 | Deny | The policy allows no outbound mail from this server.
+| 10.0.5.30 | 10.0.1.10 | TCP 3389 | Deny | RDP is not permitted by the policy.
+
+@pbq device-roles
+title: Match the device to the job
+kind: grid
+obj: 4.1, 3.2
+min: 10
+lesson: w10-1
+intro: Select the best tool for each requirement.
+why: Each tool has a specific role. Consider what it can see and whether it can act.
+cols: Requirement
+choices: Switch | Router | WAF | IPS | IDS sensor | NAC | Load balancer
+| Forward frames within a LAN by MAC address | Switch | Switches operate at Layer 2.
+| Move packets between different networks | Router | Routers operate at Layer 3.
+| Block SQL injection against a website | WAF | A WAF understands web requests.
+| Block malicious traffic inline | IPS | An IPS sits in the path and can block.
+| Watch mirrored traffic and alert only | IDS sensor | Detection without blocking.
+| Check a laptop's patch level before it joins | NAC | NAC evaluates posture.
+| Spread requests across three web servers | Load balancer | This improves availability.
+
+@pbq log-suspicious
+title: Find the malicious activity in a log
+kind: pick
+obj: 2.5, 4.8
+min: 15
+lesson: w12-4
+intro: Select every line that indicates malicious or suspicious activity. Assume the company operates in Canada, with staff on 10.0.0.0/8.
+why: Normal logs are mostly routine. Patterns such as one source across many accounts, successful sign-ins following failures, path traversal and sudden large transfers deserve attention.
+| 09:01 LOGIN OK user=amy src=10.0.4.15 | no | A normal internal sign-in.
+| 09:14 LOGIN FAIL user=bob src=198.51.100.7 | yes | The first of a spraying pattern from one external source.
+| 09:14 LOGIN FAIL user=eve src=198.51.100.7 | yes | The same source trying another account.
+| 09:15 LOGIN FAIL user=raj src=198.51.100.7 | yes | Continuing across accounts.
+| 09:15 LOGIN OK user=raj src=198.51.100.7 | yes | A success from the same source suggests a compromise.
+| 09:20 GET /reports/q3.pdf user=amy 200 | no | A routine file request.
+| 09:31 GET /download?file=../../etc/passwd 403 | yes | A directory traversal attempt, even though it was blocked.
+| 09:40 BACKUP job completed 12GB src=10.0.8.2 | no | A scheduled internal backup.
+| 10:02 OUTBOUND user=raj dst=203.0.113.200 bytes=4800000000 | yes | A large transfer soon after a suspicious sign-in.
+
+@pbq access-matrix
+title: Assign least-privilege access
+kind: grid
+obj: 4.5
+min: 12
+lesson: w11-4
+intro: Assign the minimum access that lets each person do the described job.
+why: Least privilege means granting only what the task requires. Administrative access is reserved for those who administer the system.
+cols: Person | Task | Resource
+choices: None | Read | Read and write | Administer
+| Payroll clerk | Enter monthly salaries | Payroll system | Read and write | Salary entry requires changes.
+| External auditor | Review this year's payroll | Payroll system | Read | Auditors need to see, not to change.
+| Marketing intern | Create campaign pages | Payroll system | None | The role has no need for payroll.
+| Database administrator | Maintain the payroll database | Payroll system | Administer | This is the admin function of the role.
+| Help desk agent | Reset staff passwords | Payroll system | None | A password reset does not need payroll access.
+| Payroll manager | Review reports | Payroll reports | Read | Viewing reports requires only reading.
+
+@pbq vuln-priority
+title: Prioritize vulnerability findings
+kind: order
+obj: 4.3, 2.1
+min: 12
+lesson: w11-1
+intro: Order these findings from the first to fix to the last. Consider severity, exposure, active exploitation and asset value.
+why: Exposure and active exploitation can outweigh raw severity. A low-severity finding on an isolated system can wait.
+| CVSS 8.1, internet-facing payment portal, listed in CISA KEV | Exposed, valuable and actively exploited, so it comes first.
+| CVSS 9.8, internal HR server reachable from all staff, no known exploit | Very severe and sensitive, but not exposed to the internet.
+| CVSS 7.2, public marketing website, no customer data | Exposed, but less valuable and no known exploitation.
+| CVSS 6.5, internal printer | Low value and internal.
+| CVSS 9.0, disconnected lab machine awaiting disposal | Isolated, and soon to be retired.
+
+@pbq ir-sequence
+title: Respond to a ransomware incident
+kind: order
+obj: 4.7
+min: 10
+lesson: w12-2
+intro: Put these actions in the order you would perform them.
+why: Confirm and contain first, preserve evidence before destroying anything, restore from clean sources, and finish by learning from the incident.
+| Validate the alert and declare an incident | Nothing else begins until the incident is confirmed.
+| Isolate affected hosts from the network | Stops the spread.
+| Preserve memory and disk evidence | Must occur before systems are rebuilt.
+| Identify the root cause and scope | Needed for complete eradication.
+| Remove the malware and close the entry point | Eradication.
+| Restore from clean, verified backups | Recovery must follow eradication.
+| Hold a lessons learned review and write the report | Post-incident activity.
+
+@pbq network-zones
+title: Place assets in security zones
+kind: grid
+obj: 3.2
+min: 10
+lesson: w8-3
+intro: Choose the most appropriate zone for each asset.
+why: Grouping by trust and exposure limits what an attacker can reach from any single compromise.
+cols: Asset
+choices: Screened subnet | Internal server zone | User zone | OT zone | Guest network
+| Public-facing web server | Screened subnet | It must be reachable from the internet, but separated from internal systems.
+| Customer database | Internal server zone | It should only be reached by the application tier.
+| Staff laptops | User zone | Users are separated from servers.
+| Factory floor controllers | OT zone | Control systems need strict isolation.
+| Visitor phones | Guest network | Unmanaged devices should be kept separate.
+| Public-facing mail relay | Screened subnet | It accepts internet connections and forwards inward.
+
+@pbq insecure-config
+title: Spot the insecure settings
+kind: pick
+obj: 4.1, 2.4
+min: 10
+lesson: w10-2
+intro: Select each setting that should be changed.
+why: Insecure settings tend to be clear-text protocols, default credentials, excessive permissions or unnecessary exposure.
+| SSH: PermitRootLogin yes | yes | Direct root login should be disabled.
+| SSH: PasswordAuthentication no | no | Key-based authentication is a stronger choice.
+| Telnet service: enabled | yes | Telnet sends credentials in clear text.
+| TLS minimum version: 1.2 | no | TLS 1.2 or later is acceptable.
+| Admin password: admin | yes | Default or trivial credentials must be changed.
+| File permissions on /etc/app.conf: 777 | yes | Everyone can read and change this file.
+| Automatic security updates: on | no | This is good practice, subject to change management.
+| Database listens on 0.0.0.0 with internet access | yes | Databases should not be exposed to all networks.
+
+@pbq crypto-choice
+title: Choose the right cryptography
+kind: grid
+obj: 1.3
+min: 10
+lesson: w5-4
+intro: Choose the most appropriate technique for each requirement.
+why: Encryption is reversible and protects confidentiality, hashing is one-way, and signatures prove origin and integrity.
+cols: Requirement
+choices: Symmetric encryption | Asymmetric key exchange | Salted password hash | SHA-256 hash | Digital signature | Tokenization
+| Encrypt a 50 GB backup quickly | Symmetric encryption | Symmetric encryption is fast for bulk data.
+| Agree on a session key across the internet | Asymmetric key exchange | Key exchange solves key sharing.
+| Store user passwords | Salted password hash | Passwords should not be reversible.
+| Confirm a download is unchanged | SHA-256 hash | Compare digests.
+| Prove who approved a document | Digital signature | Provides non-repudiation.
+| Keep card numbers out of the application database | Tokenization | Tokens replace the sensitive values.
+
+@pbq controls-classify
+title: Classify security controls
+kind: grid
+obj: 1.1
+min: 8
+lesson: w5-2
+intro: Choose each control's main type.
+why: Ask what the control is trying to accomplish.
+cols: Control
+choices: Preventive | Deterring | Detective | Corrective | Compensating | Directive
+| Firewall rule blocking inbound SMB | Preventive | It stops the traffic.
+| Sign warning of prosecution | Deterring | It discourages attempts.
+| Daily review of authentication logs | Detective | It identifies events.
+| Restoring files from backup | Corrective | It restores after an event.
+| Isolating a device that cannot be patched | Compensating | It stands in for the patch.
+| Written requirement to report incidents | Directive | It tells people what to do.
+
+@pbq risk-math
+title: Calculate and treat risk
+kind: grid
+obj: 5.2
+min: 10
+lesson: w13-2
+intro: Choose the correct answer for each row. Asset value is 200,000 dollars, exposure factor is 25%, and ARO is 0.4.
+why: SLE equals asset value multiplied by exposure factor. ALE equals SLE multiplied by ARO.
+cols: Question
+choices: 50,000 | 20,000 | 80,000 | Mitigating | Transferring | Avoiding | Accepting
+| What is the SLE? | 50,000 | 200,000 times 0.25.
+| What is the ALE? | 20,000 | 50,000 times 0.4.
+| Buying insurance is which treatment? | Transferring | Financial impact moves to the insurer.
+| Adding MFA is which treatment? | Mitigating | It reduces likelihood.
+| Stopping the risky service is which treatment? | Avoiding | The activity ends.
+| Documenting and living with the risk is which treatment? | Accepting | The risk is knowingly kept.
+
+@pbq recovery-plan
+title: Choose recovery strategies
+kind: grid
+obj: 3.4
+min: 10
+lesson: w9-4
+intro: Choose the best answer for each situation.
+why: Match the recovery approach to the time and data loss the business can tolerate.
+cols: Situation
+choices: Hot site | Warm site | Cold site | RTO | RPO | Immutable backups | UPS
+| A hospital needs systems back within minutes | Hot site | It is fully ready.
+| Equipment can be in place, with restoration in a day or two | Warm site | It has hardware but needs current data.
+| A low-priority system can wait for weeks | Cold site | Space and utilities only.
+| The maximum acceptable time a service can be down | RTO | Recovery time objective.
+| The maximum acceptable data loss, measured in time | RPO | Recovery point objective.
+| Ransomware must not be able to change backups | Immutable backups | Copies cannot be altered during the lock period.
+| A bridge for a brief power interruption | UPS | Battery power covers short outages.

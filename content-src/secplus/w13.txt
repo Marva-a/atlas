@@ -1,0 +1,587 @@
+# Week 13: Domain 5.0.
+
+@lesson w13-1
+title: Governance documents: guidelines, standards, procedures, plans and policies
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.1
+level: Beginner
+min: 100
+pre: w5-3
+out: Tell apart policies, standards, procedures and guidelines.
+out: Identify common security policies.
+out: Choose the right document for a situation.
+why: Security decisions must be written down and enforceable. Exam questions often test whether you can tell a policy from a standard or a procedure.
+plain: A policy says what must happen: all staff must wear seatbelts. A standard gives measurable requirements: the seatbelt must meet this rating. A procedure gives the steps: buckle it this way. A guideline gives recommended advice: consider adjusting your seat first.
+tech: Guidelines are recommended, not mandatory, and include benchmarks, advisories, implementation guides and reference architecture. Standards are mandatory and measurable, and include baselines, passwords, physical security, encryption and technical specifications such as a request for comments (RFC).
+tech: Procedures are step-by-step instructions, such as a standard operating procedure (SOP) or a runbook. Plans include business continuity and disaster recovery. Policies set high-level expectations, including bring your own device (BYOD), acceptable use policy (AUP), clean desk, information security, incident response, data classification and retention, access control, data disposal, vulnerability disclosure and privacy.
+table: Governance documents | Document | Purpose | Mandatory?
+| Policy | States what must be done | Yes
+| Standard | Sets specific measurable requirements | Yes
+| Procedure | Gives the steps to carry it out | Yes
+| Guideline | Offers recommended approaches | No
+term: Guidelines == Recommended, non-mandatory guidance.
+term: Benchmarks == Recommended configuration references.
+term: Advisories == Notices about risks and recommended actions.
+term: Implementation guides == Instructions for applying a technology.
+term: Reference architecture == A model design to follow.
+term: Standards == Mandatory, measurable requirements.
+term: Baselines == Minimum approved configurations.
+term: Passwords == Standards for credential requirements.
+term: Physical security == Standards for protecting premises.
+term: RFC == Request for comments: a published internet technical specification.
+term: Encryption == Standards for cryptographic use.
+term: Procedures == Step-by-step instructions.
+term: SOP == Standard operating procedure.
+term: Runbooks == Step-by-step guides for operational tasks.
+term: Plans == Prepared approaches such as business continuity and disaster recovery.
+term: Business continuity == A plan to keep the organization functioning.
+term: Disaster recovery == A plan for restoring technology.
+term: Policies == High-level statements of expectations.
+term: BYOD == Bring your own device: rules for personal devices.
+term: AUP == Acceptable use policy.
+term: Clean desk == A policy to keep sensitive material out of sight.
+term: Information security == A policy setting the organization's overall approach.
+term: Incident response == A policy establishing how incidents are handled.
+term: Data classification and retention == A policy on labeling and keeping data.
+term: Access control == A policy on who gets access.
+term: Data disposal == A policy on destroying data.
+term: Vulnerability disclosure == A policy for receiving flaw reports.
+term: Privacy == A policy on handling personal information.
+eg: A policy requires strong encryption, a standard specifies AES-256, and a procedure shows how to enable it on laptops.
+eg: A clean desk policy keeps printed customer information from being left out overnight.
+walk: Classify a sentence
+- All laptops must be encrypted: policy.
+- Laptops must use AES-256 full disk encryption: standard.
+- Click Settings, then Encryption, then Enable: procedure.
+- We suggest backing up before encrypting: guideline.
+lab: Evaluate a policy | 30 | Worksheet and a public acceptable use policy
+do: Find a publicly posted acceptable use policy from a university.
+do: Mark sentences that are really standards, procedures or guidelines.
+do: Identify one vague requirement and rewrite it to be measurable.
+do: State who enforces it and how.
+expect: A marked-up policy and one improved requirement.
+explain: Policies fail when they are vague or nobody owns enforcement.
+pass: You classified at least five sentences.
+pass: Your rewritten requirement can be measured.
+scenario: An administrator needs step-by-step instructions to rotate a server's certificate. Which document type should this be?
+answer: A procedure, such as an SOP or runbook, since it gives specific steps.
+q 5.1 mcq e | Governance documents | Which document gives step-by-step instructions?
++ Procedure :: Procedures state how to do a task.
+- Policy :: A policy states what is expected.
+- Guideline :: Guidelines recommend.
+- Benchmark :: A benchmark is a reference.
+q 5.1 mcq m | Standards | Which of these is a standard?
++ All laptops must use AES-256 full disk encryption :: It is specific and measurable.
+- We recommend using encryption :: This is a guideline.
+- Click Enable under Settings :: This is a procedure.
+- The company cares about security :: This is a general statement.
+q 5.1 match m | Policies | Match each need to a policy.
+= Rules on personal phones at work => BYOD
+= What staff may do with company systems => AUP
+= Papers must be stored away overnight => Clean desk
+= How outside researchers can report flaws => Vulnerability disclosure
+why: Each policy addresses a specific behaviour.
+q 5.1 mcq m | Guidelines | Which statement about guidelines is correct?
++ They are recommended, not mandatory :: Guidelines offer advice.
+- They override policies :: Policies carry greater authority.
+- They are legally binding in all cases :: They are generally not.
+- They are step-by-step instructions :: Those are procedures.
+mistake: Calling everything a policy.
+mistake: Writing a policy without an owner.
+sum: Policies state what, standards specify, procedures show how, and guidelines suggest.
+sum: Every document needs an owner and a review cycle.
+ref: comptia-objectives r
+ref: nist-800-53 r
+ref: cis-benchmarks s
+card: Policy, standard, procedure or guideline: which is non-mandatory? == Guideline.
+card: What is a runbook? == Step-by-step instructions for an operational task.
+
+@lesson w13-2
+title: Risk management
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.2
+level: Intermediate
+min: 100
+pre: w4-4, w13-1
+out: Identify, assess and analyze risk.
+out: Calculate SLE and ALE.
+out: Choose a treatment and maintain a risk register.
+why: Security is mostly about deciding which risks matter and what to do about them, with limited money and time.
+plain: Consider home insurance. You think about what you own, what could happen, how likely it is and what it would cost. Then you lock the doors, buy insurance, move out of the flood zone or simply accept the small risks.
+tech: Risk identification includes asset identification and stakeholder ownership. Risk assessment uses scoring and categorization. Risk analysis considers impact, likelihood or probability, the owner, current mitigations, and whether the method is qualitative (categories like high or low) or quantitative (numbers).
+tech: A risk register records risks, owners, scores and treatments, and supports communication and regular reviews. Risk treatment options are transferring (such as insurance), accepting, avoiding (stopping the activity) and mitigating (reducing the risk).
+tech: Business-level considerations include a business impact analysis (BIA), which identifies critical functions and the effect of losing them; risk appetite, the amount of risk an organization will pursue; residual risk, which remains after controls; stakeholder involvement; management oversight; and regulatory and legal requirements.
+tech: Quantitative risk: single loss expectancy (SLE) is asset value multiplied by exposure factor. The annualized rate of occurrence (ARO) is how many times per year an event is expected. Annualized loss expectancy (ALE) is SLE multiplied by ARO.
+diagram: risk-matrix
+table: Risk treatments | Treatment | Meaning | Example
+| Transferring | Shift financial impact to someone else | Buying cyber insurance
+| Accepting | Knowingly living with the risk | Low-value system left as is
+| Avoiding | Stopping the risky activity | Not offering a risky service
+| Mitigating | Reducing likelihood or impact | Adding MFA
+term: Risk identification == Finding what could go wrong.
+term: Asset identification == Determining what needs protecting.
+term: Stakeholder ownership == Assigning people to be responsible for risks.
+term: Risk assessment == Evaluating identified risks.
+term: Scoring == Assigning a value to a risk.
+term: Categorization == Grouping risks by type or level.
+term: Risk analysis == Examining impact and likelihood in depth.
+term: Impact == The harm that would result.
+term: Likelihood/probability == The chance of an event.
+term: Owner == The person accountable for a risk.
+term: Current mitigations == Controls already in place.
+term: Qualitative vs. quantitative == Using categories compared with using numbers.
+term: Risk register == A record of risks and their treatment.
+term: Communication == Sharing risk information with those who need it.
+term: Reviews == Regularly re-examining risks.
+term: Transferring == Shifting financial impact to another party.
+term: Accepting == Knowingly living with a risk.
+term: Avoiding == Stopping the activity that creates the risk.
+term: Mitigating == Reducing a risk's likelihood or impact.
+term: Business impact analysis == Identifying critical functions and the effect of losing them.
+term: Risk appetite == How much risk an organization is willing to take.
+term: Residual risk == The risk that remains after controls.
+term: Stakeholder involvement == Including affected people in risk decisions.
+term: Management oversight == Leadership review of risk.
+term: Regulatory == Requirements set by regulators.
+term: Legal == Requirements arising from laws and contracts.
+term: SLE == Single loss expectancy: the cost of one event.
+term: ALE == Annualized loss expectancy: expected yearly cost.
+term: ARO == Annualized rate of occurrence: expected events per year.
+eg: A laptop worth 2,000 dollars with an exposure factor of 100% has an SLE of 2,000. If two are lost a year, the ALE is 4,000. A control costing 500 a year that halves losses saves more than it costs.
+eg: A company buys cyber insurance, which transfers some financial impact but does not remove the risk of reputational harm.
+walk: Calculate quantitative risk
+- Asset value is 100,000 dollars, and exposure factor is 40%.
+- SLE equals 100,000 times 0.40, which is 40,000.
+- ARO is 0.5, meaning once every two years.
+- ALE equals 40,000 times 0.5, which is 20,000 a year.
+- Compare that figure with what the control would cost.
+lab: Create a risk register | 35 | Spreadsheet
+do: Create five risks for a small online shop.
+do: Score impact and likelihood from 1 to 5 and multiply.
+do: Choose a treatment and an owner for each.
+do: Calculate SLE and ALE for one of them.
+do: Note the residual risk after treatment.
+expect: A sorted register with owners, treatments and one worked quantitative example.
+explain: The register turns abstract concerns into decisions that someone owns.
+pass: Each risk has a score, owner and treatment.
+pass: Your SLE and ALE arithmetic is correct.
+scenario: A server costing 50,000 dollars would lose 20% of its value in a flood, and floods are expected once every ten years. What is the ALE?
+answer: SLE is 50,000 times 0.2, which is 10,000. ARO is 0.1. ALE is 10,000 times 0.1, which is 1,000 dollars a year.
+q 5.2 mcq e | Risk treatment | Buying cyber insurance is an example of which treatment?
++ Transferring :: Financial impact shifts to the insurer.
+- Avoiding :: The activity continues.
+- Accepting :: Action was taken.
+- Mitigating :: The likelihood of an attack is unchanged.
+q 5.2 mcq m | ALE | SLE is 8,000 dollars and ARO is 3. What is the ALE?
++ 24,000 dollars :: ALE equals SLE multiplied by ARO.
+- 2,667 dollars :: This divides instead of multiplying.
+- 8,003 dollars :: This adds them.
+- 8,000 dollars :: This ignores ARO.
+q 5.2 mcq m | Residual risk | What is residual risk?
++ The risk that remains after controls are applied :: No control removes all risk.
+- The risk before any controls exist :: That is inherent risk.
+- A risk that has been transferred :: Transfer is a treatment.
+- Money saved by controls :: This is not risk.
+q 5.2 mcq h | Treatment selection | A company stops offering a feature because its risk cannot be justified. Which treatment is this?
++ Avoiding :: Stopping the activity removes the risk.
+- Transferring :: No other party took it on.
+- Accepting :: The company did not keep the risk.
+- Mitigating :: The feature was removed, rather than made safer.
+q 5.2 match m | Risk terms | Match each term with its meaning.
+= SLE => Cost of a single event
+= ARO => Expected occurrences per year
+= ALE => Expected annual cost
+= Risk appetite => Amount of risk willing to be taken
+why: Memorize the formula: ALE equals SLE times ARO.
+mistake: Thinking transferring removes the risk altogether. Reputational harm stays.
+mistake: Accepting a risk without documenting who accepted it.
+sum: Identify, assess, analyze, treat and review.
+sum: SLE times ARO equals ALE.
+sum: Every risk needs an owner.
+ref: comptia-objectives r
+ref: nist-800-30 r
+ref: nist-800-37 s
+ref: nist-csf s
+card: What is the ALE formula? == ALE equals SLE multiplied by ARO.
+card: Name the four risk treatments. == Transfer, accept, avoid, mitigate.
+
+@lesson w13-3
+title: Third-party risk
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.3
+level: Beginner
+min: 100
+pre: w13-2, w6-4
+out: Follow a vendor from selection through monitoring.
+out: Distinguish common agreements.
+out: Recognize limits on third-party assessment.
+why: Your suppliers' weaknesses become yours. A contract signed without due diligence can move risk into your organization unnoticed.
+plain: Hiring a vendor is like hiring a contractor to work inside your home. You get quotes, check references, sign a contract that spells out the work and keep an eye on the job.
+tech: Vendor selection uses a request for proposal (RFP), request for information (RFI), request for quote (RFQ) and expression of interest (EOI). Due diligence evaluates a vendor before signing. Conflict of interest occurs when someone's personal interests could influence the decision.
+tech: Agreement types: a service-level agreement (SLA) defines measurable service commitments, and a service-level objective (SLO) is a specific target within it. A memorandum of understanding (MOU) records a general, usually non-binding, intent. A memorandum of agreement (MOA) is more specific about responsibilities. A non-disclosure agreement (NDA) protects confidential information. A master services agreement (MSA) sets general terms for future work. A statement of work (SOW) details specific deliverables.
+tech: Vendor monitoring includes right to audit, service-level monitoring, a vendor registry, vendor assessment, compliance attestation and penetration testing. Limitations and constraints include staffing limitations, resource availability, environment, legal and regulatory factors, geography/jurisdiction, financial/return on investment (ROI), vendor lock-in and assurance mechanisms. Rules of engagement define what testers may and may not do.
+table: Selection documents | Document | Purpose
+| RFI | Gather general information
+| EOI | Ask who is interested
+| RFP | Request a detailed solution proposal
+| RFQ | Request pricing for a defined need
+term: RFP == Request for proposal.
+term: RFI == Request for information.
+term: RFQ == Request for quote.
+term: EOI == Expression of interest.
+term: Due diligence == Checking a vendor before committing.
+term: Conflict of interest == A personal interest that could affect a decision.
+term: SLA == Service-level agreement: measurable service commitments.
+term: SLO == Service-level objective: a specific service target.
+term: MOU == Memorandum of understanding: a general statement of intent.
+term: MOA == Memorandum of agreement: more specific responsibilities.
+term: NDA == Non-disclosure agreement.
+term: MSA == Master services agreement: general terms for future work.
+term: SOW == Statement of work: specific deliverables.
+term: Right to audit == A contractual right to examine a vendor.
+term: Service-level monitoring == Tracking performance against the SLA.
+term: Vendor registry == A record of approved vendors.
+term: Vendor assessment == Evaluating a vendor's security.
+term: Compliance attestation == A statement that a vendor meets requirements.
+term: Penetration testing == Authorized simulated attacks.
+term: Staffing limitations == Not having enough people to oversee vendors.
+term: Resource availability == The time, tools and budget available.
+term: Environment == The technical or physical setting that limits testing.
+term: Legal and regulatory factors == Laws and regulations that constrain options.
+term: Geography/jurisdiction == Location and legal authority.
+term: Financial/ROI == Cost compared with value.
+term: Vendor lock-in == Difficulty switching suppliers.
+term: Assurance mechanisms == Evidence such as audit reports and certifications.
+term: Rules of engagement == What a tester is allowed to do.
+eg: An MSA sets the general terms, and each project gets its own SOW.
+eg: A contract includes the right to audit, so a customer can verify that security promises are being kept.
+walk: Onboard a new SaaS vendor
+- Use an RFP to compare options.
+- Run due diligence and review security attestations.
+- Sign an MSA and SLA, with data handling terms and right to audit.
+- Add it to the vendor registry and assign an owner.
+- Monitor service levels and reassess periodically.
+lab: Conduct a vendor assessment | 30 | Worksheet and a public vendor trust page
+do: Choose a well-known SaaS company with a public security or trust page.
+do: Note its certifications, data location and breach notification commitments.
+do: Score it across five questions you write yourself.
+do: List what you could not find and would need to ask.
+expect: A one-page assessment with gaps identified.
+explain: Marketing claims differ from evidence. Noting what is missing is as valuable as what is present.
+pass: You answered all five questions with evidence or noted a gap.
+pass: You listed at least two follow-up questions.
+scenario: A company wants a document that details the exact tasks and deliverables a consultant will produce for a single project, under an existing general agreement. Which document fits?
+answer: A statement of work (SOW), which sits under the master services agreement (MSA).
+q 5.3 mcq e | Agreements | Which document protects confidential information shared between parties?
++ NDA :: It restricts disclosure.
+- SLA :: This defines service commitments.
+- RFQ :: This requests pricing.
+- SOW :: This defines deliverables.
+q 5.3 match m | Agreements | Match each to its purpose.
+= SLA => Measurable service commitments
+= MSA => General terms for future work
+= SOW => Specific project deliverables
+= MOU => General statement of intent
+why: These agreements operate at different levels of specificity.
+q 5.3 mcq m | Vendor monitoring | Which contract clause allows a customer to examine a vendor's controls?
++ Right to audit :: It gives inspection rights.
+- Rules of engagement :: These define penetration test limits.
+- Vendor lock-in :: This is a constraint, not a clause.
+- Expression of interest :: This is an early purchasing document.
+q 5.3 mcq h | Rules of engagement | Before a third party tests a system, what must be agreed?
++ Rules of engagement, including scope and authorization :: Testing without these can be illegal or harmful.
+- Only the price :: This omits scope and authorization.
+- The tester's favourite tools :: This is not the primary concern.
+- Nothing, if the tester is experienced :: Authorization is always needed.
+mistake: Mixing up SLA and SLO.
+mistake: Treating a vendor's marketing as evidence.
+sum: Select with due diligence.
+sum: Agreements differ in specificity.
+sum: Monitor vendors throughout the relationship.
+ref: comptia-objectives r
+ref: nist-800-161 r
+ref: nist-800-115 s
+card: What is the difference between an MSA and a SOW? == An MSA sets general terms, and a SOW details specific work.
+card: What does a rules of engagement document define? == What testers are allowed to do, including scope and limits.
+
+@lesson w13-4
+title: Security compliance and privacy
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.4
+level: Intermediate
+min: 100
+pre: w13-3, w9-2
+out: Describe compliance training and monitoring.
+out: List consequences of non-compliance.
+out: Explain privacy rights and legal holds.
+why: Compliance failures bring fines, lost licenses and lost trust. Privacy obligations affect how systems must be built, including what they can delete.
+plain: Compliance is like following the rules of the road. You learn them, there are checks and there are penalties. Privacy law gives people rights over information about them, such as asking for corrections.
+tech: Compliance training covers data handling, anti-money laundering/counter-terrorism financing (AML/CTF) and anti-bribery. Compliance monitoring uses attestations (formal statements that requirements are met) and acknowledgements (recording that someone has read and accepted something). Consequences of non-compliance include reputational damage, financial penalties, legal action, contractual breach, sanctions and loss of license.
+tech: Privacy concepts include the right to be forgotten (erasure), opt-in or opt-out consent choices, data correction, processing restrictions, processing prevention, the difference between controller vs. processor, and ownership of data. GDPR gives broad rights to individuals in the EU. In Canada, PIPEDA governs private-sector personal information in commercial activity federally, and some provinces, such as British Columbia, Alberta and Quebec, have their own substantially similar laws. FINTRAC is Canada's AML regulator.
+tech: Legal compliance covers a legal hold, which suspends normal deletion when litigation is reasonably expected; legal orders such as subpoenas or warrants; and data retention requirements, which set minimum or maximum retention periods.
+term: Compliance training == Teaching staff their obligations.
+term: Data handling == Rules for processing information.
+term: AML/CTF == Anti-money laundering and counter-terrorism financing.
+term: Anti-bribery == Rules to prevent corrupt payments.
+term: Compliance monitoring == Checking whether requirements are being met.
+term: Attestations == Formal statements that requirements are met.
+term: Acknowledgements == Records that someone read and accepted something.
+term: Reputational damage == Loss of trust.
+term: Financial == Fines and costs.
+term: Legal == Court action and penalties.
+term: Contractual == Breaches of agreements.
+term: Sanctions == Penalties applied by authorities.
+term: Loss of license == Being barred from operating.
+term: Right to be forgotten == A person's right to have data erased.
+term: Opt-in or opt-out == Choosing to give or withdraw consent.
+term: Data correction == A person's right to fix inaccurate data.
+term: Processing restrictions == Limits on how data may be used.
+term: Processing prevention == Stopping data from being processed.
+term: Controller vs. processor == The party deciding purposes compared with the party acting on instructions.
+term: Ownership == Who holds rights in the data.
+term: Legal hold == Suspending deletion of relevant data.
+term: Legal orders == Formal demands from courts or authorities.
+term: Data retention requirements == Rules for how long data must be kept.
+eg: A company receiving a deletion request must also check whether a legal hold requires keeping that data.
+eg: A Canadian retailer collecting customer data must follow PIPEDA or a substantially similar provincial law.
+walk: Handle a deletion request
+- Verify the person's identity.
+- Find where their data is stored, including backups and processors.
+- Check for legal holds or retention requirements.
+- Delete what can be deleted, and record the action.
+- Respond within the required time.
+lab: Map privacy rights | 30 | PIPEDA summary and GDPR overview
+do: Read the OPC summary of PIPEDA's fair information principles.
+do: Read the European Commission's data protection overview.
+do: Compare the two on consent, access and erasure in a small table.
+do: Note one way a retention requirement could conflict with an erasure request.
+expect: A comparison table and a stated conflict.
+explain: Regulations differ, and real systems must be built to handle conflicting obligations.
+pass: Your table covers three topics.
+pass: You identified a realistic conflict.
+scenario: A customer asks to have their data deleted, but the company has been told to preserve records relating to a lawsuit that includes that customer. What takes priority?
+answer: The legal hold. Relevant data must be preserved. The company should explain the limitation, and handle the deletion when the hold ends, under legal guidance.
+q 5.4 mcq e | Legal hold | What does a legal hold do?
++ Suspends normal deletion of relevant data :: It preserves potential evidence.
+- Encrypts backups :: It is not an encryption mechanism.
+- Removes user accounts :: It does not.
+- Transfers risk :: It does not.
+q 5.4 mcq m | Privacy rights | A person asks an organization to delete their personal data. Which right is this?
++ Right to be forgotten :: It concerns erasure.
+- Data correction :: This is about fixing data.
+- Opt-in :: This is about consent.
+- Attestation :: This is a compliance statement.
+q 5.4 mcq m | Compliance monitoring | Employees sign a form stating that they read the policy. What is this?
++ An acknowledgement :: It records acceptance.
+- A sanction :: This is a penalty.
+- A legal order :: This comes from a court or authority.
+- A CVSS score :: This relates to vulnerabilities.
+q 5.4 multi m | Consequences | Which are consequences of non-compliance? Choose two.
++ Sanctions :: Authorities may impose penalties.
++ Loss of license :: An organization can lose the right to operate.
+- Faster network speeds :: This is not a consequence.
+- Automatic patching :: This is not a consequence.
+mistake: Confusing a legal hold with data retention rules.
+mistake: Assuming deletion is always required and always possible.
+sum: Training and monitoring support compliance.
+sum: Non-compliance has many kinds of consequence.
+sum: Privacy rights must be balanced with legal duties.
+ref: comptia-objectives r
+ref: pipeda r
+ref: gdpr r
+ref: fintrac s
+card: What is a legal hold? == An instruction to preserve relevant data, suspending normal deletion.
+card: What is an attestation? == A formal statement that requirements are met.
+
+@lesson w13-5
+title: Audits, assessments and penetration testing
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.5
+level: Intermediate
+min: 100
+pre: w13-4
+out: Plan an audit, including data gathering and scoping.
+out: Distinguish penetration test types and passive and active reconnaissance.
+out: Use MITRE ATT&CK, the Cyber Kill Chain and the Diamond Model.
+why: Audits confirm that controls actually work. Knowing the type of engagement tells you who does what, and with what independence.
+plain: An audit is a health check by someone looking at your records. A penetration test is hiring a friendly burglar to try the doors. Known environment means the burglar has floor plans. Unknown environment means they have none.
+tech: Data gathering uses sampling, questionnaires/surveys, interviews and assertion, which is a claim to be tested. Reference sources include MITRE ATT&CK, a knowledge base of real attacker techniques; the Cyber Kill Chain, which describes the stages of an intrusion; and the Diamond Model of Intrusion Analysis, which relates adversary, capability, infrastructure and victim. Scoping uses an audit charter, which sets authority and purpose, and frequency.
+tech: Engagement types include gap analysis; internal work by compliance staff, the audit committee and self-assessments; external work, including examinations, assessments, regulatory reviews and independent third-party audits; and benchmarking against peers or standards.
+tech: Penetration testing can be known environment (full details), unknown environment (no details) or partially known environment. It may be physical, offensive (attacking), defensive (defending) or integrated (both sides working together, often called purple teaming). Reconnaissance can be passive, which avoids touching the target, such as public records, or active, which interacts with the target, such as scanning.
+tech: Frameworks and standards include industry-based standards such as PCI DSS, international standards such as ISO/IEC 27001, and region-specific standards such as GDPR requirements. Functional testing checks that a control works as designed, and behavioral testing checks how people or systems actually act.
+term: Sampling == Examining a subset to draw conclusions.
+term: Questionnaires/surveys == Written questions used to collect information.
+term: Interviews == Direct conversations used to gather evidence.
+term: Assertion == A claim made for testing.
+term: MITRE ATT&CK == A knowledge base of attacker tactics and techniques.
+term: Cyber Kill Chain == A model of the stages of an intrusion.
+term: Diamond Model of Intrusion Analysis == A model linking adversary, capability, infrastructure and victim.
+term: Audit charter == A document setting the authority and purpose of auditing.
+term: Frequency == How often audits occur.
+term: Gap analysis == Comparing the current state with a target.
+term: Compliance == Internal work to confirm requirements are met.
+term: Audit committee == A governing group that oversees audits.
+term: Self-assessments == Reviews carried out by the organization itself.
+term: Examinations == Formal external reviews.
+term: Assessments == External evaluations of controls.
+term: Regulatory == Reviews by a regulator.
+term: Independent third-party audits == Audits by an outside, impartial party.
+term: Benchmarking == Comparing against peers or standards.
+term: Known environment == Testing with full knowledge of the target.
+term: Unknown environment == Testing with no prior knowledge.
+term: Partially known environment == Testing with limited knowledge.
+term: Physical == Testing premises and physical controls.
+term: Offensive == Attacking as an adversary would.
+term: Defensive == Detecting and responding to attacks.
+term: Integrated == Offensive and defensive teams working together.
+term: Reconnaissance == Gathering information about a target.
+term: Passive == Reconnaissance that does not touch the target.
+term: Active == Reconnaissance that interacts with the target.
+term: Industry-based standards == Standards set for a sector.
+term: International standards == Standards used across countries.
+term: Region-specific standards == Standards applying to one region.
+term: Functional testing == Checking that a control works as designed.
+term: Behavioral testing == Checking how people or systems really act.
+eg: A SOC maps its detections to MITRE ATT&CK techniques and finds it has none for credential dumping.
+eg: Reading a company's job adverts to learn its technologies is passive reconnaissance. Scanning its servers is active.
+walk: Scope a penetration test
+- Obtain written authorization.
+- Define the systems in and out of scope.
+- Choose known, partially known or unknown environment.
+- Agree rules of engagement, timing and emergency contacts.
+- Report findings, then verify that they were fixed.
+lab: Map an attack to ATT&CK | 30 | MITRE ATT&CK in a browser
+do: Take a scenario from an earlier lesson and split it into at least four steps.
+do: Find the ATT&CK tactic and technique for each.
+do: Map the same steps to Kill Chain stages.
+do: Fill in the four Diamond Model elements for it.
+expect: One attack described three ways.
+explain: Each framework answers a different question: technique detail, sequence or relationships.
+pass: You mapped at least four techniques.
+pass: You completed all three models.
+scenario: A company hires testers and gives them no information about its systems. What type of test is this?
+answer: An unknown environment penetration test. They begin with nothing, simulating an outside attacker's starting point.
+q 5.5 mcq e | Reconnaissance | Searching public records about a target, without touching its systems, is which?
++ Passive reconnaissance :: There is no interaction with the target.
+- Active reconnaissance :: Active reconnaissance interacts with the target.
+- A tabletop exercise :: This is practice for incident response.
+- Fail-open :: This is a failure mode.
+q 5.5 mcq m | Penetration testing | Testers receive complete network diagrams and source code. Which is this?
++ Known environment :: Testers have full information.
+- Unknown environment :: There testers have no information.
+- Partially known environment :: There testers have limited information.
+- Passive reconnaissance :: This is one activity, not an engagement type.
+q 5.5 match m | Frameworks | Match each framework to what it describes.
+= MITRE ATT&CK => Knowledge base of attacker techniques
+= Cyber Kill Chain => Stages of an intrusion
+= Diamond Model => Adversary, capability, infrastructure and victim
+why: They look at an intrusion from different angles.
+q 5.5 mcq m | Audits | Which offers the most independence?
++ An independent third-party audit :: It is carried out by an outside, impartial party.
+- A self-assessment :: The organization assesses itself.
+- A questionnaire filled in by the system's own administrator :: Not independent.
+- An informal team conversation :: This is not an audit.
+q 5.5 mcq h | Integrated testing | Offensive and defensive teams collaborate during a test, and share results as they go. What is this?
++ Integrated testing :: Both sides work together.
+- Unknown environment testing :: This is about knowledge of the target.
+- Sampling :: This is a data gathering method.
+- A legal hold :: This preserves data.
+mistake: Calling scanning passive. Scanning touches the target, so it is active.
+mistake: Starting any test without written authorization.
+sum: Audits test claims with evidence.
+sum: Pen tests differ in knowledge and approach.
+sum: ATT&CK, Kill Chain and the Diamond Model describe attacks differently.
+ref: comptia-objectives r
+ref: mitre-attack r
+ref: lm-killchain r
+ref: diamond-model s
+ref: nist-800-115 r
+ref: iso-27001 s
+ref: pci s
+card: Passive or active: is port scanning a target passive? == No. Scanning interacts with the target, so it is active.
+card: What are the four elements of the Diamond Model? == Adversary, capability, infrastructure and victim.
+
+@lesson w13-6
+title: Security awareness
+domain: Domain 5: Security Program Management and Oversight
+obj: 5.6
+level: Beginner
+min: 100
+pre: w13-5, w7-2
+out: Choose training types and delivery mechanisms.
+out: Measure whether training works.
+out: Build a topic plan including BEC and operational security.
+why: People are both a common target and an early warning system. Good awareness programs change behaviour, and that is what should be measured.
+plain: Awareness training is like fire drills. A single talk is forgotten. Regular, specific practice, followed by feedback, means that people know what to do when it matters.
+tech: Types of training include initial/onboarding when someone joins, ongoing, targeted (for a role or risk) and corrective (following a mistake). Delivery mechanisms include a learning management system (LMS), self-service portals, one-to-one and one-to-many sessions.
+tech: Reporting and monitoring of effectiveness uses metrics (such as phishing report rates), managerial reports and personnel behavior risk scoring, which should be used carefully and fairly. Common training topics include social engineering, emerging security topics, password and credential management, remote work/teleworking/hybrid, BYOD, business email compromise (BEC), removable media and cables, situational awareness and operational security.
+term: Initial/onboarding == Training when someone joins.
+term: Ongoing == Regular, continuing training.
+term: Targeted == Training for a specific role or risk.
+term: Corrective == Training following a mistake.
+term: LMS == Learning management system.
+term: Self-service portals == Sites where staff access training themselves.
+term: One-to-one == Individual training.
+term: One-to-many == Group training.
+term: Metrics == Measures such as phishing report rates.
+term: Managerial reports == Summaries for leaders.
+term: Personnel behavior risk scoring == Rating risk based on observed behaviour.
+term: Social engineering == Manipulating people into unsafe actions.
+term: Emerging security topics == New threats such as deepfakes.
+term: Password and credential management == Handling credentials safely.
+term: Remote work/teleworking/hybrid == Working away from the office.
+term: BYOD == Using personal devices for work.
+term: BEC == Business email compromise.
+term: Removable media and cables == USB devices and charging cables that may be malicious.
+term: Situational awareness == Noticing what is happening around you.
+term: Operational security == Protecting information through daily habits.
+eg: After a phishing simulation, those who clicked get short corrective training, and those who report are thanked. Reporting rate is tracked, more than click rate alone.
+eg: A finance team receives targeted training on BEC, including a call-back step for any payment change.
+walk: Build an awareness plan
+- Identify the top human risks.
+- Decide on training type and delivery for each.
+- Set measures, such as time to report phishing.
+- Run the training and communicate results to managers.
+- Adjust it according to results.
+lab: Design a phishing awareness program | 30 | Worksheet
+do: Draft a one-year plan: four topics, audience and delivery for each.
+do: Define two metrics and targets.
+do: Draft a short message that tells staff how to report a suspicious email.
+do: Note how you would keep scoring fair and proportionate.
+expect: A plan with audiences, delivery, metrics and a report message.
+explain: The aim is changed behaviour, and a culture in which reporting is encouraged, not embarrassment.
+pass: Your plan includes four topics and two metrics.
+pass: Your message tells staff exactly what to do.
+scenario: The finance team was caught by a fake invoice email from a supplier's compromised account. Which training is most appropriate?
+answer: Targeted training on business email compromise, including verifying payment changes through a known phone number.
+q 5.6 mcq e | Training types | Training given after an employee falls for a phishing test is which type?
++ Corrective :: It follows a specific mistake.
+- Initial :: This occurs on joining.
+- Onboarding :: This occurs on joining.
+- Benchmarking :: This compares with peers.
+q 5.6 mcq m | Metrics | Which metric best shows staff are becoming a stronger detection layer?
++ The rate at which staff report suspected phishing :: It measures positive behaviour.
+- The number of slides in the training :: This measures content, not change.
+- The size of the training video files :: This is irrelevant.
+- The number of firewall rules :: This is unrelated.
+q 5.6 mcq m | BEC | An email appears to come from a supplier, asking to change bank details. What should staff do?
++ Verify by calling a known number from existing records :: Using an independent channel defeats the fraud.
+- Reply to the email to confirm :: The attacker may control the mailbox.
+- Make the payment if the logo looks correct :: Logos can be copied.
+- Forward it to all staff :: This doesn't verify anything.
+q 5.6 match m | Delivery | Match each to its delivery mechanism.
+= An online course that records completion => LMS
+= A personal coaching session => One-to-one
+= An all-staff briefing => One-to-many
+= A help site staff can browse => Self-service portals
+why: Delivery should fit the audience and message.
+mistake: Measuring only completion, not behaviour.
+mistake: Using punishment in a way that discourages reporting.
+sum: Match training type to need.
+sum: Measure behaviour.
+sum: Teach people what to do and how to report it.
+ref: comptia-objectives r
+ref: nist-800-50 r
+ref: cisa-phishing s
+card: What is BEC? == Business email compromise: fraud using a compromised or spoofed business email.
+card: Name four types of training. == Initial/onboarding, ongoing, targeted and corrective.

@@ -1,0 +1,14 @@
+{
+ "schema": "identity-lab-coach.pathway.v1",
+ "createdOn": "2026-11-09",
+ "note": "Retired: this pathway had no lessons of its own. Its days are Week 5 and the case study 2 days of the 60-day course, which are unchanged. This version removes the old pathway from your course.",
+ "pathway": {
+  "id": "network-kubernetes",
+  "title": "Network and Kubernetes Security",
+  "summary": "Now part of the 60-day course: see Week 5 and the case study 2 days.",
+  "forWho": "Everyone: these lessons are in the calendar.",
+  "order": 2,
+  "retired": true
+ },
+ "lessons": []
+}

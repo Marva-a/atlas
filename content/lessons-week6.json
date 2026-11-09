@@ -1,0 +1,507 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 6 lessons: logs, alerts and incidents. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w6-d36",
+   "week": 6,
+   "day": 36,
+   "date": "2026-12-07",
+   "title": "Logs, flow logs, alerts and the people who read them",
+   "level": "intermediate",
+   "inOneSentence": "Logs are the records of what happened; flow logs record connections, audit logs record changes, and alerts are the few events that need a person’s attention now.",
+   "youCanNow": "Distinguish event logs, audit records and flow logs, and identify which role in an organization reads each.",
+   "whyItMattersToADesigner": "Security teams spend their days in logs and alert queues, and most products show these badly: too much noise, too little context. Designing for them is a big opportunity, and it builds directly on the flow you saw in Exercise 12.",
+   "keyIdeas": [
+    "From Week 1 you know “accounting”: recording what happened. Logs are that record at scale.",
+    "A flow log records a connection: who talked to whom, when, on which port, and whether it was allowed. It does not record the content of the conversation.",
+    "An audit log records changes: who changed which setting, rule or user, and when. Example: “Alex changed the policy file at 14:02”.",
+    "Identity events worth watching: many failed sign-ins, a sign-in from a new country, MFA turned off, a new admin created, and access granted to sensitive systems.",
+    "A security operations team (SOC) watches alerts and investigates. Analysts get hundreds of alerts a day, and most are false alarms.",
+    "Alert fatigue: when there are too many alerts, people stop trusting them and miss the real one. Every alert should be actionable, rare enough to matter and clear about what to do."
+   ],
+   "words": [
+    {
+     "term": "log",
+     "meaning": "A record of events, written by a system as they happen."
+    },
+    {
+     "term": "flow log",
+     "meaning": "A record of network connections: source, destination, port, time and allowed or denied."
+    },
+    {
+     "term": "audit log",
+     "meaning": "A record of who changed what, and when."
+    },
+    {
+     "term": "alert",
+     "meaning": "An event that a system decides needs a person’s attention."
+    },
+    {
+     "term": "SOC",
+     "meaning": "Security operations centre: the team that watches for and responds to threats."
+    },
+    {
+     "term": "false positive",
+     "meaning": "An alert about something that is actually harmless."
+    },
+    {
+     "term": "alert fatigue",
+     "meaning": "Missing important alerts because there are too many."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read what Tailscale flow logs contain.",
+     "minutes": 10,
+     "resourceId": "c5-ts-flowlogs"
+    },
+    {
+     "text": "Read about configuration audit logging and compare it with flow logs.",
+     "minutes": 10,
+     "resourceId": "c5-ts-auditlog"
+    },
+    {
+     "text": "Read about viewing Calico flow logs.",
+     "minutes": 15,
+     "resourceId": "c5-calico-flowlogs"
+    },
+    {
+     "text": "Read what VPC flow logs record and what they do not.",
+     "minutes": 15,
+     "resourceId": "w7-aws-flowlogs"
+    },
+    {
+     "text": "Read about alert fatigue and list its causes.",
+     "minutes": 10,
+     "resourceId": "c5-pd-alert-fatigue"
+    },
+    {
+     "text": "Write five identity or network events and decide for each: log only, show on a dashboard, or alert someone now. Explain why.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Add the new words to your glossary.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip SIEM products and query languages. Understand what each kind of log says and who reads it.",
+   "checkYourself": [
+    "What is the difference between a flow log and an audit log?",
+    "Name four identity events worth alerting on.",
+    "What makes an alert good?"
+   ],
+   "lookFor": [
+    "A flow log records connections (who talked to whom and whether it was allowed). An audit log records changes to the system (who changed which setting and when).",
+    "For example: many failed sign-ins for one account, a sign-in from an unusual place, MFA being turned off, a new admin being created, or access granted to a sensitive system.",
+    "It is actionable, rare enough to be trusted, and clear: what happened, why it matters, and what to do next, with the context needed to decide."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w6-d37",
+   "week": 6,
+   "day": 37,
+   "date": "2026-12-08",
+   "title": "Detection and incident response in plain words",
+   "level": "intermediate",
+   "inOneSentence": "Detection is spotting an attack in your data, and incident response is the organised way a team handles it, from first alert to lessons learned.",
+   "youCanNow": "Explain what MITRE ATT&CK is (a knowledge base of techniques, not an incident-response process) and outline the stages of incident response separately.",
+   "whyItMattersToADesigner": "Incidents are where security products prove their worth. Designers who know how analysts think, and how incidents unfold, can design investigation views, timelines and handoffs that save time when it matters most.",
+   "keyIdeas": [
+    "MITRE ATT&CK is a shared catalogue of what attackers do, grouped by goal: getting in, staying in, stealing credentials, moving around, taking data. Teams use it as a common language.",
+    "Credential access (TA0006) is the group of techniques for stealing passwords and tokens, for example phishing or dumping saved passwords. Identity products defend here.",
+    "The incident-response lifecycle (NIST SP 800-61): prepare, detect and analyse, contain, eradicate and recover, then learn lessons. The newer revision links these to the NIST Cybersecurity Framework.",
+    "Roles in an incident: an incident commander who coordinates, responders who investigate, and someone who communicates with leaders and customers.",
+    "From Day 11: many incidents start with broken access control, such as BOLA (changing an id to reach someone else's data). Its cousin BFLA, broken function level authorization, is a normal user calling an admin-only action. Both show up in detection as odd access patterns, not failed sign-ins."
+   ],
+   "words": [
+    {
+     "term": "detection",
+     "meaning": "Finding signs of an attack in data."
+    },
+    {
+     "term": "MITRE ATT&CK",
+     "meaning": "A public catalogue of attacker tactics and techniques."
+    },
+    {
+     "term": "tactic",
+     "meaning": "An attacker’s goal, such as credential access."
+    },
+    {
+     "term": "technique",
+     "meaning": "A way of achieving a tactic, such as phishing."
+    },
+    {
+     "term": "incident",
+     "meaning": "A security event that needs an organised response."
+    },
+    {
+     "term": "containment",
+     "meaning": "Stopping an attack from spreading, for example disabling an account."
+    },
+    {
+     "term": "postmortem",
+     "meaning": "A blameless review after an incident, to learn and improve."
+    },
+    {
+     "term": "BFLA",
+     "meaning": "Broken function level authorization: doing actions you should not be allowed to do."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Look at the MITRE ATT&CK matrix and open two techniques.",
+     "minutes": 15,
+     "resourceId": "c5-mitre"
+    },
+    {
+     "text": "Read the Credential Access tactic page and pick three techniques you could explain to a friend.",
+     "minutes": 15,
+     "resourceId": "w7-attack"
+    },
+    {
+     "text": "Read the summary of NIST SP 800-61 Rev. 3 and its lifecycle.",
+     "minutes": 20,
+     "resourceId": "w7-nist61"
+    },
+    {
+     "text": "Read PagerDuty’s incident response overview and the roles.",
+     "minutes": 20,
+     "resourceId": "c5-pd-response"
+    },
+    {
+     "text": "Write an incident as a story in six steps for “a contractor’s password was phished”: what is detected, by whom, what is contained, and what is learned.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip detection rule languages and forensics. Understand the language, the roles and the lifecycle.",
+   "checkYourself": [
+    "What is MITRE ATT&CK used for?",
+    "Name the phases of the incident-response lifecycle.",
+    "Explain BOLA with an example."
+   ],
+   "lookFor": [
+    "It gives teams a shared language for attacker behaviour, grouped by goal (tactics) and method (techniques), so they can plan detections and describe incidents consistently.",
+    "Preparation; detection and analysis; containment, eradication and recovery; and post-incident activity (lessons learned). Rev. 3 frames them around the CSF functions.",
+    "Broken object level authorization: an app checks that you are signed in but not that the object is yours. Changing /orders/123 to /orders/124 shows someone else’s order."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w6-d38",
+   "week": 6,
+   "day": 38,
+   "date": "2026-12-09",
+   "title": "Exercise 13: find the odd connection in flow logs",
+   "level": "advanced",
+   "inOneSentence": "You will read real flow logs from your cluster or tailnet and find a connection that should not be there, the way an analyst does.",
+   "youCanNow": "Investigate a set of flow logs and identify the connection that does not fit the expected pattern.",
+   "whyItMattersToADesigner": "Reading data like an analyst moves you from knowing terms to understanding the work. You will see what information is missing, which is exactly where product design adds value: context, grouping and links to policy.",
+   "keyIdeas": [
+    "This is the first advanced lesson. You will judge real data yourself rather than follow a guide.",
+    "Plant a problem first: in your cluster, add a small pod that calls the database directly, or in your tailnet, connect from a device that should not reach a server.",
+    "An analyst asks: Is this normal? Who owns this source? What policy allowed it? Has it happened before? What else did this source talk to?",
+    "Most raw logs answer only “what” and “when”. The “who owns it” and “should it” answers come from other systems: labels, owners, policies. Joining them is the design opportunity.",
+    "Write down every question you had and where you found the answer, or whether you could not."
+   ],
+   "words": [
+    {
+     "term": "baseline",
+     "meaning": "What normal traffic looks like, used to spot unusual activity."
+    },
+    {
+     "term": "anomaly",
+     "meaning": "Something that differs from the baseline."
+    },
+    {
+     "term": "context",
+     "meaning": "Extra information that helps judge an event, such as owner or policy."
+    },
+    {
+     "term": "enrichment",
+     "meaning": "Adding context to raw events automatically."
+    },
+    {
+     "term": "triage",
+     "meaning": "Quickly deciding how urgent an event is and what to do next."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Re-read what your flow logs contain.",
+     "minutes": 10,
+     "resourceId": "c5-calico-flowlogs"
+    },
+    {
+     "text": "Plant one odd connection in your cluster or tailnet, and generate some normal traffic around it.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Find it in the flow logs without looking at what you planted. Time yourself.",
+     "minutes": 30,
+     "resourceId": "c5-ts-flowlogs"
+    },
+    {
+     "text": "Re-read how to use flow logs to check that a rule blocks what you meant.",
+     "minutes": 10,
+     "resourceId": "w7-aws-flowlogs"
+    },
+    {
+     "text": "Write notes: each question you asked, where you found the answer, and what context was missing.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "List three kinds of enrichment that would have made you faster.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip building dashboards or queries in a SIEM. Raw logs and careful notes are enough.",
+   "checkYourself": [
+    "What questions does an analyst ask about an unusual connection?",
+    "What context was missing from the raw flow logs?"
+   ],
+   "lookFor": [
+    "Is it normal for this source? Who owns it? Which policy allowed it? Has it happened before? What else did this source do? Is the destination sensitive?",
+    "Usually ownership (which team or person), purpose (what the service is), the policy that allowed or denied it, and history. Raw logs show only addresses, ports, times and verdicts."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w6-d39",
+   "week": 6,
+   "day": 39,
+   "date": "2026-12-10",
+   "title": "Exercise 14: tabletop: a stolen laptop",
+   "level": "advanced",
+   "inOneSentence": "You will run a paper incident for “an employee’s laptop was stolen”, minute by minute: what the admin sees, decides and does in your tailnet and identity provider.",
+   "youCanNow": "Walk through a stolen-laptop incident and name the containment, session-revocation and communication steps it requires.",
+   "whyItMattersToADesigner": "Tabletops are how security teams rehearse. Running one as a designer shows you the real sequence of screens and decisions under stress, and which are slow or missing. This is a strong interview story about designing for high-stakes moments.",
+   "keyIdeas": [
+    "A tabletop exercise is an incident practised on paper or in a meeting, with no real harm.",
+    "Scenario: Friday 18:00, Jordan reports their laptop stolen from a car. It was signed in to the tailnet and the identity provider, with access to production.",
+    "Minute by minute: who is told, how the admin finds the device, how they remove it from the tailnet, end sessions in the identity provider, rotate any secrets on it, and check logs for use after the theft.",
+    "Decisions under uncertainty: Was the disk encrypted? Did anyone use the device after 18:00? Should Jordan’s whole account be suspended, or only the device?",
+    "Afterwards, write a blameless review: what went well, what was slow, and which screen or feature would have helped.",
+    "Notice the designer’s questions: Can the admin find the device by owner name? Is “remove device” clearly different from “suspend user”? Does the log show activity after a given time?"
+   ],
+   "words": [
+    {
+     "term": "tabletop exercise",
+     "meaning": "A practised incident on paper, used to rehearse a response."
+    },
+    {
+     "term": "revoke",
+     "meaning": "To cancel access or a credential so it stops working."
+    },
+    {
+     "term": "session termination",
+     "meaning": "Ending a signed-in session so the user must sign in again."
+    },
+    {
+     "term": "rotate a secret",
+     "meaning": "Replace a key or password with a new one, so the old one stops working."
+    },
+    {
+     "term": "blameless review",
+     "meaning": "A review that looks for causes in systems and process, not individual blame."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Skim one CISA tabletop package to see how a scenario is structured.",
+     "minutes": 10,
+     "resourceId": "c5-cisa-ttx"
+    },
+    {
+     "text": "Read PagerDuty’s guidance on roles during an incident.",
+     "minutes": 15,
+     "resourceId": "c5-pd-response"
+    },
+    {
+     "text": "Write the scenario and a minute-by-minute timeline from 18:00 to 19:00, with each decision and the screen used.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Perform the containment steps for real in your test tailnet and Keycloak (remove a device, end sessions, disable a user) and time each.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Write the blameless review: three things that were slow or unclear, and a design idea for each.",
+     "minutes": 30,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip legal and HR steps, but note where they would happen.",
+   "checkYourself": [
+    "What are the first three things an admin should do when a laptop is stolen?",
+    "Which screen or decision was slowest in your tabletop, and what would fix it?"
+   ],
+   "lookFor": [
+    "Typically: remove or disable the device in the tailnet, end the user’s sessions and reset credentials in the identity provider, and check logs for any use after the theft. Then rotate secrets stored on the device.",
+    "A good answer names a specific moment, such as finding the device by owner or telling device removal apart from user suspension, and a concrete design change with its benefit."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w6-d40",
+   "week": 6,
+   "day": 40,
+   "date": "2026-12-11",
+   "title": "Exercise 15: an alert triage view",
+   "level": "advanced",
+   "inOneSentence": "You will design an alert triage view that cuts noise and tells a tired analyst what happened, why it matters and what to do next.",
+   "youCanNow": "Design an alert-triage view that separates severity, confidence and impact as distinct fields.",
+   "whyItMattersToADesigner": "Triage screens are some of the most used and most criticised screens in security products. A strong design here shows senior skills: information density, prioritisation, and designing for speed under pressure.",
+   "keyIdeas": [
+    "Start from your Exercise 13 notes: the questions you asked and the context that was missing are your requirements.",
+    "Triage is sorting: is this real, how bad is it, who should handle it? Your view should answer these in seconds for each alert.",
+    "Reduce noise by grouping related alerts into one (ten failed sign-ins become one item), by showing confidence, and by letting analysts tune or mute with care.",
+    "Each alert needs: what happened in plain words, the entities involved (user, device, service) with owners, why it matters (severity and context), and next actions (contain, investigate, dismiss with a reason).",
+    "Analysts are experts: they want density, keyboard shortcuts and filters, not big friendly cards. Design for experts while keeping the most important thing obvious."
+   ],
+   "words": [
+    {
+     "term": "severity",
+     "meaning": "How harmful an event could be."
+    },
+    {
+     "term": "confidence",
+     "meaning": "How sure the system is that an alert is real."
+    },
+    {
+     "term": "grouping",
+     "meaning": "Combining related alerts into one item."
+    },
+    {
+     "term": "entity",
+     "meaning": "A thing involved in an alert, such as a user, device or service."
+    },
+    {
+     "term": "information density",
+     "meaning": "How much useful information fits on a screen without confusion."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read the four main tasks people do with data tables.",
+     "minutes": 10,
+     "resourceId": "c5-nng-data-tables"
+    },
+    {
+     "text": "Read how to make dashboards easy to read at a glance.",
+     "minutes": 10,
+     "resourceId": "c5-nng-dashboards"
+    },
+    {
+     "text": "Read when to use indicators, validations and notifications.",
+     "minutes": 10,
+     "resourceId": "c5-nng-notifications"
+    },
+    {
+     "text": "Write your requirements from your Exercise 13 and 14 notes: the questions, the missing context and the actions.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Design the triage view in Figma: the queue, a grouped alert, the detail panel with context and actions, and a dismiss-with-reason flow.",
+     "minutes": 55,
+     "resourceId": null
+    },
+    {
+     "text": "Write a short rationale for each major decision.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not design the whole product. One queue and one detail view, done well.",
+   "checkYourself": [
+    "How does your design reduce noise?",
+    "What does each alert in your design tell the analyst in the first few seconds?"
+   ],
+   "lookFor": [
+    "For example by grouping related alerts, showing confidence, hiding low-value alerts behind a filter, and letting analysts tune rules with a recorded reason.",
+    "What happened in plain words, who or what is involved and who owns it, how severe and how certain it is, and the next action."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w6-d41",
+   "week": 6,
+   "day": 41,
+   "date": "2026-12-12",
+   "title": "Triage view and tabletop: write it up and share",
+   "level": "advanced",
+   "inOneSentence": "You will write up the triage view and the tabletop as one story: how a team notices, decides and acts when something goes wrong.",
+   "youCanNow": "Document and present an alert-triage and incident-response design with its reasoning.",
+   "whyItMattersToADesigner": "This piece shows you can design for experts under pressure, using real research. It covers questions hiring managers ask often: “How do you design for power users?” and “How do you handle complex data?”",
+   "keyIdeas": [
+    "Tell it as a story: the stolen-laptop incident, what the admin and analyst needed, and how your triage view helps.",
+    "Show evidence from your own exercises: times, missing context, slow screens.",
+    "Explain trade-offs openly, for example density versus clarity, or automatic grouping versus control.",
+    "Say what you would measure: time to triage, share of alerts dismissed as false, and missed real incidents.",
+    "Reflect: you are now working at an advanced level, judging real data and designing for experts. Note what still feels uncertain."
+   ],
+   "words": [
+    {
+     "term": "trade-off",
+     "meaning": "A choice where gaining one thing means giving up some of another."
+    },
+    {
+     "term": "time to triage",
+     "meaning": "How long it takes to decide what an alert needs."
+    },
+    {
+     "term": "power user",
+     "meaning": "An expert user who uses a product heavily and wants speed and control."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Write the case (600–900 words) with the timeline, the triage view and its rationale.",
+     "minutes": 55,
+     "resourceId": null
+    },
+    {
+     "text": "Add a trade-offs section with at least two trade-offs and how you decided.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Ask a security engineer or a developer to review it, and note their comments.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Post a short version or save it in your portfolio folder.",
+     "minutes": 10,
+     "resourceId": null
+    },
+    {
+     "text": "Update your glossary and your people map: what did you learn about analysts?",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not explain every alert type. One incident and one view tell the story.",
+   "checkYourself": [
+    "What trade-off in your triage view was hardest, and how did you decide?",
+    "How would you know your triage view is working?"
+   ],
+   "lookFor": [
+    "A good answer names both sides (for example showing more context versus keeping the list scannable) and the reason for the choice, ideally based on evidence from your exercises.",
+    "For example: shorter time to triage, fewer real incidents missed, and fewer alerts dismissed without a reason, measured before and after."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

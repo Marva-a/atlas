@@ -1,0 +1,287 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 9 lessons: the capstone: two case studies and your story. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w9-d57",
+   "week": 9,
+   "day": 57,
+   "date": "2026-12-28",
+   "title": "Polish case study 1: story, outcome, honest labels",
+   "level": "advanced",
+   "inOneSentence": "You will turn case study 1 from a draft into a finished piece: a sharp story, clear visuals, the feedback you received, and an honest outcome.",
+   "youCanNow": "Revise the access-policy case study's story and outcome, labelling what was self-initiated, simulated or tested.",
+   "whyItMattersToADesigner": "Hiring managers skim. A polished case study shows senior judgement through what you leave out as much as what you include. This is the piece that will start most of your interview conversations.",
+   "keyIdeas": [
+    "Apply the feedback from Week 7 first; note what you changed and why.",
+    "Cut to the story: problem, insight, key decisions, result. Move process details to the end or remove them.",
+    "Make the first screen count: a title that states the problem, one strong image, and a one-paragraph summary.",
+    "Show impact even without launch: what the tests showed, the metric you would track, and what you would do next.",
+    "Add the senior layer: the trade-offs you made, how you would work with engineering and product, and how the design would scale to 5,000 devices.",
+    "Label it as a self-initiated concept and say who you researched and tested with."
+   ],
+   "words": [
+    {
+     "term": "narrative",
+     "meaning": "The story structure that connects problem, decisions and result."
+    },
+    {
+     "term": "scannable",
+     "meaning": "Easy to understand by skimming headings, images and captions."
+    },
+    {
+     "term": "scale",
+     "meaning": "How a design holds up with many more users, rules or devices."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read how hiring managers look at UX portfolios.",
+     "minutes": 10,
+     "resourceId": "c5-nng-portfolio"
+    },
+    {
+     "text": "Apply the practitioner feedback and list what you changed.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Rewrite the opening and cut the draft by about a third.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Finish the visuals: one hero image, key screens with captions, one diagram.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Add a trade-offs and scale section, and a clear self-initiated label.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not add new features to the design now. Polish the story.",
+   "checkYourself": [
+    "What is the one-sentence summary of case study 1?",
+    "Which trade-off shows your senior judgement best?"
+   ],
+   "lookFor": [
+    "A good summary names the user, the problem and the result, for example: “I designed a policy editor that shows admins who will gain or lose access before they save, and in testing both admins trusted the preview enough to save.”",
+    "A good answer names a real trade-off from your work and the evidence behind the choice, such as plain-language previews versus showing the full rule."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w9-d58",
+   "week": 9,
+   "day": 58,
+   "date": "2026-12-29",
+   "title": "Polish case study 2: story, outcome, honest labels",
+   "level": "advanced",
+   "inOneSentence": "You will finish case study 2 to the same standard, making the technical subject easy to follow for any reader.",
+   "youCanNow": "Revise the network-policy case study's story and outcome with accurate, honestly labelled claims.",
+   "whyItMattersToADesigner": "Your second case study proves range: a different user (the platform engineer), a deeper technical domain and a rollout problem. Together the two pieces tell hiring managers you can work across identity and network security.",
+   "keyIdeas": [
+    "Apply the Week 8 feedback and record the changes.",
+    "Explain Kubernetes network policy in one picture and one paragraph, for readers who do not know it.",
+    "Highlight what is unique: staged enforcement and trust in recommendations.",
+    "Show collaboration: what you learned from engineers and how it changed the design.",
+    "End with outcome and next steps: metrics, open questions and what you would test next.",
+    "Check consistency between the two case studies: structure, labels, image style."
+   ],
+   "words": [
+    {
+     "term": "range",
+     "meaning": "Showing you can solve different kinds of problems."
+    },
+    {
+     "term": "consistency",
+     "meaning": "Using the same structure and style across pieces so readers can compare."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Apply the practitioner feedback and list what you changed.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Rewrite the opening and cut the draft by about a third.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Finish the visuals: hero image, key screens with captions, the network policy picture.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Check both case studies side by side for consistency.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Ask one person to read both openings and tell you what each is about.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not explain every Kubernetes term. Explain only what the reader needs to follow the story.",
+   "checkYourself": [
+    "Can a non-technical reader understand the problem in case study 2 from its opening?",
+    "What does case study 2 show that case study 1 does not?"
+   ],
+   "lookFor": [
+    "A good answer is tested: someone outside the field read the opening and could explain the problem back in their own words.",
+    "For example: designing for a highly technical user, working with traffic data and recommendations, and designing a safe staged rollout in Kubernetes."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w9-d59",
+   "week": 9,
+   "day": 59,
+   "date": "2026-12-30",
+   "title": "Portfolio page, LinkedIn and resume for identity and security roles",
+   "level": "advanced",
+   "inOneSentence": "You will present yourself as a product designer for identity and network security: portfolio home page, LinkedIn and resume, all telling the same story.",
+   "youCanNow": "Write a portfolio page, LinkedIn summary and resume section positioned for identity/security product-design roles.",
+   "whyItMattersToADesigner": "Recruiters and hiring managers at companies like Tailscale and Tigera search for specific signals: security domain knowledge, technical users, complex systems. Your materials should show these at a glance, backed by your two case studies.",
+   "keyIdeas": [
+    "Your positioning sentence: who you design for and what you solve, for example “Product designer for identity and network security: I make access and infrastructure tools clear and safe.”",
+    "Portfolio home: the positioning sentence, the two case studies first, then other work.",
+    "LinkedIn: headline with your positioning, an About section with your story into the domain, and featured links to both case studies.",
+    "Resume: lead with relevant outcomes; add the domain skills you can now honestly claim (zero trust, SSO and SCIM, Kubernetes network policy, security UX).",
+    "Use real job posts: mirror their language where it is true for you.",
+    "Be honest about what you learned in this course and what you did in past roles. Specific and true beats impressive and vague."
+   ],
+   "words": [
+    {
+     "term": "positioning",
+     "meaning": "A short statement of who you help and how."
+    },
+    {
+     "term": "headline",
+     "meaning": "The line under your name on LinkedIn."
+    },
+    {
+     "term": "featured",
+     "meaning": "LinkedIn’s section for highlighting links such as case studies."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Re-read the portfolio guidance on how hiring managers scan.",
+     "minutes": 10,
+     "resourceId": "c5-nng-portfolio"
+    },
+    {
+     "text": "Re-read two job posts and highlight the words that describe you truthfully.",
+     "minutes": 15,
+     "resourceId": "c5-ts-careers"
+    },
+    {
+     "text": "Write and test your positioning sentence with one person.",
+     "minutes": 15,
+     "resourceId": "c5-tigera-careers"
+    },
+    {
+     "text": "Update your portfolio home page with both case studies first.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Update LinkedIn: headline, About and featured case studies.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Update your resume with domain skills and outcomes.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not rewrite your whole career history. Focus on the top third of each page.",
+   "checkYourself": [
+    "What is your positioning sentence?",
+    "Which three domain skills can you now honestly claim?"
+   ],
+   "lookFor": [
+    "A good sentence names who you design for and the value, in plain words, and matches the roles you want.",
+    "For example: zero-trust access policies, SSO and SCIM setup flows, Kubernetes network policy and security UX patterns, each backed by an exercise or case study."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w9-d60",
+   "week": 9,
+   "day": 60,
+   "date": "2026-12-31",
+   "title": "Interview practice: a live design exercise and a retrospective",
+   "level": "advanced",
+   "inOneSentence": "You will practise the interviews you will face: presenting a case study, a live design exercise in this domain, and a retrospective on the 60 days.",
+   "youCanNow": "Explain a security architecture in plain language, identify a risk in a live design exercise, and defend a design trade-off under questioning.",
+   "whyItMattersToADesigner": "Senior interviews test how you think out loud, handle technical questions and take feedback. Practising with domain-specific prompts turns what you learned into confident answers.",
+   "keyIdeas": [
+    "Case study presentation: 15 minutes, problem first, then key decisions and trade-offs, then results. Leave time for questions.",
+    "Live exercise prompts to practise: “Design how an admin finds out why an employee cannot reach a server” or “Design how an engineer rolls out a network policy safely”.",
+    "In live exercises, ask clarifying questions first (who, what scale, what constraints), then think aloud, sketch, and name trade-offs.",
+    "Expect domain questions: explain zero trust, SSO versus SCIM, default deny, or how an agent should be authorised. Your glossary is your study guide.",
+    "Retrospective: what you can do now that you could not on Day 1, what is still weak, and your next 30 days."
+   ],
+   "words": [
+    {
+     "term": "design exercise",
+     "meaning": "A live or take-home design problem used in interviews."
+    },
+    {
+     "term": "clarifying question",
+     "meaning": "A question that narrows the problem before you start."
+    },
+    {
+     "term": "retrospective",
+     "meaning": "A look back at what went well, what did not, and what to change."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about giving and receiving design critique.",
+     "minutes": 10,
+     "resourceId": "c5-nng-critiques"
+    },
+    {
+     "text": "Present one case study out loud in 15 minutes, recorded or to a friend, and note where you hesitated.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Do one live design exercise from the prompts above in 40 minutes, thinking aloud.",
+     "minutes": 40,
+     "resourceId": null
+    },
+    {
+     "text": "Answer five domain questions from your glossary out loud without notes.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Write your retrospective and your plan for the next 30 days.",
+     "minutes": 25,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not memorise scripts. Practise the structure, so you can adapt to any question.",
+   "checkYourself": [
+    "What do you ask first in a live design exercise?",
+    "What can you do now that you could not do on Day 1?"
+   ],
+   "lookFor": [
+    "Clarifying questions: who the user is, what they are trying to do, at what scale, under which constraints and how success is measured. Then state your assumptions.",
+    "A good answer is specific, for example explaining zero trust and network policy in plain words, designing for admins and engineers, and presenting two case studies with evidence."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

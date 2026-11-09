@@ -1,0 +1,529 @@
+# Week 11: Domain 4.0, part 2.
+
+@lesson w11-1
+title: Vulnerability management tasks
+domain: Domain 4: Security Operations
+obj: 4.3
+level: Intermediate
+min: 120
+pre: w6-1, w10-4
+out: Run a vulnerability management cycle.
+out: Use identification methods including scanning and CSPM.
+out: Verify and report on remediation.
+why: New flaws appear daily, so this is continuous work. Exam scenarios ask what to do next: scan, prioritize, fix, verify or report.
+plain: Vulnerability management is like regular building maintenance. You inspect, decide what is urgent, fix it, check the fix and keep records.
+tech: Identification methods include scanning with vulnerability tools; Internet Protocol Address Management (IPAM), which tracks address use and can reveal unknown hosts; cloud security posture management (CSPM), which finds cloud misconfigurations; and source code review. Credentialed scans sign in for more accurate results, and non-credentialed scans show what an outsider would see.
+tech: Prioritization uses severity assessment plus context, and penetration test report review, which shows what was actually exploitable. Remediation may mean patching, changing configuration, applying a compensating control or formally accepting the risk. Verification confirms the fix, usually by rescanning.
+tech: Reporting can be internal, to management and asset owners, or external. External routes include a bounty program, which pays researchers for valid findings, and responsible disclosure policies, which tell researchers how to report safely. A false positive is a reported problem that does not exist. A false negative is a real problem that was missed.
+term: Scanning == Automated testing for known weaknesses.
+term: IPAM == Internet Protocol Address Management: tracks address allocation.
+term: CSPM == Cloud security posture management: finds cloud misconfigurations.
+term: Source code review == Examining code for flaws.
+term: Severity assessment == Rating how serious a finding is.
+term: Penetration test report review == Studying test results to understand real exploitability.
+term: Remediation == Fixing or reducing a vulnerability.
+term: Verification == Confirming that a fix worked.
+term: Reporting == Communicating vulnerability status.
+term: Internal == Reporting within the organization.
+term: External == Reporting outside the organization.
+term: Bounty program == Paying researchers for valid vulnerability reports.
+term: Responsible disclosure policies == Rules for how researchers should report flaws.
+term: False positive == An alert about something that is not actually a problem.
+term: False negative == A real problem that was not detected.
+eg: CSPM reports a storage bucket that became publicly readable last night, and it is closed before any data is taken.
+eg: After a patch, a rescan still flags the server. The team finds that the service was never restarted, so the fix was not active.
+walk: Handle one scan finding
+- Confirm it is real, and rule out a false positive.
+- Check exposure, exploitation status and asset importance.
+- Assign an owner and a due date.
+- Apply the fix under change management.
+- Rescan to verify, then close and report.
+lab: Scan only your own VM | 40 | nmap in your lab VM, against localhost only
+do: Install nmap with sudo apt install nmap.
+do: Start a test service, such as sudo apt install openssh-server.
+do: Run nmap -sV 127.0.0.1 and record the open ports and versions.
+do: Disable the service with sudo systemctl stop ssh and rescan to verify.
+do: Write a three-line finding: issue, priority and action. Do not scan any other system.
+expect: The port appears, then disappears after the fix.
+explain: Rescanning proves the result. A ticket being closed proves nothing on its own.
+pass: You recorded a finding before and after.
+pass: You wrote a three-line report.
+scenario: A patch was deployed and the ticket closed, but the next scan still lists the vulnerability. What step was skipped, and what should happen?
+answer: Verification was skipped. The team should find out whether the patch failed, the service needs a restart or the result is a false positive, then rescan.
+q 4.3 order m | Vulnerability management | Put these in order.
+1. Identify vulnerabilities
+2. Prioritize by severity and context
+3. Remediate
+4. Verify the fix
+5. Report the outcome
+why: A fix cannot be verified until it has been made, and reporting should reflect the verified state.
+q 4.3 mcq e | False positive | A scanner reports a flaw that does not exist on the system. What is this?
++ A false positive :: The alert is incorrect.
+- A false negative :: That is a missed real flaw.
+- A zero-day :: That is a flaw with no fix.
+- A compensating control :: This is an alternative protection.
+q 4.3 mcq m | CSPM | Which tool is designed to find misconfigured cloud resources?
++ CSPM :: It continually assesses cloud configuration.
+- IPAM :: This tracks IP addresses.
+- UPS :: This is power protection.
+- HIDS :: This watches a single host.
+q 4.3 mcq m | Disclosure | A company wants outside researchers to know how to report flaws safely. What should it publish?
++ A responsible disclosure policy :: It explains how and where to report.
+- A DMARC record :: This is for email.
+- A risk register :: This is an internal record.
+- A CRL :: This is for certificates.
+q 4.3 mcq h | Scan types | Which scan generally gives the most accurate view of missing patches on a host?
++ Credentialed :: It signs in and inspects the system.
+- Non-credentialed :: This gives only an outside view.
+- Passive DNS lookup :: This does not check software.
+- A ping sweep :: This only finds live hosts.
+mistake: Closing a ticket without rescanning.
+mistake: Treating every scanner finding as confirmed.
+sum: Identify, prioritize, remediate, verify, report.
+sum: Use context, not just severity.
+sum: Provide a safe way for outsiders to report flaws.
+ref: comptia-objectives r
+ref: nist-800-40 r
+ref: nist-800-115 s
+ref: cisa-ssvc s
+ref: nmap-book s
+ref: nmap-legal r
+card: What is the difference between a false positive and a false negative? == A false positive is a wrong alert, and a false negative is a missed real issue.
+card: Which scan type logs into the target? == A credentialed scan.
+
+@lesson w11-2
+title: Security alerting and monitoring
+domain: Domain 4: Security Operations
+obj: 4.4
+level: Intermediate
+min: 120
+pre: w11-1, w4-2
+out: Explain the roles of SIEM and related tools.
+out: Compare NetFlow, SNMP, syslog and SCAP.
+out: Tune alerts to reduce noise.
+why: Analysts live inside these tools. Too few alerts means missing attacks. Too many means people stop paying attention.
+plain: Monitoring is like a building's security desk. Cameras, door sensors and alarms all feed one room. A SIEM is that room. Alert tuning makes sure the alarm does not go off each time someone opens a window.
+tech: Monitoring covers systems, applications and infrastructure. Activities include log aggregation (collecting logs in one place), alerting, scanning, archiving (retaining data for later), reporting and alert tuning (adjusting rules to reduce false positives).
+tech: Tools include benchmarks, which define secure configuration targets; agents, installed on a device, and agentless collection, which reads remotely; security information and event management (SIEM), which aggregates and correlates events; antivirus; DLP; vulnerability scanners; orchestration; and a packet analyzer such as Wireshark, which examines traffic in detail. Security orchestration, automation and response (SOAR) acts on alerts through playbooks. A SIEM finds and correlates, while SOAR takes the resulting actions.
+tech: Protocols: NetFlow records metadata about traffic flows but not content. Simple Network Management Protocol (SNMP) monitors and manages devices. syslog is a standard for sending log messages. Security Content Automation Protocol (SCAP) standardizes how vulnerability and configuration information is expressed, so tools can share it. Port mirroring copies traffic to a monitoring port. Dashboards summarize status. Automated alerts notify staff without someone watching. Network management systems monitor device health.
+table: Commonly confused | Tool | Focus
+| SIEM | Collects and correlates events, produces alerts
+| SOAR | Automates the response through playbooks
+| NetFlow | Who talked to whom, and how much, without content
+| Packet capture | Complete content of traffic
+| SNMP | Device health and management
+| syslog | Log message transport
+term: Systems == Computers and operating systems being monitored.
+term: Application == Software being monitored.
+term: Infrastructure == Network and supporting technology being monitored.
+term: Log aggregation == Collecting logs from many sources.
+term: Alerting == Notifying people of important events.
+term: Archiving == Storing data for later use.
+term: Alert tuning == Adjusting rules to reduce noise.
+term: Benchmarks == Published secure configuration standards.
+term: Agents/agentless == Collecting data with installed software or remotely without it.
+term: SIEM == Security information and event management: aggregates and correlates events.
+term: SOAR == Security orchestration, automation and response: automates responses.
+term: Orchestration == Coordinating multiple tools and steps.
+term: Packet analyzer == A tool that captures and inspects network traffic.
+term: Vulnerability scanners == Tools that test for known weaknesses.
+term: NetFlow == Metadata records about network flows.
+term: SNMP == Simple Network Management Protocol.
+term: syslog == A standard for sending log messages.
+term: SCAP == Security Content Automation Protocol.
+term: Automated alerts == Notifications triggered without manual review.
+term: Port mirroring == Copying traffic to a monitoring port.
+term: Dashboards == Visual summaries of status.
+term: Network management systems == Tools monitoring network devices.
+eg: A SIEM correlates a failed VPN login, a successful one and a large download, and raises one high-priority alert.
+eg: An alert fires hundreds of times a day for a harmless backup process, so analysts begin ignoring it. Tuning fixes that.
+walk: Tune a noisy alert
+- Find out how often the alert fires and how often it is real.
+- Identify the benign cause, for example a scheduled backup.
+- Add a precise exception, not a broad one.
+- Monitor to confirm real events are still detected.
+- Document why the exception exists.
+lab: Aggregate and search logs | 40 | journalctl and grep in your lab VM
+do: Run sudo journalctl --since "1 hour ago" -p warning to filter logs.
+do: Write a small shell one-liner that counts failed sudo attempts.
+do: Open Wireshark with a sample capture from the Wireshark wiki and find the conversation statistics.
+do: Decide what you would alert on, and write the rule in plain language.
+expect: A filtered list, a count and an alert written with a threshold.
+explain: A rule is only useful if you can say what triggers it and why that matters.
+pass: You produced a count from a log search.
+pass: Your alert rule states a threshold and a reason.
+scenario: An analyst must quickly see whether a host sent a large amount of data to an unfamiliar address, and packet captures are not available. Which data source helps most?
+answer: NetFlow or similar flow data, which records who communicated, when and how much, without storing the content.
+q 4.4 mcq e | SIEM | What is the main function of a SIEM?
++ Aggregating and correlating security events :: It brings together logs and finds patterns.
+- Providing battery backup :: This is a UPS.
+- Issuing certificates :: This is a CA.
+- Assigning IP addresses :: This is DHCP.
+q 4.4 mcq m | SIEM versus SOAR | A system automatically disables an account and opens a ticket when an alert fires. Which technology is that?
++ SOAR :: It automates response actions.
+- SNMP :: This monitors devices.
+- SPF :: This is email authentication.
+- NetFlow :: This records flow metadata.
+q 4.4 match m | Monitoring protocols | Match each protocol to its use.
+= NetFlow => Metadata about traffic flows
+= SNMP => Monitoring and managing devices
+= syslog => Sending log messages
+= SCAP => Standardized security content
+why: Each one carries a different type of information.
+q 4.4 mcq h | Port mirroring | How does a monitoring sensor receive a copy of switch traffic without being inline?
++ Port mirroring :: The switch copies traffic to the sensor's port.
+- OCSP stapling :: This relates to certificates.
+- A captive portal :: This handles guest access.
+- Key escrow :: This stores keys.
+q 4.4 mcq m | Alert tuning | A rule produces hundreds of harmless alerts. What is the best action?
++ Tune it with a precise exception and monitor the result :: This reduces noise while keeping detection.
+- Disable all alerts :: This removes detection.
+- Ignore it, as analysts will get used to it :: Alert fatigue causes real events to be missed.
+- Delete the logs :: This destroys evidence.
+mistake: Confusing SIEM and SOAR.
+mistake: Believing NetFlow shows content. It shows metadata only.
+sum: A SIEM aggregates and correlates.
+sum: Protocols carry different kinds of monitoring data.
+sum: Tuning keeps alerts useful.
+ref: comptia-objectives r
+ref: nist-800-92 r
+ref: rfc-5424 s
+ref: rfc-7011 s
+ref: rfc-3954 s
+ref: rfc-3411 s
+ref: nist-scap s
+ref: wireshark-samples s
+ref: cis-benchmarks s
+card: SIEM or SOAR: which automates response? == SOAR.
+card: Does NetFlow include packet content? == No. It records metadata about flows.
+also: 36 | Logs, flow logs, alerts and the people who read them
+
+@lesson w11-3
+title: Identity: accounts, federation, SSO, SAML, LDAP, OAuth and OIDC
+domain: Domain 4: Security Operations
+obj: 4.5
+level: Intermediate
+min: 120
+pre: w4-4, w11-2
+out: Manage accounts from provisioning through deprovisioning.
+out: Explain federation and single sign-on.
+out: Clearly distinguish SAML, LDAP, OAuth and OpenID Connect.
+why: Identity is now the main security boundary, and stolen or over-privileged accounts are behind many breaches. The difference between OAuth and OIDC trips up even experienced people.
+plain: Federation is like using your passport in another country: a government you trust vouches for you. Single sign-on is a wristband at a festival: show it once and you can enter each stage.
+plain: OAuth is a hotel key card: it says what doors you can open, not who you are. OpenID Connect adds a photo ID on top: it tells the application who you are.
+tech: Provisioning creates accounts and grants access. Deprovisioning removes them, and should happen promptly when someone leaves. Permissions assignments have implications: granting a permission to a group affects everyone in it. Identity proofing verifies a person is who they claim to be before issuing credentials. Federation allows trust between organizations, so that a person can use one identity across them.
+tech: Single sign-on (SSO) lets a user authenticate once for many applications. Security Assertions Markup Language (SAML) exchanges XML assertions between an identity provider and a service provider, and is common in enterprise SSO. Lightweight Directory Access Protocol (LDAP) queries and manages directory information such as users and groups. Open Authorization (OAuth) is an authorization framework: it grants an application limited access to resources on a user's behalf using access tokens. OAuth by itself does not tell an application who the user is.
+tech: OpenID Connect (OIDC) is an identity layer built on OAuth 2.0. It adds an ID token, a signed statement about who authenticated. Use OIDC to sign users in, and OAuth to grant access to an API. OIDC does not appear in the current exam list by name, but it is essential to understanding OAuth correctly.
+tech: Account types include user accounts; privileged accounts, either global (rights across an environment) or local (rights on one system); service accounts for applications; third-party accounts for outside organizations; and emergency access accounts, sometimes called break-glass accounts, which are tightly controlled, used only in emergencies and closely monitored.
+diagram: oauth-oidc
+diagram: sso-federation
+table: Identity standards compared | Standard | Main job | Format or token | Common use
+| SAML | Authentication and SSO | XML assertions | Enterprise web SSO
+| OAuth 2.0 | Delegated authorization | Access tokens | Letting an app call an API
+| OpenID Connect | Authentication on top of OAuth | ID token, a signed JWT | Sign in with an account
+| LDAP | Directory queries | LDAP protocol | Looking up users and groups
+term: Provisioning/deprovisioning user accounts == Creating accounts and removing them promptly.
+term: Permissions assignments and implications == Granting access and understanding what it affects.
+term: Identity proofing == Verifying someone is who they claim to be.
+term: Federation == Trusting identities across organizations.
+term: SSO == Single sign-on: authenticate once for many applications.
+term: SAML == Security Assertions Markup Language: exchanges XML identity assertions.
+term: LDAP == Lightweight Directory Access Protocol: queries directories.
+term: OAuth == Open Authorization: delegated access through tokens.
+term: OpenID Connect == An identity layer on OAuth 2.0 that provides an ID token.
+term: Access token == A credential that an application uses to reach a resource.
+term: ID token == A signed statement about who authenticated.
+term: User == A standard account for a person.
+term: Privileged == An account with elevated rights.
+term: Global == Privileged rights across an environment.
+term: Local == Privileged rights on one system.
+term: Service == An account for an application or process.
+term: Third-party == An account for an outside organization.
+term: Emergency access == Tightly controlled accounts for emergencies.
+eg: Sign in with Google uses OIDC to tell a site who you are. Letting an app read your calendar uses OAuth access to an API.
+eg: An employee leaves and HR's system triggers automatic deprovisioning across all applications via SSO.
+walk: Decide which standard is in use
+- An app needs to read a user's files on another service. That is OAuth.
+- A website needs to know who has signed in using an outside provider. That is OIDC.
+- A corporate intranet application accepts XML assertions from an identity provider. That is SAML.
+- An application looks up a user's group in a directory. That is LDAP.
+lab: Trace an OIDC sign-in | 40 | Browser developer tools, on your own account
+do: Open a site that supports signing in with an account you own. Open the Network tab and preserve the log.
+do: Start signing in and find a request with response_type and scope in the URL.
+do: Note whether scope includes openid, the sign that OIDC is in use.
+do: Note the redirect back to the site. Do not share or paste any tokens or codes anywhere.
+expect: A request that has parameters such as client_id, redirect_uri and scope.
+explain: The openid scope signals OIDC, while scopes such as calendar read describe OAuth API access.
+pass: You located the authorization request.
+pass: You can explain what the openid scope means.
+scenario: A mobile app needs permission to post to a user's calendar on another service, and must not see the user's password. Which standard fits?
+answer: OAuth 2.0, because it delegates limited access through tokens. If the app also needed to know who the user is, it would use OpenID Connect too.
+q 4.5 mcq e | OAuth | What is OAuth 2.0 primarily for?
++ Delegated authorization :: It lets an app access resources on a user's behalf.
+- Encrypting a hard disk :: This is unrelated.
+- Sending log messages :: This is syslog.
+- Assigning IP addresses :: This is DHCP.
+q 4.5 mcq m | OAuth versus OIDC | Which token tells an application who authenticated?
++ The ID token from OpenID Connect :: It carries identity claims.
+- An OAuth access token :: Its purpose is resource access.
+- A DKIM signature :: This relates to email.
+- A CRL entry :: This relates to certificate revocation.
+q 4.5 mcq m | Deprovisioning | Which step is most urgent when an employee is terminated?
++ Disable the employee's accounts and access :: Prompt deprovisioning prevents continued access.
+- Update the network diagram :: It may be needed, but is not urgent.
+- Rotate backups :: This is unrelated.
+- Replace the firewall :: This is unrelated.
+q 4.5 mcq h | Emergency access | How should emergency access accounts be treated?
++ Rarely used, strongly protected and closely monitored :: They bypass normal controls, so any use must be reviewed.
+- Shared widely for convenience :: This defeats accountability.
+- Used for daily administration :: This defeats their purpose.
+- Left without a password :: This is unsafe.
+q 4.5 match m | Identity standards | Match each scenario to its standard.
+= XML assertions for enterprise SSO => SAML
+= Directory lookups for users and groups => LDAP
+= Letting an app call an API on your behalf => OAuth
+= Signing in with an outside identity provider => OpenID Connect
+why: Ask whether the purpose is authentication, authorization or directory lookup.
+mistake: Calling OAuth an authentication protocol. It delegates authorization, and OIDC adds authentication.
+mistake: Leaving accounts active after someone leaves.
+sum: Manage accounts across their entire life.
+sum: SSO reduces repeated sign-ins, and federation extends trust.
+sum: OAuth grants access, and OIDC states who the user is.
+ref: comptia-objectives r
+ref: rfc-6749 r
+ref: oidc-core r
+ref: saml-overview s
+ref: rfc-4511 s
+ref: nist-800-63 s
+card: OAuth or OIDC: which one tells an app who the user is? == OpenID Connect.
+card: What is federation? == Trust that allows identities to be used across organizations.
+also: 22 | OAuth 2.0 and OpenID Connect in plain words
+also: 23 | SAML single sign-on and SCIM provisioning
+
+@lesson w11-4
+ref: owasp-authz s
+title: Access control models, MFA and passwords
+domain: Domain 4: Security Operations
+obj: 4.5
+level: Intermediate
+min: 120
+pre: w11-3
+out: Compare access control models.
+out: Choose MFA factors and understand their strengths.
+out: Apply current password guidance.
+why: Most identity attacks succeed through weak or reused credentials and excessive permissions. Picking the right model and factors closes those paths.
+plain: Role-based access is like staff uniforms: nurses get nurse access. Discretionary access is like owning your diary: you decide who reads it. Mandatory access is like a military clearance, which the owner cannot change. Just-in-time access is a key checked out for one hour.
+tech: In role-based access control, users are assigned roles, roles hold permissions, and a person's access is the combination of their roles. With role inheritance, a senior role automatically receives the permissions of a junior role, so an administrator role can include everything an editor can do. Least privilege means giving each role only what the job needs. Access enforcement must happen on the server for every request: hiding a button changes what users see, not what they can do.
+tech: Access control models include role-based (permissions follow job roles), rule-based (conditions apply, such as firewall rules), mandatory (the system enforces labels and clearances), discretionary (owners decide), time-based (access is limited to certain hours) and just-in-time (elevated access is granted temporarily when needed). Attribute-based access control (ABAC), which decides using attributes of the user, resource and context, is not in the current list but is common. Privileged access management (PAM) tools secure and broker admin access.
+tech: Access management includes authentication, and policies that are logical/technical (enforced by systems) or administrative/business (rules set by the organization). An access review periodically confirms that people still need their permissions.
+tech: Multifactor authentication uses different factor types. A hard token is a physical device. A soft token is an app. Biometrics measure a body feature. A one-time password (OTP) is valid once or for a short time. A backup code is a pre-generated recovery code. Phishing-resistant options such as FIDO2 security keys and passkeys are stronger than SMS or push prompts.
+tech: Password concepts: a passkey is a FIDO credential based on public key cryptography, bound to the real site, so it resists phishing. Passwordless authentication replaces passwords with such methods. Password managers generate and store unique passwords. NIST SP 800-63B-4 says that passwords used alone must be at least 15 characters, and that verifiers should check against lists of compromised values, should not impose composition rules and should not force periodic changes unless there is evidence of compromise. Many organizations still enforce complexity, expiration and minimum age, and the exam may refer to them. Password best practices cover length, complexity, reuse, expiration, age (how long a password must be kept before it can be changed), compromised credential monitoring, account auditing and a policy report that shows compliance.
+table: Access control models | Model | Who or what decides | Example
+| Role-based | Job role | Nurses can view charts
+| Rule-based | Defined conditions | Block access from outside the country
+| Mandatory | System labels | Secret clearance needed
+| Discretionary | The resource's owner | A file owner shares a file
+| Time-based | Time of day | Only during shifts
+| Just-in-time | A temporary approval | Admin rights for one hour
+term: Rule-based == Access decided by defined conditions.
+term: Role-based == Permissions based on job function.
+term: Role inheritance == A senior role automatically receiving a junior role's permissions.
+term: Time-based == Access limited to specific times.
+term: Mandatory == System-enforced access using labels.
+term: Discretionary == Owners decide who gets access.
+term: Just-in-time == Temporary elevated access when needed.
+term: ABAC == Attribute-based access control: decisions using attributes.
+term: PAM == Privileged access management: secures admin access.
+term: Authentication == Proving identity.
+term: Policies == Rules, either logical/technical or administrative/business.
+term: Access review == Periodically checking who has access.
+term: Hard token == A physical device for authentication.
+term: Soft token == An app that produces codes.
+term: Biometrics == Authentication using a body feature.
+term: OTP == One-time password.
+term: Backup code == A pre-generated recovery code.
+term: Passkey == A phishing-resistant FIDO credential.
+term: Password managers == Tools that generate and store unique passwords.
+term: Passwordless == Authentication without a password.
+term: Length == A primary factor in password strength.
+term: Complexity == Character variety requirements.
+term: Reuse == Using one password across places.
+term: Expiration == A required password change date.
+term: Age == How long a password must exist before changing it.
+term: Compromised credential monitoring == Checking whether credentials have appeared in breaches.
+term: Account auditing == Reviewing accounts and their use.
+term: Policy report == A report showing compliance with password rules.
+eg: Administrators request admin rights for one hour using a PAM tool, and every session is recorded.
+eg: A passkey will not work on a look-alike phishing site because it is bound to the real domain.
+walk: Select a factor combination
+- A password plus SMS is better than a password alone, but SMS can be intercepted or swapped.
+- A password plus an authenticator app is stronger.
+- Hardware security keys or passkeys are resistant to phishing.
+- Keep backup codes secure for recovery.
+lab: Build an access control matrix | 35 | Spreadsheet; the permissions PBQ in Atlas
+do: Create rows for users in five roles, and columns for five resources.
+do: Fill in read, write or none, following least privilege.
+do: Identify one role you would make just-in-time.
+do: Complete the permissions exercise in Atlas's Performance-based practice.
+expect: A matrix in which no role has more than it needs.
+explain: A matrix makes excess permissions easy to see during an access review.
+pass: Your matrix is complete with justification for any write access.
+pass: You scored 80% or more on the exercise.
+scenario: Administrators currently hold permanent domain administrator rights. Audit asks for reduced standing privilege. What should be implemented?
+answer: Just-in-time privileged access, typically through PAM, granting time-limited elevation with approval and logging.
+q 4.5 mcq e | Access control models | Permissions assigned by job function describe which model?
++ Role-based :: Permissions follow roles.
+- Discretionary :: Here, owners decide.
+- Mandatory :: Here, labels decide.
+- Time-based :: Here, time decides.
+q 4.5 mcq m | MFA | Which is the most phishing-resistant option?
++ A FIDO2 security key :: It is bound to the correct site.
+- SMS code :: It can be phished or intercepted.
+- A second password :: This is the same factor.
+- A security question :: This is something you know.
+q 4.5 mcq m | Password guidance | According to NIST SP 800-63B-4, which practice is recommended?
++ Check new passwords against lists of compromised values :: This addresses a major real-world risk.
+- Force changes every 30 days :: NIST says not to require periodic changes.
+- Require a mix of symbols and capitals :: NIST says not to impose composition rules.
+- Limit passwords to 8 characters :: Longer passwords should be permitted.
+q 4.5 mcq h | Mandatory access control | A system prevents a file's owner from sharing it because of its classification label. Which model is this?
++ Mandatory :: The system's labels override owner discretion.
+- Discretionary :: There, the owner could share.
+- Role-based :: The scenario does not concern roles.
+- Rule-based :: The scenario relies on classification labels.
+q 4.5 match m | MFA factors | Match each example to its authentication factor type.
+= A hardware security key => Something you have
+= A fingerprint => Something you are
+= A PIN => Something you know
+why: Factors are distinguished by their type, and combining different types creates MFA.
+q 4.5 mcq m | Access review | Why perform regular access reviews?
++ To remove permissions no longer needed :: This counters privilege creep.
+- To increase password complexity :: This is a separate control.
+- To test backups :: This is restoration testing.
+- To scan for open ports :: This is scanning.
+mistake: Treating two passwords as MFA.
+mistake: Assuming strict complexity and frequent expiry are current best practice. NIST now advises length and breach checks.
+sum: Match the access model to the need.
+sum: Prefer phishing-resistant authentication.
+sum: Favour length, uniqueness and breach checks.
+ref: comptia-objectives r
+ref: nist-800-63b r
+ref: fido-passkeys r
+ref: webauthn s
+ref: rfc-6238 s
+ref: nist-800-162 s
+ref: cisa-mfa s
+card: What is just-in-time access? == Temporary elevated access granted only when needed.
+card: Why are passkeys resistant to phishing? == They are bound to the legitimate site, so they will not work on a look-alike site.
+also: 25 | Exercise 9: MFA, passkeys and recovery
+
+@lesson w11-5
+title: OAuth 2.0 and OpenID Connect in depth
+domain: Domain 4: Security Operations
+obj: 4.5
+level: Intermediate
+min: 90
+pre: w11-3
+out: Name the four OAuth roles and what each one does.
+out: Follow the Authorization Code flow with PKCE step by step.
+out: Explain access tokens, refresh tokens, scopes, expiry and revocation.
+out: Decide when OIDC, Authorization Code, Client Credentials or the Device flow fits.
+why: Almost every modern product connects to other products. OAuth decides how much access those connections receive and how that access ends, so misunderstanding it leads to over-granted, long-lived access that nobody can see.
+plain: Imagine lending a parking valet a key that starts the car but cannot open the boot, and that stops working at midnight. You never hand over your own key. OAuth works like that: an app receives a limited, expiring pass instead of your password. OpenID Connect adds a signed note saying who you are.
+tech: OAuth 2.0 defines four roles. The resource owner is usually the user. The client is the application that wants access. The authorization server authenticates the user, records consent and issues tokens. The resource server is the API holding the data, and it accepts or rejects tokens. Scopes name what the client may do, such as reading a calendar, and the granted scopes can be narrower than those requested.
+tech: In the Authorization Code flow the client sends the browser to the authorization server. The user signs in and approves the request. The browser returns to a pre-registered redirect URI with a short-lived, single-use code. The client then exchanges that code at the token endpoint, over a back channel, for tokens. Exact matching of the redirect URI stops an attacker from sending the code somewhere else.
+tech: Proof Key for Code Exchange (PKCE) protects that code. The client creates a random code verifier, sends a SHA-256 hash of it as the code challenge at the start, and reveals the verifier only when exchanging the code. An attacker who steals the code cannot produce the verifier. The current OAuth security best practice, RFC 9700, requires protection against code injection and recommends PKCE for all clients, including ones with a secret. It also says the Implicit grant should not be used and the Resource Owner Password Credentials grant must not be used.
+tech: An access token is presented to the resource server and should be short-lived and narrowly scoped. A refresh token lets the client get a new access token without asking the user again, is sent only to the authorization server, and should be rotated or sender-constrained for public clients. Expiry is automatic. Revocation ends access early, as RFC 7009 describes. A self-contained JSON Web Token (JWT) access token can often keep working until it expires, even after revocation, unless the resource server checks with the authorization server. That is one reason lifetimes are kept short.
+tech: The Client Credentials grant is for one service talking to another with no user present. The Device Authorization grant suits input-limited devices such as televisions. OpenID Connect adds authentication on top of OAuth: requesting the openid scope returns an ID token, a signed JWT intended for the client, that states who authenticated. An ID token should not be sent to APIs, and an access token should not be treated as proof of who signed in.
+diagram: oauth-pkce
+table: OAuth flows compared | Flow | Use it when | User present?
+| Authorization Code with PKCE | Web, mobile and single-page apps acting for a user | Yes
+| Client Credentials | One service calls another as itself | No
+| Device Authorization | A device has limited input, such as a television | Yes, on a second device
+| Implicit | Legacy only. Should not be used for new work | Yes
+| Resource Owner Password | Legacy only. Must not be used | Yes
+table: Tokens compared | Token | Audience | Purpose | Typical life
+| Authorization code | Token endpoint | Exchanged once for tokens | Very short
+| Access token | Resource server | Calls an API within its scopes | Short
+| Refresh token | Authorization server | Gets new access tokens | Longer, rotated or constrained
+| ID token | The client | States who authenticated | Short
+term: Resource owner == The party who can grant access, usually the user.
+term: Client == The application requesting access.
+term: Authorization server == The service that authenticates users and issues tokens.
+term: Resource server == The API that holds the data and checks tokens.
+term: Scope == A named limit on what a token permits.
+term: Redirect URI == The registered address the authorization server sends the browser back to.
+term: Authorization code == A short-lived, single-use value exchanged for tokens.
+term: PKCE == Proof Key for Code Exchange: proves that the client exchanging a code is the one that requested it.
+term: Access token == A credential presented to an API.
+term: Refresh token == A longer-lived credential used only to obtain new access tokens.
+term: ID token == A signed JWT from OpenID Connect stating who authenticated.
+term: JWT == JSON Web Token: a compact signed set of claims.
+term: Token revocation == Ending a token's validity before it expires.
+term: Client Credentials == An OAuth grant in which a service acts as itself.
+eg: A project tool asks to read a user's calendar. The consent page lists calendar read only, and the tool never sees the user's password.
+eg: An administrator revokes a reporting integration. New refresh attempts fail at once, and any JWT access token already issued stops working when it expires unless the API checks revocation.
+walk: Follow Authorization Code with PKCE
+- The client creates a random code verifier and hashes it to make a code challenge.
+- The client redirects the browser to the authorization server with its client ID, redirect URI, scopes, state value and code challenge.
+- The user signs in and approves the scopes.
+- The authorization server redirects back to the registered URI with a single-use code.
+- The client checks the state value, then posts the code and the original verifier to the token endpoint.
+- The authorization server hashes the verifier, compares it with the challenge and issues tokens.
+- The client calls the resource server with the access token.
+lab: Compute a PKCE challenge and read a JWT, offline | 25 | openssl and base64 in your lab VM, using no real tokens
+do: In your VM, set the published test verifier from RFC 7636 Appendix B: V=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
+do: Run: printf %s "$V" | openssl dgst -sha256 -binary | base64 | tr '+/' '-_' | tr -d '='
+do: Compare the output with the RFC's expected challenge, E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
+do: Make a harmless token payload: printf '{"sub":"lab-user","scope":"calendar.read","exp":1893456000}' | base64 and then decode it again with base64 -d. Note that anyone can read an encoded payload.
+do: Write one sentence on why encoding is not encryption. Use only sample values, and never paste a real token into any tool.
+expect: Your computed challenge matches the RFC value exactly, and the decoded payload shows the sample claims.
+explain: PKCE works because a hash cannot be reversed to reveal the verifier. JWT payloads are signed, usually not encrypted, so they must not hold secrets.
+pass: Your challenge matches the published value.
+pass: You can explain why a stolen code alone is useless when PKCE is used.
+scenario: A single-page app needs to read a user's documents through an API on that user's behalf. A developer suggests collecting the user's password and sending it to the API. What should be used instead?
+answer: The Authorization Code flow with PKCE and a narrow read scope. The app never handles the password, access is limited and expiring, and the user or an administrator can revoke it. The password grant must not be used.
+q 4.5 mcq e | OAuth roles | In OAuth 2.0, which component accepts or rejects access tokens when an API is called?
++ The resource server :: It hosts the API and checks each token presented.
+- The authorization server :: It issues tokens, but the API call goes elsewhere.
+- The client :: It presents tokens and does not judge them.
+- The resource owner :: The owner grants consent and does not check tokens.
+q 4.5 mcq m | PKCE | What does PKCE specifically protect against?
++ Use of a stolen authorization code :: The thief cannot supply the original code verifier.
+- A weak user password :: PKCE does not change password strength.
+- A forged TLS certificate :: Certificate validation handles this.
+- A user approving too many scopes :: Consent design and policy handle this.
+q 4.5 mcq m | Token purpose | Where should a client send a refresh token?
++ Only to the authorization server :: It is exchanged there for new access tokens.
+- To every API it calls :: This exposes a powerful credential widely.
+- To the resource owner's browser storage for sharing :: This would increase exposure.
+- To the identity of the next client :: Tokens are not passed between clients.
+q 4.5 mcq h | Revocation | An administrator revokes an integration, but its self-contained JWT access token still works for ten more minutes. What explains this?
++ The API validates the JWT locally until it expires :: Local validation does not consult revocation state.
+- Revocation always requires a server restart :: Restarting is not part of revocation.
+- The refresh token has become an ID token :: Tokens do not change type.
+- OAuth does not support revocation at all :: RFC 7009 defines token revocation.
+q 4.5 match m | Choosing a flow | Match each situation to the best OAuth choice.
+= A nightly job calls an API as itself => Client Credentials
+= A mobile app acts for a signed-in user => Authorization Code with PKCE
+= A television shows a code to enter on a phone => Device Authorization
+why: Ask who is acting, and whether that party can use a browser and hold a secret.
+q 4.5 tf e | ID tokens | True or false: an ID token should be sent to an API as proof of access.
+- True :: APIs should receive access tokens.
++ False :: An ID token is intended for the client and describes authentication.
+mistake: Treating a successful OAuth grant as proof of who the user is. Use OIDC for sign-in.
+mistake: Assuming revocation stops every token instantly.
+mistake: Asking for broad scopes up front because it is easier than asking later.
+sum: OAuth delegates limited, expiring access without sharing passwords.
+sum: Authorization Code with PKCE is the normal choice when a user is present.
+sum: Access tokens go to APIs, refresh tokens go to the authorization server, and ID tokens go to the client.
+ref: comptia-objectives r
+ref: rfc-6749 r
+ref: rfc-7636 r
+ref: oidc-core r
+ref: rfc-9700 s
+ref: rfc-7009 s
+ref: owasp-oauth s
+card: What does PKCE prove? == That the client exchanging a code is the one that started the request.
+card: Which OAuth token goes only to the authorization server? == The refresh token.
+card: What adds an ID token on top of OAuth? == OpenID Connect.

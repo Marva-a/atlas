@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Containers and Kubernetes in plain words · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Containers and Kubernetes in plain words</h1>
+<p class="eyebrow">Day 29 · Week 5 · Intermediate · about 120 min</p>
+<p>A container packs an app with everything it needs so it runs the same anywhere, and Kubernetes is the system that runs many containers across many machines and keeps them healthy.</p>
+<p><strong>By the end, you can:</strong> Explain the relationship between containers, Pods, nodes, namespaces and Services in Kubernetes.</p>
+<h2>Why it matters to a designer</h2>
+<p>Tigera, and many security companies, sell to platform engineers who run Kubernetes. You cannot design for them without their basic vocabulary: pods, nodes, namespaces and services. Today you learn it with everyday pictures, plus the cloud basics around it.</p>
+<h2>Key ideas</h2>
+<ul><li>You already ran a container on Day 3: Keycloak in Docker. A container is like a lunchbox: the app and everything it needs, packed so it works the same on any table.</li><li>Kubernetes is like a restaurant kitchen manager: it decides which cook (machine) prepares which dish (container), replaces a cook who goes home sick, and adds cooks when it gets busy.</li><li>A node is one machine. A pod is the smallest unit Kubernetes runs, usually one container. A cluster is all the nodes together. A namespace is a separate area of the cluster, for example one per team.</li><li>Most clusters run in a cloud (AWS, Google Cloud, Azure). In the shared responsibility model, the cloud secures the buildings and hardware; you secure your accounts, settings, data and who can reach what.</li><li>In AWS, a VPC is your private network in the cloud, a subnet is a section of it (public if it has a route to the internet), and a security group is a firewall around a server.</li><li>Many small services talking to each other inside a cluster is called east-west traffic. Traffic coming in from users outside is north-south. Most attacks spread east-west after getting in.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>container</strong></td><td>An app packaged with everything it needs, so it runs the same anywhere.</td></tr><tr><td><strong>image</strong></td><td>The saved template a container is started from.</td></tr><tr><td><strong>Kubernetes</strong></td><td>A system that runs and manages many containers across many machines.</td></tr><tr><td><strong>node</strong></td><td>One machine in a Kubernetes cluster.</td></tr><tr><td><strong>pod</strong></td><td>The smallest unit Kubernetes runs, usually one container.</td></tr><tr><td><strong>cluster</strong></td><td>A group of nodes managed together by Kubernetes.</td></tr><tr><td><strong>namespace</strong></td><td>A separate area inside a cluster, often one per team or app.</td></tr><tr><td><strong>shared responsibility</strong></td><td>The cloud provider secures the infrastructure; you secure what you put on it and how you configure it.</td></tr><tr><td><strong>VPC</strong></td><td>Virtual private cloud: your own private network in a cloud provider.</td></tr><tr><td><strong>east-west traffic</strong></td><td>Traffic between services inside a network or cluster.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read what a container is, and watch the short video. &mdash; <a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/">What is a container?</a> (Docker Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read the Kubernetes overview. &mdash; <a href="https://kubernetes.io/docs/concepts/overview/">Kubernetes overview</a> (Kubernetes Docs)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the first sections on pods and namespaces. &mdash; <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a> (Kubernetes Docs)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the shared responsibility model. &mdash; <a href="https://aws.amazon.com/compliance/shared-responsibility-model/">Shared Responsibility Model</a> (AWS)</p><span class="step__min">15 min</span></div><div class="step"><p>Read what a VPC is, including subnets. &mdash; <a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html">What is Amazon VPC?</a> (AWS)</p><span class="step__min">15 min</span></div><div class="step"><p>Draw a picture of a small online shop running in Kubernetes: three services (web, orders, payments) in pods, on two nodes, in one namespace, inside a VPC. Mark east-west and north-south traffic.</p><span class="step__min">35 min</span></div><div class="step"><p>Add the new words to your glossary with your own picture for each.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Skip YAML details, Helm, storage and how the Kubernetes control plane works inside.</p>
+<h2>Check yourself</h2><ul><li>Explain containers and Kubernetes with the lunchbox and kitchen pictures.</li><li>What is the difference between a pod, a node and a cluster?</li><li>In the shared responsibility model, give two things that stay your responsibility.</li></ul>
+<h2>What a good answer looks like</h2><ul><li>A container packs an app with everything it needs, like a lunchbox that works on any table. Kubernetes is the kitchen manager that decides where each dish is cooked, replaces cooks who leave and adds cooks when busy.</li><li>A pod is the smallest unit that runs (usually one container), a node is a machine that runs pods, and a cluster is all the nodes managed together.</li><li>For example: who has access to your cloud accounts, how your network and security groups are configured, and protecting your data. The provider secures the data centres and hardware.</li></ul>
+<p><a href="../../index.html#lesson/29">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

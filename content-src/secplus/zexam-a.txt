@@ -1,0 +1,457 @@
+# Mock exam A: 90 original Atlas practice questions. Not real exam questions.
+@exam a
+q 1.1>w5-1 mcq m | CIA triad | A payroll file was changed so that one employee's salary doubled. Nobody outside payroll saw the file, and the system stayed online. Which security goal failed?
++ Integrity :: Unauthorized modification of data is an integrity failure.
+- Confidentiality :: No one unauthorized viewed the data.
+- Availability :: The system remained usable.
+- Non-repudiation :: The core harm here is altered data, not denial of an action.
+q 1.1>w5-1 mcq m | AAA | A VPN gateway checks a user's certificate, assigns the user to a network segment based on group, then writes session details to a server. Which step is the second action?
++ Authorization :: Assigning what the user may reach is authorization.
+- Authentication :: Checking the certificate was the first action.
+- Accounting :: Writing session details was the third action.
+- Encryption :: This describes how data is protected, which was not the action asked about.
+q 1.1>w5-2 mcq e | Control types | A bank installs bright lighting around its ATM area so criminals are less inclined to attempt anything. What is the primary control type?
++ Deterring :: The aim is to discourage attempts.
+- Corrective :: It repairs nothing.
+- Compensating :: It does not replace another unavailable control.
+- Directive :: It does not instruct people what to do.
+q 1.1>w5-2 mcq m | Control categories | Which is an operational control?
++ A guard carrying out nightly patrols :: People following a routine carry this out.
+- A firewall deny rule :: This is technical.
+- A corporate risk appetite statement :: This is managerial.
+- A steel door :: This is physical.
+q 1.1>w5-2 mcq h | Control types | A company cannot enable encryption on a legacy database, so it restricts the database to one management subnet and logs each query. Which control type does this represent?
++ Compensating :: Alternative protection is used because the primary control is not feasible.
+- Preventive only :: Subnet restriction is preventive, but the defining feature here is substitution.
+- Deterring :: The purpose is not simply to discourage.
+- Directive :: These are technical measures, not instructions.
+q 1.2>w5-3 mcq e | Change management | Who typically reviews and authorizes significant production changes?
++ A change advisory board :: The CAB exists for this purpose.
+- A threat actor :: This is someone who causes harm.
+- The certificate authority :: A CA issues certificates.
+- The DHCP server :: This assigns addresses.
+q 1.2>w5-3 mcq m | Technical implications | A change requires restarting the identity service used by all staff. What should the plan account for?
++ Downtime for dependent systems :: Restarting a shared service affects dependents.
+- Disabling all logging :: This removes visibility.
+- Removing the backout plan :: A backout plan is especially important here.
+- Publishing administrator passwords :: This is unsafe.
+q 1.2>w5-3 mcq h | Backout versus fail forward | A schema migration has run for 12 hours and irreversibly transformed live data. A minor defect is found. What is the most reasonable approach?
++ Fail forward with a tested fix :: Going back is impractical and would lose data.
+- Restore last week's backup immediately :: This would lose a week of changes.
+- Ignore the defect and close the change :: The issue still needs a fix.
+- Disable the CAB :: This does not address the defect.
+q 1.3>w5-4 mcq e | Encryption | Which algorithm is symmetric?
++ AES :: It uses a single shared key.
+- RSA :: RSA is asymmetric.
+- ECC :: ECC is asymmetric.
+- SHA-256 :: This is a hashing algorithm.
+q 1.3>w5-4 mcq m | Key exchange | Two parties want a shared secret over an untrusted network, without ever sending the secret itself. What should they use?
++ Diffie-Hellman :: It derives a shared secret from exchanged public values.
+- MD5 :: This is an obsolete hash.
+- Steganography :: This hides data but does not establish a key.
+- Masking :: This hides parts of a displayed value.
+q 1.3>w5-4 mcq m | Password storage | Which approach is best for storing user passwords?
++ A unique salt with a slow password hashing function :: This limits offline cracking.
+- AES encryption with the key in the same database :: The key's exposure would reveal every password.
+- Base64 encoding :: Encoding provides no protection.
+- A single unsalted SHA-1 hash :: This is fast and has no salt.
+q 1.3>w5-4 mcq h | Encryption level | A company needs one field of a database table protected, so that only the payments application can read it. Which level of encryption fits most closely?
++ Record or field level :: It protects a specific data element.
+- Full disk :: This does not separate access once a system is running.
+- Volume :: This protects the whole logical drive.
+- Transport :: This protects data only while moving.
+q 1.3>w5-5 mcq m | Certificates | A browser reports that a site's certificate was issued for a different domain. What was checked?
++ The certificate's name :: Name mismatch is a validation failure.
+- The speed of the server :: This is not a certificate property.
+- The site's DMARC policy :: This relates to email.
+- The client's MAC address :: This does not appear in validation.
+q 1.3>w5-5 mcq h | PKI | A company's internal root CA private key may have been stolen. Which is the most serious consequence?
++ Forged certificates trusted internally :: The root is the source of trust.
+- One user could forget a password :: This is not related.
+- A backup could take longer :: This is not related.
+- DNS would stop working :: The CA does not operate DNS.
+q 2.1>w6-1 mcq m | Threat intelligence | Which item is most likely to be delivered through an automated threat feed?
++ Current malware indicators :: Feeds commonly carry indicators.
+- A company's disaster recovery plan :: This is internal.
+- A data retention schedule :: This is internal.
+- A staff training calendar :: This is internal.
+q 2.1>w6-1 mcq h | Prioritization | Two findings have the same CVSS base score. One system is internet-facing and holds customer data, the other is an isolated lab host. How should they be ordered?
++ The internet-facing system first :: Exposure and asset value raise real risk.
+- The lab host first :: It is isolated, with low impact.
+- Randomly, as the scores match :: Context should decide.
+- Neither should be fixed :: Both need a decision, and matching scores do not remove risk.
+q 2.1>w6-1 mcq e | CVE | What does the identifier CVE-2024-12345 refer to?
++ A specific known vulnerability :: CVE IDs identify known flaws.
+- A security policy version :: It is not a policy number.
+- A certificate serial number :: It is not a certificate value.
+- A network subnet :: It is not an address.
+q 2.2>w6-2 mcq e | Threat actors | Which actor is most associated with using an attack to promote a cause?
++ Hacktivist :: The defining feature is a cause.
+- Organized crime :: It is focused on profit.
+- Accidental insider :: There is no intent.
+- Unskilled attacker :: Motive is usually curiosity or notoriety.
+q 2.2>w6-2 mcq m | Attributes | A group has large budgets, dedicated developers and years of patience. Which attributes are being described?
++ High resources and high sophistication :: Budget and capability are the attributes.
+- Internal and accidental :: There is nothing about being inside or accidental.
+- Low funding and low capability :: This is the opposite.
+- Fail-closed and fail-open :: These describe devices.
+q 2.3>w6-3 mcq m | Vectors | Attackers send a fake sign-in link through a team chat application. Which vector category best fits?
++ Message-based, using a collaboration tool :: The route is a chat platform.
+- Supply chain, through a logistics provider :: No logistics provider is involved.
+- Physical, through lock and key :: There is no physical route.
+- Signal-based, through NFC :: No NFC is involved.
+q 2.3>w6-3 mcq h | Session tokens | Users with MFA have accounts taken over after installing a malicious browser extension. What is the most probable mechanism?
++ The extension stole authenticated session tokens or cookies :: The session already passed MFA.
+- The extension changed the user's MAC address :: This would not provide account access.
+- The extension broke AES :: This is not realistic.
+- The extension revoked the site's certificate :: Extensions cannot do this.
+q 2.3>w6-4 mcq m | Supply chain | A trusted software vendor's update installs a backdoor at thousands of customers. What is this?
++ A supply chain-based attack :: Trust in the vendor was abused.
+- Tailgating :: This is physical.
+- Password spraying :: This targets accounts.
+- A race condition :: This is a timing flaw.
+q 2.3>w6-4 mcq e | Living off the land | Why do attackers use built-in tools such as PowerShell?
++ Legitimate tools attract less suspicion :: They blend in with normal administration.
+- These tools cannot be logged :: They can be logged.
+- These tools are illegal to monitor :: This is not true.
+- They require no permissions :: They run with the user's permissions.
+q 2.4>w7-1 mcq e | Vulnerability types | A vendor has stopped issuing fixes for a product still in use. What is this?
++ An unsupported product :: No more fixes are coming.
+- A zero-day :: A zero-day is a flaw without a fix, whereas this describes the product's support status.
+- A false positive :: This is an incorrect alert.
+- A rogue device :: This is an unauthorized device.
+q 2.4>w7-1 mcq m | Code weaknesses | A code review finds an API key written directly in source code. What is this?
++ A hardcoded secret :: The credential is embedded in code.
+- A buffer overflow :: This is a memory flaw.
+- A misconfigured VLAN :: This is a network setting.
+- A logic bomb :: This is malicious code with a trigger.
+q 2.4>w7-1 mcq m | Race conditions | Which condition describes a TOC/TOU flaw?
++ A resource changes between validation and use :: The timing gap is exploited.
+- A password is reused across sites :: This is a credential practice issue.
+- A network is flooded with traffic :: This is denial of service.
+- A certificate has expired :: This is a PKI issue.
+q 2.4>w7-1 mcq h | Identity providers | Why is compromise of an identity provider especially serious?
++ It can unlock every connected application :: One failure has broad reach.
+- It only affects one user's printer :: Its scope is far greater.
+- It only stops DNS resolution :: That is unrelated.
+- It disables backups automatically :: That is unrelated.
+q 2.5>w7-2 mcq e | Malware | A program looks like a free game, but secretly gives a remote attacker access. What is it?
++ Trojan :: It is disguised as something desirable.
+- Worm :: It does not need to disguise itself to spread.
+- Adware :: Its purpose is advertising.
+- Logic bomb :: It would wait for a condition.
+q 2.5>w7-2 mcq m | Social engineering | The CFO receives a highly personalized email asking for an urgent wire transfer. Which term is most precise?
++ Whaling :: It targets a senior executive.
+- Smishing :: This uses SMS.
+- Vishing :: This uses voice.
+- Quishing :: This uses QR codes.
+q 2.5>w7-2 mcq m | Physical attacks | An employee holds a door open for a stranger carrying boxes. What has happened?
++ Tailgating or piggybacking :: An unauthorized person entered behind someone authorized.
+- Skimming :: This involves capturing card data.
+- Forced entry :: Nothing was broken.
+- Shoulder surfing :: Nobody observed a screen or keypad.
+q 2.5>w7-3 mcq m | Network attacks | Users connecting to a bank reach a look-alike site, and investigators find incorrect records in a resolver. Which attack is indicated?
++ DNS cache poisoning :: False records were inserted into a resolver.
+- Password spraying :: This targets accounts.
+- Buffer overflow :: This targets memory.
+- Tailgating :: This is physical.
+q 2.5>w7-3 mcq h | Log analysis | What does this web log indicate?
+> 10:01:02 GET /login.php?user=admin'-- 200
+> 10:01:04 GET /login.php?user=admin'%20OR%201=1-- 200
++ SQL injection attempts :: The quote and comment sequences target a query.
+- Directory traversal :: There are no path sequences.
+- A DDoS attack :: There are just two requests.
+- Certificate pinning :: This is not an attack.
+q 2.5>w7-3 mcq m | Indicators | An account signs in from Toronto and then from Singapore eleven minutes later. Which indicator is this?
++ Impossible travel :: The distance cannot be covered in that time.
+- Log manipulation :: Nothing suggests logs were changed.
+- Excessive resource consumption :: Nothing suggests this.
+- Plaintext strings :: This refers to readable text in files or memory.
+q 2.5>w7-3 mcq h | Protocol downgrade | A client and server that both support TLS 1.3 end up negotiating an obsolete version because an attacker interfered. What attack is this?
++ Protocol downgrade :: The attacker forced a weaker version.
+- Cache poisoning :: This affects DNS.
+- Spraying :: This targets passwords.
+- Skimming :: This targets cards.
+q 2.6>w7-4 mcq m | AI threats | An attacker hides instructions in a résumé that an AI screening tool reads. The instructions cause it to rate the applicant highly. What is this?
++ Indirect prompt injection :: The instructions arrive within processed content.
+- Bias :: The result comes from an attack and not skewed data.
+- Hallucination :: The model followed an instruction.
+- A race condition :: This is a timing flaw.
+q 2.6>w7-4 mcq m | AI data loss | Which policy most directly reduces data loss through public AI tools?
++ Approved tools with DLP :: This addresses what people submit.
+- Longer Wi-Fi passwords :: This is unrelated.
+- A larger UPS :: This is unrelated.
+- Disabling all logging :: This reduces visibility.
+q 3.1>w8-1 mcq e | Cloud models | Which cloud model is shared by several organizations with common compliance needs?
++ Community :: It serves a group with common needs.
+- Public :: It is open to the general public.
+- Private :: It is for one organization.
+- Serverless :: This is a compute style, not a deployment model.
+q 3.1>w8-1 mcq m | Microservices | What is a security tradeoff of moving from one large application to many microservices?
++ More connections to secure :: The attack surface moves to APIs.
+- There is no longer any need for access control :: Access control is still needed.
+- All data becomes public :: This does not follow.
+- Patching is no longer needed :: Each service needs patching.
+q 3.1>w8-2 mcq m | Business considerations | A regulator requires that citizen data remain within national borders. Which factor is this?
++ Data sovereignty :: Location is subject to law.
+- Compute :: This is processing capacity.
+- Usability :: This is ease of use.
+- Power requirements :: This is electricity.
+q 3.1>w8-2 mcq h | Tradeoffs | Open source software is being compared with a proprietary product. Which is a realistic consideration?
++ Code is reviewable, but support varies :: Transparency and support are the tradeoff.
+- Open source is always free of vulnerabilities :: This is false.
+- Proprietary software never has zero-days :: This is false.
+- Licensing has no security impact :: Support and transparency do have an impact.
+q 3.2>w8-3 mcq m | Device placement | Where should a NIPS be placed to protect a server farm from internet traffic?
++ Inline between the internet edge and the servers :: It must be in the path to block.
+- On a disconnected laptop :: It would see nothing.
+- On a port that only receives a copy of traffic :: It could not block from there.
+- Inside a backup archive :: This is not a network location.
+q 3.2>w8-3 mcq m | Zero Trust architecture | Which is an example of application access control in a Zero Trust design?
++ Per-application access for a user :: Access is per application.
+- Allowing all devices on the VPN to reach everything :: This gives broad network trust.
+- Disabling device checks for managed laptops :: This removes useful signals.
+- Trusting anyone on the office Wi-Fi :: Location must not grant trust.
+q 3.2>w8-3 mcq h | Diversity | Which design best applies the principle of diversity to reduce shared failure?
++ Different vendors for edge and internal firewalls :: One flaw is less likely to affect both.
+- Two identical devices with identical software :: A flaw would affect both.
+- One administrator for all systems :: This concentrates risk.
+- A single, shared password :: This is a poor practice.
+q 3.2>w8-4 mcq m | Secure access | Administrators need to reach switches even when the production network is down. What should be used?
++ Out-of-band management :: It provides a separate path.
+- Split-tunnel VPN :: It relies on existing networks.
+- A wildcard certificate :: This does not provide a path.
+- Data masking :: This relates to data display.
+q 3.2>w8-4 mcq m | Failure modes | A web filter fails, and traffic continues without inspection. Which failure mode is this?
++ Fail-open :: It permits traffic when it fails.
+- Fail-closed :: This would block traffic.
+- Fail forward :: This is a change term.
+- Failover :: This moves to a standby.
+q 3.3>w9-1 mcq e | Data states | A file being edited in an application's memory is in which state?
++ In use :: It is being actively processed.
+- At rest :: It is not simply stored.
+- In transit :: It is not moving across a network.
+- Archived :: It is active.
+q 3.3>w9-1 mcq m | Data methods | A call centre should display only the last four digits of a card number. Which method applies?
++ Masking :: It hides part of the value.
+- Salting :: This applies to hashes.
+- Hashing :: This produces a digest.
+- Key escrow :: This stores keys.
+q 3.3>w9-2 mcq m | Data roles | A company engages a payment processor, which engages a cloud hosting firm for storage. What is the cloud hosting firm?
++ A data subprocessor :: It is engaged by a processor.
+- The data owner :: It does not own the data.
+- The data controller :: It does not set purposes.
+- The auditor :: It does not perform audits.
+q 3.3>w9-2 mcq m | Data handling | A policy says confidential documents must show a header stating their classification. What is this?
++ Marking and labeling :: It shows the classification on the data.
+- Geofencing :: This restricts by location.
+- Tokenization :: This replaces values.
+- Load balancing :: This distributes traffic.
+q 3.4>w9-3 mcq m | Redundancy | Which technology automatically adds servers during a traffic spike?
++ Autoscaling :: Capacity changes automatically.
+- A surge protector :: This handles voltage spikes.
+- A cold site :: This is a recovery location.
+- A CRL :: This is a certificate list.
+q 3.4>w9-3 mcq h | Recovery sites | A company needs recovery within an hour after a disaster and can justify a high cost. Which fits?
++ Hot site :: It is ready almost immediately.
+- Cold site :: This takes much longer.
+- Warm site :: This needs setup and current data.
+- Tape in an office drawer :: This does not provide infrastructure.
+q 3.4>w9-4 mcq m | Recovery metrics | Hourly backups mean that at most one hour of data can be lost. Which metric describes this?
++ RPO :: It measures acceptable data loss.
+- RTO :: This measures time to restore.
+- MTBF :: This measures reliability.
+- ARO :: This is an annual risk rate.
+q 3.4>w9-4 mcq m | Backups | Which testing proves that backups will work?
++ Restoration testing :: It proves that data can be recovered.
+- Counting the number of backup jobs :: This does not test recovery.
+- Checking only the job success flag :: A success flag can mislead.
+- Encrypting the backup :: This does not prove recoverability.
+q 4.1>w10-1 mcq m | Firewalls | Which device best protects a website from cross-site scripting?
++ WAF :: It inspects web application traffic.
+- NIDS only, on a mirror port :: It detects but does not block.
+- UPS :: This provides power.
+- Hub :: This repeats traffic.
+q 4.1>w10-1 mcq h | Firewall rules | Which ordered rules correctly allow only HTTPS from anywhere to the web server, and allow SSH only from 10.0.5.0/24?
+> 1 allow tcp any -> web 443
+> 2 allow tcp 10.0.5.0/24 -> web 22
+> 3 deny ip any -> web any
++ The rules are correct as listed :: Specific allows come first, and the deny catches the rest.
+- Rule 3 must come first :: This would block everything.
+- Rule 2 should allow any source :: This would expose SSH.
+- Rule 1 should use port 80 :: HTTPS uses 443.
+q 4.1>w10-1 mcq m | NAC | A visitor sees a web page requiring them to accept terms before Wi-Fi works. What is this?
++ Captive portal :: It intercepts until conditions are met.
+- Honeypot :: This is a decoy.
+- WIPS :: This detects wireless threats.
+- Runbook :: This is a procedure.
+q 4.1>w10-2 mcq m | Endpoint security | Which capability is most associated with EDR?
++ Behaviour recording and host isolation :: This is core to EDR.
+- Blocking SQL injection at a website edge :: This is a WAF role.
+- Signing email :: This is DKIM.
+- Issuing certificates :: This is a CA.
+q 4.1>w10-3 mcq m | Email security | Which mechanism adds a digital signature to outgoing mail?
++ DKIM :: It signs messages.
+- SPF :: This lists permitted servers.
+- BIMI :: This displays a logo.
+- NAC :: This controls network access.
+q 4.1>w10-3 mcq h | Deception | A fake database credential is placed in a config file. An alert fires when it is used. What is this?
++ Honeytoken :: It is bait data that signals misuse.
+- Honeypot :: This is a decoy system.
+- Hardcoded secret left in error :: This is deliberately planted, and alerts on use.
+- Key escrow :: This stores recovery keys.
+q 4.2>w10-4 mcq m | Asset management | Which stage would record that a laptop was issued to a specific employee?
++ Assignment/accounting :: It records ownership.
+- Planning/scoping :: This occurs before purchase.
+- Disposal/decommissioning :: This occurs at the end.
+- Acquisition/procurement :: This is the purchase stage.
+q 4.2>w10-4 mcq h | Sanitization | Hard drives with top-sensitivity data are being retired and will not be reused. Which outcome fits best?
++ Destroy :: Physical destruction fits the sensitivity and no reuse.
+- Clear :: This protects only against simple recovery.
+- Format the drive :: Formatting does not sanitize.
+- Delete the files :: Deletion does not sanitize.
+q 4.3>w11-1 mcq m | Vulnerability management | After patching, what should occur next?
++ Rescan to verify the fix :: Verification confirms the result.
+- Delete the scanner :: This removes capability.
+- Disable the firewall :: This creates risk.
+- Remove the finding without checking :: Unverified closure is unreliable.
+q 4.3>w11-1 mcq m | Identification | Which tool helps reveal unknown hosts by tracking address allocation?
++ IPAM :: It tracks address use.
+- OCSP :: This checks certificates.
+- DKIM :: This is email signing.
+- UPS :: This provides power.
+q 4.3>w11-1 mcq h | Penetration test report | A scan rates a flaw as medium, but a penetration test used it to take over a domain. What should happen?
++ Raise its priority :: Real impact outweighs a generic rating.
+- Ignore the test, as the score is medium :: This ignores evidence.
+- Close the finding :: The risk has been demonstrated.
+- Lower its priority :: This is the opposite of the evidence.
+q 4.4>w11-2 mcq e | SIEM | Which tool correlates events from many sources?
++ SIEM :: Correlation is its main function.
+- Surge protector :: This handles power.
+- Password manager :: This stores credentials.
+- Captive portal :: This handles guest access.
+q 4.4>w11-2 mcq m | Agentless | A monitoring tool reads logs remotely without installed software. What is this?
++ Agentless collection :: Nothing is installed.
+- Agent-based collection :: This requires installed software.
+- Air gap :: This is isolation.
+- Fail-closed :: This is a failure mode.
+q 4.4>w11-2 mcq m | SCAP | What is the role of SCAP?
++ Standardizing security data :: It enables tools to share information.
+- Transferring files :: This is SFTP or similar.
+- Encrypting email :: SCAP does not do this.
+- Allocating IP addresses :: This is DHCP.
+q 4.5>w11-3 mcq m | SSO | Staff sign in once and access the HR, email and expense systems. What is this?
++ Single sign-on :: One authentication serves many applications.
+- Key escrow :: This stores keys.
+- NAT :: This translates addresses.
+- A cold site :: This is a recovery location.
+q 4.5>w11-3 mcq h | OAuth | A photo app needs to read images from a user's cloud drive without seeing the user's password. What is the correct approach?
++ OAuth delegated access with limited scopes :: It grants limited access by token.
+- Asking the user to give the app their password :: This shares credentials unsafely.
+- Using LDAP over the internet :: This is a directory protocol.
+- Using SAML to encrypt the images :: SAML does not do this.
+q 4.5>w11-4 mcq m | Access models | Access to a production system is permitted only during a scheduled four-hour change. Which model applies?
++ Time-limited access :: Access is limited in time.
+- Discretionary :: This is decided by the owner.
+- Mandatory :: This is decided by labels.
+- Open access :: This is no control.
+q 4.5>w11-4 mcq m | Authentication factors | Which is an example of a soft token?
++ An authenticator app :: This is software-based.
+- A hardware key fob :: This is a hard token.
+- A fingerprint :: This is biometric.
+- A password :: This is knowledge.
+q 4.6>w12-1 mcq m | Automation | Which outcome is most directly served when servers are auto-corrected to an approved configuration?
++ Enforcing baselines :: Systems stay aligned to a standard.
+- Vendor lock-in :: This is a constraint.
+- Data sovereignty :: This concerns location.
+- Whaling :: This is an attack.
+q 4.6>w12-1 mcq h | Automation risk | A script will revoke access for all accounts inactive for 30 days. Which guardrail is best?
++ Exclusions and a per-run change cap :: This limits damage from errors.
+- Run it with no logging :: Logging is needed.
+- Grant it global admin rights with no review :: This increases risk.
+- Run it only on production without testing :: Testing should occur first.
+q 4.7>w12-2 mcq e | Incident response | Which stage includes developing playbooks and running tabletop exercises?
++ Preparation :: These occur before incidents.
+- Eradication :: This removes the cause.
+- Containment :: This limits spread.
+- Negotiation :: This relates to extortion.
+q 4.7>w12-2 mcq m | Containment | Ransomware is spreading through a file share. What is the best immediate action?
++ Isolate affected systems from the network :: This limits spread.
+- Reimage all systems without assessment :: This loses evidence.
+- Pay the ransom :: This is a business decision and does not stop spread.
+- Delete the logs :: This destroys evidence.
+q 4.8>w12-3 mcq m | Data sources | Which source best confirms how much data left the network to one address?
++ NetFlow records :: They show volumes between hosts.
+- BIMI records :: These relate to email logos.
+- An SLA :: This is a contract.
+- A CRL :: This relates to certificates.
+q 4.8>w12-4 mcq m | Evidence | Why calculate a hash of a disk image at collection?
++ To prove it is unchanged :: Hashes support integrity.
+- To encrypt it :: Hashing does not encrypt.
+- To compress it :: Hashing does not compress.
+- To remove malware :: Hashing does not remove anything.
+q 5.1>w13-1 mcq e | Governance | Which document states that employees may not install unapproved software?
++ Acceptable use policy :: It defines permitted behaviour.
+- Runbook :: This gives steps for a task.
+- CSR :: This requests a certificate.
+- SOW :: This defines project work.
+q 5.1>w13-1 mcq m | Standards versus guidelines | Which statement is most clearly a guideline?
++ Consider using a password manager :: It is advice.
+- Passwords must be at least 15 characters :: This is a requirement.
+- All servers must use the approved baseline :: This is a standard.
+- Restart the service by following these steps :: This is a procedure.
+q 5.2>w13-2 mcq m | ALE | A $20,000 asset has an exposure factor of 50% and an ARO of 2. What is the ALE?
++ $20,000 :: SLE is $10,000, and multiplied by 2 is $20,000.
+- $10,000 :: This is the SLE.
+- $40,000 :: This omits the exposure factor.
+- $5,000 :: This divides by the ARO.
+q 5.2>w13-2 mcq m | Risk treatment | A firm adds MFA to reduce the likelihood of account takeover. Which treatment is this?
++ Mitigating :: It reduces the risk.
+- Accepting :: Action was taken.
+- Transferring :: No other party took on the impact.
+- Avoiding :: The activity continues.
+q 5.2>w13-2 mcq h | Risk appetite | Leadership says it will accept moderate risk to enter a new market quickly, but none for safety systems. What does this express?
++ Risk appetite :: It is the risk leadership is willing to take.
+- Residual risk :: This is what remains after controls.
+- An SLE :: This is a loss figure.
+- A CRL :: This is a list of certificates.
+q 5.3>w13-3 mcq m | Vendor selection | A company wants pricing for a clearly defined quantity of a product. Which document fits?
++ RFQ :: It requests a quote.
+- RFI :: This gathers general information.
+- NDA :: This protects confidential information.
+- AUP :: This defines acceptable use.
+q 5.3>w13-3 mcq m | Agreements | Which term sets a specific measurable target, such as 99.9% uptime?
++ SLO :: It is the objective.
+- MOU :: This is a general intent.
+- EOI :: This signals interest.
+- BYOD :: This is a device policy.
+q 5.4>w13-4 mcq m | Privacy | A website lets users choose whether to receive marketing, with nothing selected by default. What is this?
++ Opt-in consent :: The user must choose to participate.
+- Legal hold :: This preserves data.
+- Sanctions :: These are penalties.
+- Sampling :: This is an audit technique.
+q 5.4>w13-4 mcq h | Legal hold | Which action is appropriate when litigation is reasonably expected?
++ Preserve relevant data :: This meets preservation duties.
+- Delete sensitive records quickly :: This could be spoliation.
+- Change every employee's role :: This is unrelated.
+- Remove all backups :: This could destroy evidence.
+q 5.5>w13-5 mcq m | Audits | An auditor reviews a selection of 25 access requests from a year's total. What is this?
++ Sampling :: A subset represents the whole.
+- Reconnaissance :: This is in penetration testing.
+- Tokenization :: This relates to data.
+- Fail forward :: This relates to changes.
+q 5.5>w13-5 mcq m | Penetration testing | Testers have limited credentials and some diagrams, but not the full design. Which environment type is this?
++ Partially known environment :: They have some information.
+- Known environment :: There they have full information.
+- Unknown environment :: There they have no information.
+- Air-gapped :: This describes a network.
+q 5.6>w13-6 mcq m | Awareness | Which measure best shows training changed behaviour?
++ More phishing reports from staff :: It tracks action.
+- Training completion alone :: It does not show change.
+- Number of printed posters :: This measures output.
+- The length of the course :: This measures content.
+q 5.6>w13-6 mcq m | Awareness topics | Which topic most directly addresses fraud using fake invoices or changed bank details?
++ Business email compromise :: This is its typical pattern.
+- Clean desk :: This relates to physical material.
+- Autoscaling :: This relates to capacity.
+- OCSP :: This relates to certificates.

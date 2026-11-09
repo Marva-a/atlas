@@ -1,0 +1,406 @@
+# Week 12: Domain 4.0, part 3.
+
+@lesson w12-1
+title: Automation and orchestration
+domain: Domain 4: Security Operations
+obj: 4.6
+level: Intermediate
+min: 120
+pre: w11-2
+out: Choose suitable tasks to automate.
+out: Identify automation risks and guardrails.
+out: Describe how AI and CI/CD fit into security operations.
+why: Analysts cannot manually keep up with alert volume. Automation improves speed and consistency, but a mistake in automation can spread instantly.
+plain: Automation is a dishwasher: it does one job the same way every time. Orchestration is the kitchen manager who coordinates the dishwasher, the oven and the staff so that a whole meal comes together.
+tech: Use cases of automation and scripting include user provisioning, resource provisioning, desired state management (continuously correcting systems back to a defined configuration), anomaly detection and ticket management. Scripts, often using APIs, carry out the steps.
+tech: Considerations include guardrails, which limit what automation can do; automation logic, which must handle errors correctly; process engineering, as a poor process merely becomes a fast poor process; complexity; financial cost; process risks, such as one flawed run deleting many accounts; and deployment, including how changes are tested and released.
+tech: AI capabilities in security operations include agentic systems, which can take multiple steps towards a goal; chatbots, which answer analyst or user questions; predictive analysis, which forecasts likely issues; and AI-augmented baselines, which learn what is normal. Agentic tools need strict limits and human approval for risky actions.
+tech: Intended outcomes are efficiency and time saving, enforcing baselines, continuous improvements, productivity improvements, reduced downtime and increased proactivity. In SecOps, continuous integration and continuous deployment (CI/CD) pipelines build security checks into software delivery. Workflows combine automation with integrations between tools. Security orchestration, automation and response (SOAR) platforms run playbooks that do this for incident work.
+term: User provisioning == Creating accounts automatically.
+term: Resource provisioning == Automatically creating infrastructure.
+term: Desired state management == Keeping systems matched to a defined configuration.
+term: Anomaly detection == Identifying departures from normal behaviour.
+term: Ticket management == Automatically creating and routing work items.
+term: Guardrails == Limits that keep automation safe.
+term: Automation logic == The rules and error handling in automation.
+term: Process engineering == Designing the process before automating it.
+term: Complexity == The difficulty of building and maintaining automation.
+term: Financial == The cost of automation.
+term: Process risks == Harm that could arise from an automated process.
+term: Deployment == Releasing changes into use.
+term: Agentic == AI that takes multiple steps toward a goal.
+term: Chatbot == AI that converses with users.
+term: Predictive analysis == Forecasting likely future events.
+term: AI-augmented baselines == AI-learned models of normal behaviour.
+term: Efficiency/time saving == Completing work faster.
+term: Enforcing baselines == Making sure systems follow standard settings.
+term: Continuous improvements == Repeatedly making a process better.
+term: Productivity improvements == Getting more done with the same people.
+term: Reduced downtime == Less time when a service is unavailable.
+term: Increased proactivity == Addressing issues before they cause harm.
+term: CI/CD == Continuous integration and continuous deployment.
+term: Workflows == Sequences of automated or manual steps.
+term: Automation == Using technology to perform a task without manual effort.
+term: Integrations == Connections between tools.
+term: Playbook == A documented set of response steps.
+eg: A new employee's HR record automatically creates accounts and group memberships, and a departure automatically removes them.
+eg: A faulty script disables all accounts that have not logged in within a day. A guardrail limiting changes to 10 at a time would have contained it.
+walk: Design a safe automation
+- Choose a repeatable, well-understood task.
+- Write down the process and its edge cases.
+- Add guardrails such as limits, approvals and logs.
+- Test on a sample, and include a way to stop it.
+- Deploy under change management and measure the outcome.
+lab: Write a safe script | 40 | bash in your lab VM
+do: Create a text file that lists three fictional usernames.
+do: Write a bash loop that prints what it would do for each one, without doing it. That is a dry run.
+do: Add a guardrail so the script exits if the list holds more than five names.
+do: Test it by adding a sixth name, and write a one-line log entry for each run.
+expect: The script reports intended actions, and refuses an oversized list.
+explain: Dry runs and limits are basic guardrails that prevent small mistakes from growing into outages.
+pass: Your script has a dry-run mode.
+pass: Your limit guardrail stopped an oversized list.
+scenario: A SOAR playbook automatically isolates any host with a medium alert, and a false positive isolates a critical production server. What should change?
+answer: Add guardrails: exclude or require approval for critical assets, and raise the confidence needed for automatic action. Automation should scale decisions only where they are safe.
+q 4.6 mcq e | Automation | Which is a good candidate for automation?
++ Creating standard accounts for new hires :: It is repeatable and well defined.
+- Deciding company risk appetite :: This needs human judgment.
+- A one-off unusual legal decision :: This requires judgment.
+- Negotiating a vendor contract :: This requires people.
+q 4.6 mcq m | Guardrails | What is the purpose of guardrails?
++ To limit what automation can do and contain errors :: They reduce process risk.
+- To increase alert volume :: They are not for that.
+- To remove all logs :: This is harmful.
+- To disable approvals :: Approvals are one form of guardrail.
+q 4.6 mcq m | Desired state | A tool notices a server's setting changed, and restores it to the approved value. What is this?
++ Desired state management :: The system is continuously returned to the defined configuration.
+- Key escrow :: This stores keys.
+- Evasion :: This is an AI attack.
+- Fail forward :: This is a change management approach.
+q 4.6 mcq h | Agentic AI | Which control is most important when an agentic AI can modify firewall rules?
++ Human approval and least privilege for changes :: Autonomy needs limits.
+- Giving it a global administrator account :: This increases risk.
+- Disabling logging for speed :: Logging is needed for oversight.
+- Letting it approve its own changes :: This removes oversight.
+q 4.6 match m | Automation outcomes | Match each result to its intended outcome.
+= Settings always match the standard => Enforcing baselines
+= Fewer outages because repairs start automatically => Reduced downtime
+= Risks are addressed before they cause harm => Increased proactivity
+= Analysts spend less time on repetitive tasks => Efficiency/time saving
+why: Automation should be tied to a measurable result.
+mistake: Automating a broken process.
+mistake: Letting automation act on low-confidence signals against critical systems.
+sum: Automate repeatable work.
+sum: Use guardrails, testing and logging.
+sum: Keep humans responsible for risky decisions.
+ref: comptia-objectives r
+ref: owasp-cicd r
+ref: nist-800-218 s
+ref: nist-ai-rmf s
+ref: slsa s
+card: What is desired state management? == Continuously bringing systems back to a defined configuration.
+card: What is the difference between automation and orchestration? == Automation does one task, and orchestration coordinates many tasks and tools.
+
+@lesson w12-2
+title: Incident response
+domain: Domain 4: Security Operations
+obj: 4.7
+level: Intermediate
+min: 120
+pre: w12-1
+out: Follow the incident response stages in order.
+out: Handle evidence with chain of custody.
+out: Decide who must be notified.
+why: Every organization will have incidents. A rehearsed response limits damage, and mistakes made in panic can destroy evidence or make things worse.
+plain: Responding to an incident is like responding to a fire. You prepare with drills and extinguishers, then detect the fire, work out what is burning, contain it, put it out, repair the damage and review what happened so it does not recur.
+tech: Preparation includes training, testing, tabletop exercises (discussion-based walkthroughs), playbooks, simulation (practice using realistic scenarios) and assigning roles. Identification includes detection through alerts, internal advisory and external advisory sources and proactive threat hunting, which searches for attackers who have evaded detection.
+tech: Investigation includes digital forensics, chain of custody (documenting who handled evidence and when), e-discovery (identifying and producing electronic information for legal purposes) and preservation of evidence. Containment limits spread, for example quarantine/isolation of a host. Negotiation may involve a specialist negotiator in extortion events, working with legal counsel and considering sanctions and law enforcement guidance.
+tech: Eradication/recovery removes the cause and restores service. Notification/external reporting covers stakeholders, customers, law enforcement and mandatory reporting to regulators, sometimes within strict time limits. Post-incident work includes lessons learned, root cause analysis and post-incident reporting (PIR).
+tech: NIST SP 800-61 Revision 3 now aligns incident response with the Cybersecurity Framework 2.0 functions instead of a separate four-phase cycle. Follow the stage names in CompTIA's objectives for the exam, and know that real organizations may use other models.
+diagram: incident-response
+table: Incident response stages | Stage | What happens | Example
+| Preparation | Build plans, train and rehearse | Tabletop exercise
+| Identification | Detect and confirm an incident | Alert validated
+| Investigation | Determine scope and preserve evidence | Disk image with chain of custody
+| Containment | Limit the spread | Isolate a host
+| Eradication/recovery | Remove the cause and restore | Rebuild from clean backups
+| Notification/external reporting | Tell those who must be told | Regulator notified
+| Post-incident | Learn and improve | Root cause analysis and report
+term: Preparation == Getting ready before an incident occurs.
+term: Training == Teaching staff their responsibilities.
+term: Testing == Checking that plans work.
+term: Tabletop exercises == Discussion-based incident walkthroughs.
+term: Playbooks == Documented steps for a type of incident.
+term: Simulation == Practising with a realistic scenario.
+term: Roles == Defined incident responsibilities.
+term: Identification == Recognizing that an incident is occurring.
+term: Detection == Finding signs of an incident.
+term: Internal advisory == Warnings produced within the organization.
+term: External advisory == Warnings from outside sources.
+term: Threat hunting == Proactively searching for undetected attackers.
+term: Investigation == Determining what happened.
+term: Digital forensics == Collecting and analyzing digital evidence.
+term: Chain of custody == A record of who handled evidence and when.
+term: E-discovery == Finding and producing electronic information for legal purposes.
+term: Preservation == Protecting evidence from being altered.
+term: Containment == Limiting the spread of an incident.
+term: Quarantine/isolation == Separating an affected system.
+term: Negotiation == Communicating with an attacker, usually in extortion.
+term: Eradication/recovery == Removing the cause and restoring services.
+term: Notification/external reporting == Telling required parties outside the team.
+term: Stakeholders == Those affected by, or responsible for, an incident.
+term: Customers == People whose data or service was affected.
+term: Law enforcement == Police or national agencies.
+term: Mandatory == Legally required reporting.
+term: Post-incident == Activities after recovery.
+term: Lessons learned == Reviewing what worked and what to change.
+term: Root cause analysis == Determining the underlying cause.
+term: PIR == Post-incident reporting: a written summary of the incident.
+eg: A tabletop exercise shows that nobody knows who can authorize taking the payment system offline. That is cheaper to learn before an incident.
+eg: An investigator seals a laptop, records the time and signs a chain of custody form when handing it to the forensics team.
+walk: First hour of a ransomware alert
+- Confirm the alert and declare an incident according to the plan.
+- Assemble the response team and open a timeline.
+- Isolate affected hosts while preserving evidence.
+- Identify the scope and the initial vector.
+- Begin notification decisions with legal and leadership.
+lab: Run a tabletop and build a timeline | 40 | A CISA tabletop package; worksheet
+do: Open CISA's tabletop exercise packages and read one ransomware scenario.
+do: Answer: who declares an incident, who talks to customers and who decides about isolation?
+do: Write a six-entry incident timeline using timestamps.
+do: Complete the incident response ordering exercise in Atlas.
+expect: A list of named roles and an ordered timeline.
+explain: Rehearsal exposes unclear responsibilities before real pressure does.
+pass: You answered all three role questions.
+pass: Your timeline is in time order and includes containment.
+scenario: An analyst finds malware on a laptop and immediately wipes and reinstalls it. Which incident response problems does this cause?
+answer: It destroys evidence before investigation, so scope and root cause may never be known and any legal use is lost. The host should have been isolated and evidence preserved first.
+q 4.7 order m | Incident response | Put these stages in the order given in the exam objectives.
+1. Preparation
+2. Identification
+3. Investigation
+4. Containment
+5. Eradication/recovery
+6. Post-incident
+why: Each stage relies on knowledge gained in earlier stages, and post-incident work feeds preparation.
+q 4.7 mcq e | Chain of custody | What does chain of custody document?
++ Who handled evidence and when :: This helps show it was not tampered with.
+- Which firewall rules were applied :: This is configuration documentation.
+- Which certificates were revoked :: This is PKI.
+- Which staff took training :: This is a training record.
+q 4.7 mcq m | Containment | A compromised host is spreading malware. What is the priority action?
++ Isolate the host from the network :: This limits spread while preserving evidence.
+- Wipe it immediately :: This destroys evidence.
+- Ignore it until the weekly meeting :: This allows further spread.
+- Post the incident on social media :: This is not appropriate.
+q 4.7 mcq m | Threat hunting | Analysts proactively search for signs of an attacker that alerts have not flagged. What is this?
++ Threat hunting :: It is proactive and hypothesis-driven.
+- Tabletop exercise :: This is discussion-based practice.
+- Fail forward :: This is a change approach.
+- Tokenization :: This is a data method.
+q 4.7 mcq h | Mandatory reporting | A breach affects personal data covered by a regulation with a notification deadline. Who should drive that decision?
++ Legal and compliance staff, with leadership, following the incident plan :: Legal obligations need qualified judgment.
+- The most junior analyst alone :: This is not appropriate.
+- The attacker :: This is absurd.
+- Nobody, if the data is backed up :: Backups do not remove notification duties.
+q 4.7 mcq m | Lessons learned | When should a lessons learned review take place?
++ After the incident has been resolved :: It belongs in post-incident activity.
+- Only before an incident begins :: Nothing has occurred yet.
+- Only if a regulator demands it :: It should be routine.
+- Never, so as to keep incidents quiet :: This wastes the chance to improve.
+mistake: Wiping a machine before collecting evidence.
+mistake: Skipping lessons learned once things are running again.
+sum: Prepare, identify, investigate, contain, eradicate and recover, then learn.
+sum: Preserve evidence and document handling.
+sum: Notification can be legally required.
+ref: comptia-objectives r
+ref: nist-800-61r3 r
+ref: cisa-ctep r
+ref: nist-800-86 s
+ref: cisa-ransomware s
+card: What is a tabletop exercise? == A discussion-based walkthrough of an incident scenario.
+card: What does chain of custody prove? == Who handled evidence and when, which supports its integrity.
+also: 37 | Detection and incident response in plain words
+
+@lesson w12-3
+title: Data sources for investigations
+domain: Domain 4: Security Operations
+obj: 4.8
+level: Intermediate
+min: 120
+pre: w12-2
+out: Identify which log types answer which questions.
+out: Choose suitable data sources for an investigation.
+out: Interpret key fields in logs.
+why: In an investigation, the right data answers the question quickly. Knowing where to look is frequently what separates a two-hour triage from a two-week one.
+plain: Investigating an incident is like reconstructing a day using receipts, door badge records and security footage. Each source shows part of the picture. Combined, they tell the story.
+tech: Log and trace data types include access and accounting logs, which are either logical (sign-ins to systems) or physical (door badges); device logs from network equipment; server logs; application logs; authentication logs; communication logs such as email or chat records; audit logs of administrative action; endpoint logs; network logs; and metadata, data about data, such as file timestamps or email headers.
+tech: Data sources include vulnerability scans, which show what was exploitable; automated reports; NetFlow and Internet Protocol Flow Information Export (IPFIX), which summarize flows; surveillance footage; security tools such as EDR; dashboards; and packet captures, which contain full traffic content.
+table: Which source answers what | Question | Best source
+| Who signed in and from where? | Authentication logs
+| Who entered the building? | Physical access logs and surveillance footage
+| How much data left, and where to? | NetFlow or IPFIX
+| What exactly was sent? | Packet captures
+| What did a process do on a host? | Endpoint logs or EDR
+| Who changed the configuration? | Audit logs
+| When was this email sent and from where? | Metadata in the email headers
+term: Access and accounting == Logs of who accessed what.
+term: Logical == Access to systems and data.
+term: Physical == Access to places.
+term: Device == Logs from equipment such as routers.
+term: Server == Logs from servers.
+term: Application == Logs produced by software.
+term: Authentication == Logs of sign-in attempts.
+term: Communication == Records of email and messaging.
+term: Audit == Records of administrative actions.
+term: Endpoint == Logs from user devices.
+term: Network == Logs of network activity.
+term: Metadata == Data that describes other data.
+term: Vulnerability scans == Scan results showing weaknesses at a point in time.
+term: Automated reports == Scheduled summaries from tools.
+term: NetFlow/IPFIX == Flow records summarizing network conversations.
+term: Surveillance footage == Video recordings of a physical area.
+term: Security tools == Products such as EDR that record activity.
+term: Dashboards == Visual summaries of monitoring data.
+term: Packet captures == Recordings of actual network traffic.
+eg: A badge record shows someone entered the office after hours, and a matching logical login confirms which workstation was used.
+eg: Email header metadata shows the true sending server, despite the displayed sender name.
+walk: Choose the data to investigate data theft
+- Authentication logs show which account was used.
+- Endpoint logs show which files were opened or compressed.
+- Flow data shows how much went to which external host.
+- Packet captures, if available, show content.
+- Correlate timestamps to form the sequence.
+lab: Read packets and flows | 40 | Wireshark and a sample capture from the Wireshark wiki
+do: Download a small HTTP sample capture from the Wireshark SampleCaptures page. Open it only in your lab VM.
+do: Use Statistics, then Conversations, to view who talked to whom and how much.
+do: Filter using http.request and write down the requested paths.
+do: Use Follow, then TCP Stream, on one conversation.
+expect: A list of hosts, volumes and the requested URLs.
+explain: The conversations view resembles flow data, while following a stream shows the content that only a packet capture can provide.
+pass: You recorded top conversations and two requested paths.
+pass: You can state what flow data would not have shown.
+scenario: An investigator needs to prove which employee physically accessed a server room overnight. Which data sources are most directly relevant?
+answer: Physical access logs from badge readers, along with surveillance footage. Logical logs could show activity on systems but not who was in the room.
+q 4.8 mcq e | Data sources | Which source shows actual packet contents?
++ Packet capture :: It records actual traffic.
+- NetFlow :: It records metadata only.
+- A dashboard :: It displays summaries.
+- A vulnerability scan :: It reports weaknesses.
+q 4.8 mcq m | Metadata | Which is an example of metadata?
++ An email header's sending server and timestamps :: It describes the message.
+- The paragraph text of the email :: That is the content.
+- A person's memory of the email :: That is testimony.
+- The company's firewall vendor :: That is unrelated.
+q 4.8 match m | Log types | Match each question to the best source.
+= Who approved a firewall change? => Audit logs
+= Who used a door badge at midnight? => Physical access logs
+= How much data went to an external address? => NetFlow
+= What did a running process do? => Endpoint logs
+why: Each type records a different part of the story.
+q 4.8 mcq m | Log analysis | What is the most likely concern in this entry?
+> 2026-10-02 03:14:22 SUCCESS login user=svc_backup src=198.51.100.23
+> 2026-10-02 03:14:25 file_read user=svc_backup path=/hr/payroll.xlsx
++ A service account signed in from outside and accessed a payroll file :: The behaviour does not fit a backup account.
+- A normal backup, because the name contains backup :: Names can be misleading.
+- A hardware failure :: Nothing indicates a fault.
+- An expired certificate :: Nothing indicates this.
+mistake: Relying on a single source.
+mistake: Forgetting physical logs in technical investigations.
+sum: Each log type answers particular questions.
+sum: Flow data shows volume, and packets show content.
+sum: Correlate sources by time.
+ref: comptia-objectives r
+ref: nist-800-92 r
+ref: nist-800-86 s
+ref: wireshark-samples r
+ref: owasp-logging s
+card: What does a physical access log show? == Who entered which location and when.
+card: What is metadata? == Data that describes other data, such as timestamps or email headers.
+
+@lesson w12-4
+title: Evidence handling and hands-on log investigation
+domain: Domain 4: Security Operations
+obj: 4.8
+level: Advanced
+min: 120
+pre: w12-3
+out: Preserve evidence with hashes and images.
+out: Use log-parsing techniques to extract a timeline.
+out: Involve the right stakeholders.
+why: A good investigation needs both technical skill and care. Evidence that was changed can't be trusted, and a finding that isn't communicated to the right people can't be acted on.
+plain: A forensic copy is like a photograph of a crime scene taken before anyone moves anything. Investigators work from the copy, so the original stays untouched.
+tech: File and log integrity is confirmed by hashing a copy and comparing later. System images include a memory dump, which captures RAM; a bit-level copy, which duplicates every bit of a drive, including deleted space; and a snapshot, which captures the state of a VM. The order of volatility means collecting the most volatile sources, such as memory, before less volatile ones, such as disks.
+tech: Stakeholders include Human Resources (HR) for employee matters, accounts (finance) for financial losses and billing fraud, and legal for evidence, privacy and notification issues. Log-parsing techniques include filtering with grep, extracting fields with cut or awk, counting with sort and uniq, and using regular expressions, as well as queries in a SIEM.
+term: File/log integrity == Assurance that files or logs were not altered.
+term: System image == A copy of a system's state.
+term: Memory dump == A capture of RAM contents.
+term: Bit-level copy == An exact copy of every bit on a drive.
+term: Snapshot == A captured state of a virtual machine.
+term: Order of volatility == Collecting the most short-lived evidence first.
+term: HR == Human Resources, involved in employee matters.
+term: Accounts == The finance team, involved in monetary issues.
+term: Legal == Counsel involved in evidence and obligations.
+term: Log-parsing techniques == Methods for extracting meaning from logs.
+term: Regular expression == A pattern for matching text.
+eg: An investigator hashes a disk image at collection and again before analysis. Matching values show the copy is unchanged.
+eg: A suspected insider case needs HR and legal involved early, to keep the investigation fair and lawful.
+walk: Build a timeline from logs
+- Extract only relevant lines using grep.
+- Pull out the timestamp, user and source fields.
+- Sort them by time.
+- Merge lines from different systems, adjusting for time zones.
+- Mark the first suspicious event and each later step.
+lab: Investigate a suspicious connection | 45 | grep, sort and uniq in your lab VM
+do: Create auth.log containing these invented lines, adding your own: Oct 2 03:01 FAILED bob 198.51.100.7; Oct 2 03:02 FAILED amy 198.51.100.7; Oct 2 03:03 FAILED raj 198.51.100.7; Oct 2 03:04 OK raj 198.51.100.7; Oct 2 08:30 OK amy 10.0.4.15.
+do: Run grep FAILED auth.log | awk '{print $NF}' | sort | uniq -c to count failures by source.
+do: Run sha256sum auth.log and save the hash. Copy the file, and verify the copy has the same hash.
+do: Write a timeline and a one-paragraph incident summary.
+do: Complete the log-analysis exercise under Performance-based practice in Atlas.
+expect: The counts show one source hitting several accounts, followed by a success for raj. The hashes of original and copy match.
+explain: One source failing against many accounts and then succeeding is the signature of a spraying attack that worked.
+pass: Your hashes matched.
+pass: Your summary identifies the attack, the affected account and the next action.
+scenario: A responder must collect evidence from a running compromised server. Should memory or disk be collected first, and why?
+answer: Memory first, as it is the most volatile, and is lost at shutdown. Then collect a bit-level disk copy, and hash each item.
+q 4.8 mcq e | Memory dump | Which capture records the contents of RAM?
++ Memory dump :: It records volatile memory.
+- Bit-level copy of a disk :: This copies storage.
+- NetFlow export :: This records flows.
+- A backup tape :: This is storage.
+q 4.8 mcq m | File integrity | How can an investigator show that a forensic copy has not changed?
++ Compare cryptographic hashes taken at different times :: Matching hashes indicate that the data has not changed.
+- Compare file names :: Names can match while content differs.
+- Check the screen resolution :: This is unrelated.
+- Ask the suspect :: This is not evidence of integrity.
+q 4.8 mcq m | Log parsing | Which command counts repeated lines after sorting?
++ uniq -c :: It prefixes each unique line with its count.
+- chmod 600 :: This changes permissions.
+- ping -c 4 :: This tests reachability.
+- ssh-keygen :: This creates keys.
+q 4.8 mcq h | Log analysis | Which conclusion fits this log best?
+> 03:01 FAILED bob from 198.51.100.7
+> 03:02 FAILED amy from 198.51.100.7
+> 03:03 FAILED raj from 198.51.100.7
+> 03:04 SUCCESS raj from 198.51.100.7
++ Password spraying from one address that succeeded against raj :: One source failing across accounts, then succeeding, fits the pattern.
+- A failed backup job :: Nothing points to backups.
+- DNS cache poisoning :: This is a name resolution attack.
+- Certificate revocation :: This is unrelated.
+q 4.8 multi m | Stakeholders | An employee is suspected of misusing payroll access. Which stakeholders should be involved? Choose two.
++ HR :: The matter concerns an employee.
++ Legal :: Evidence and rights must be handled properly.
+- The attacker's internet provider first :: That is not the immediate priority.
+- All staff through an announcement :: This risks fairness and the investigation.
+mistake: Analyzing the original evidence directly.
+mistake: Forgetting time zones when merging logs.
+sum: Collect the most volatile evidence first.
+sum: Hash images to prove integrity.
+sum: Parse logs into a timeline.
+ref: comptia-objectives r
+ref: nist-800-86 r
+ref: man-grep s
+ref: nist-800-92 s
+card: In what order do you collect memory and disk? == Memory first, because it is more volatile.
+card: What is a bit-level copy? == An exact copy of every bit on a drive, including deleted space.
+also: 38 | Exercise 13: find the odd connection in flow logs

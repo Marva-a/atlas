@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logs, flow logs, alerts and the people who read them · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Logs, flow logs, alerts and the people who read them</h1>
+<p class="eyebrow">Day 36 · Week 6 · Intermediate · about 120 min</p>
+<p>Logs are the records of what happened; flow logs record connections, audit logs record changes, and alerts are the few events that need a person’s attention now.</p>
+<p><strong>By the end, you can:</strong> Distinguish event logs, audit records and flow logs, and identify which role in an organization reads each.</p>
+<h2>Why it matters to a designer</h2>
+<p>Security teams spend their days in logs and alert queues, and most products show these badly: too much noise, too little context. Designing for them is a big opportunity, and it builds directly on the flow you saw in Exercise 12.</p>
+<h2>Key ideas</h2>
+<ul><li>From Week 1 you know “accounting”: recording what happened. Logs are that record at scale.</li><li>A flow log records a connection: who talked to whom, when, on which port, and whether it was allowed. It does not record the content of the conversation.</li><li>An audit log records changes: who changed which setting, rule or user, and when. Example: “Alex changed the policy file at 14:02”.</li><li>Identity events worth watching: many failed sign-ins, a sign-in from a new country, MFA turned off, a new admin created, and access granted to sensitive systems.</li><li>A security operations team (SOC) watches alerts and investigates. Analysts get hundreds of alerts a day, and most are false alarms.</li><li>Alert fatigue: when there are too many alerts, people stop trusting them and miss the real one. Every alert should be actionable, rare enough to matter and clear about what to do.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>log</strong></td><td>A record of events, written by a system as they happen.</td></tr><tr><td><strong>flow log</strong></td><td>A record of network connections: source, destination, port, time and allowed or denied.</td></tr><tr><td><strong>audit log</strong></td><td>A record of who changed what, and when.</td></tr><tr><td><strong>alert</strong></td><td>An event that a system decides needs a person’s attention.</td></tr><tr><td><strong>SOC</strong></td><td>Security operations centre: the team that watches for and responds to threats.</td></tr><tr><td><strong>false positive</strong></td><td>An alert about something that is actually harmless.</td></tr><tr><td><strong>alert fatigue</strong></td><td>Missing important alerts because there are too many.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read what Tailscale flow logs contain. &mdash; <a href="https://tailscale.com/kb/1219/network-flow-logs">Network flow logs</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read about configuration audit logging and compare it with flow logs. &mdash; <a href="https://tailscale.com/kb/1203/audit-logging">Configuration audit logging</a> (Tailscale Docs)</p><span class="step__min">10 min</span></div><div class="step"><p>Read about viewing Calico flow logs. &mdash; <a href="https://docs.tigera.io/calico/latest/observability/view-flow-logs">View flow logs</a> (Calico Documentation)</p><span class="step__min">15 min</span></div><div class="step"><p>Read what VPC flow logs record and what they do not. &mdash; <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html">Logging IP traffic using VPC Flow Logs</a> (AWS)</p><span class="step__min">15 min</span></div><div class="step"><p>Read about alert fatigue and list its causes. &mdash; <a href="https://www.pagerduty.com/resources/digital-operations/learn/alert-fatigue/">Alert Fatigue and How to Prevent it</a> (PagerDuty)</p><span class="step__min">10 min</span></div><div class="step"><p>Write five identity or network events and decide for each: log only, show on a dashboard, or alert someone now. Explain why.</p><span class="step__min">35 min</span></div><div class="step"><p>Add the new words to your glossary.</p><span class="step__min">25 min</span></div>
+<h2>Skip or skim</h2><p>Skip SIEM products and query languages. Understand what each kind of log says and who reads it.</p>
+<h2>Check yourself</h2><ul><li>What is the difference between a flow log and an audit log?</li><li>Name four identity events worth alerting on.</li><li>What makes an alert good?</li></ul>
+<h2>What a good answer looks like</h2><ul><li>A flow log records connections (who talked to whom and whether it was allowed). An audit log records changes to the system (who changed which setting and when).</li><li>For example: many failed sign-ins for one account, a sign-in from an unusual place, MFA being turned off, a new admin being created, or access granted to a sensitive system.</li><li>It is actionable, rare enough to be trusted, and clear: what happened, why it matters, and what to do next, with the context needed to decide.</li></ul>
+<p><a href="../../index.html#lesson/36">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

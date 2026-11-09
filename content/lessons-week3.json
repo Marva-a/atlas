@@ -1,0 +1,516 @@
+{
+ "schema": "identity-lab-coach.lessons.v1",
+ "createdOn": "2026-11-04",
+ "note": "Week 3 lessons: zero trust and identity-based access. Each lesson has a level (basics, intermediate or advanced) so the climb is visible.",
+ "lessons": [
+  {
+   "id": "w3-d15",
+   "week": 3,
+   "day": 15,
+   "date": "2026-11-16",
+   "title": "Zero trust in plain words: check every request",
+   "level": "basics",
+   "inOneSentence": "Zero trust means no one is trusted just because they are “inside” the network: every request is checked for who is asking, from which device, and for what.",
+   "youCanNow": "Explain why zero trust checks identity, device and resource on every request, and describe the policy decision function and the policy enforcement point without treating a vendor's control/data plane as identical to NIST's model.",
+   "whyItMattersToADesigner": "Every company in this course, Tailscale, Cloudflare, Tigera, sells a version of zero trust. If you can explain it in one plain sentence and know what it changes for admins and employees, you can talk to customers, engineers and interviewers in their language.",
+   "keyIdeas": [
+    "You already know (Week 2) that a classic VPN is one front door into the whole office network. Zero trust removes the idea of “inside is safe”.",
+    "Everyday picture: an old office checks your badge at the front door, then lets you into every room. A zero-trust office checks your badge at every door, and also checks you are wearing a visitor sticker if you are a visitor.",
+    "Three things are checked on every request: the identity (who), the device (is it a company laptop, is it up to date), and the resource (what are you trying to reach).",
+    "NIST splits the decision into a policy engine plus a policy administrator (together, the decision function) and a separate policy enforcement point, which lets traffic through or blocks it at the resource. In Tailscale, the coordination server plays the decision role and each device enforces — read that as resembling NIST’s model, not as an exact match to it.",
+    "ZTNA (zero-trust network access) gives access to one app or service, not the whole network. That limits the damage when one account is stolen.",
+    "Google’s BeyondCorp was an early real example: Google employees work from any network, and access depends on the user and device, not on being in the office.",
+    "For design, zero trust creates new moments: “Why am I blocked?”, “What do I need to fix on my device?”, and for admins, “Who can reach what right now?”"
+   ],
+   "words": [
+    {
+     "term": "zero trust",
+     "meaning": "A security approach where no request is trusted by default; each one is checked."
+    },
+    {
+     "term": "ZTNA",
+     "meaning": "Zero-trust network access: access to specific apps or services, decided per request."
+    },
+    {
+     "term": "policy decision point (PDP)",
+     "meaning": "The part that decides whether a request is allowed."
+    },
+    {
+     "term": "policy enforcement point (PEP)",
+     "meaning": "The part that lets traffic through or blocks it, following the decision."
+    },
+    {
+     "term": "device posture",
+     "meaning": "Facts about a device, such as its operating system version or whether disk encryption is on."
+    },
+    {
+     "term": "BeyondCorp",
+     "meaning": "Google’s zero-trust model, where access depends on user and device, not network location."
+    },
+    {
+     "term": "perimeter",
+     "meaning": "The old idea of a protected “inside” network with a wall around it."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read Tailscale’s short definition of zero trust networking.",
+     "minutes": 10,
+     "resourceId": "c5-ts-zt"
+    },
+    {
+     "text": "Read Microsoft’s zero trust overview: verify explicitly, least privilege, assume breach.",
+     "minutes": 20,
+     "resourceId": "w5-ms-zt"
+    },
+    {
+     "text": "Read the BeyondCorp paper’s introduction and first section only.",
+     "minutes": 20,
+     "resourceId": "w5-beyondcorp"
+    },
+    {
+     "text": "Skim NIST SP 800-207’s summary and find the diagram of the policy decision and enforcement points.",
+     "minutes": 20,
+     "resourceId": "w5-nist207"
+    },
+    {
+     "text": "Draw two pictures of the same company: one with a VPN, one with zero trust. Show what a stolen laptop could reach in each.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Write a one-sentence explanation of zero trust for an employee, and another for a CISO.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the maturity models and the long NIST implementation guide (SP 1800-35). They are references for later, not for today.",
+   "checkYourself": [
+    "Explain zero trust with the office-badge example.",
+    "What three things are checked on every request?",
+    "Why does ZTNA limit the damage of a stolen account more than a VPN?"
+   ],
+   "lookFor": [
+    "An old office checks your badge once at the front door and then trusts you everywhere. A zero-trust office checks your badge at every door, so being inside the building does not give you access to every room.",
+    "Who is asking (identity), from what (the device and its state) and for what (the resource or app). Some systems also look at context such as time or location.",
+    "A VPN usually puts you on the whole network, so a stolen account can reach many systems. ZTNA grants access only to the specific apps that account is allowed, so the attacker reaches far less."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w3-d16",
+   "week": 3,
+   "day": 16,
+   "date": "2026-11-17",
+   "title": "Access policies: groups, tags, ACLs and grants",
+   "level": "intermediate",
+   "inOneSentence": "An access policy is a set of rules that says which people and devices may reach which services; good policies are written for groups and roles, not for individuals.",
+   "youCanNow": "Write an access rule using source, destination and permission, explain the difference between ACLs and grants, and state that default-deny or default-allow behaviour depends on the specific policy engine's rules.",
+   "whyItMattersToADesigner": "Writing access rules is the daily job of the admins you design for, and it is where the worst mistakes happen: a rule that is too open, or one that locks out the whole sales team. Case study 1 is about exactly this problem, so today you learn the vocabulary of rules.",
+   "keyIdeas": [
+    "From Week 1 you know roles and groups in Keycloak. Network access policies use the same ideas for devices and services.",
+    "A rule has a source (who), a destination (what), and what is allowed (for example a port, or “can use SSH”). Example: “group:design may reach tag:figma-proxy on port 443”.",
+    "Tags label machines by purpose instead of by owner. Example: tag:database or tag:prod. Rules about tags keep working when a new database is added.",
+    "In Tailscale, older rules are called ACLs and the newer form is grants. Both say who may reach what; grants can also carry application permissions.",
+    "Default deny: in Tailscale, ACLs are deny-by-default once you have a policy — if no rule allows something, it is blocked. But a policy file with no ACL section at all currently defaults to allowing everything, so “default deny” is a property of how a specific policy engine is configured, not a universal law every access-control product follows.",
+    "RBAC (role-based access control) gives access by role: “engineers may reach staging”. ABAC (attribute-based) uses facts: “engineers on a managed laptop during an incident”. ReBAC (relationship-based) uses links: “the owner of this document may share it”.",
+    "Where RBAC breaks: real companies need exceptions, so roles multiply (“engineer-staging-read-only-contractor”) until nobody understands them. This is called role explosion, and it is a design problem as much as a technical one."
+   ],
+   "words": [
+    {
+     "term": "access policy",
+     "meaning": "A set of rules deciding who may reach what."
+    },
+    {
+     "term": "ACL",
+     "meaning": "Access control list: rules that list who may access which resources."
+    },
+    {
+     "term": "grant",
+     "meaning": "In Tailscale, the newer rule form that gives a source access to a destination, optionally with app permissions."
+    },
+    {
+     "term": "tag",
+     "meaning": "A label for a machine by purpose, such as tag:prod, used in rules."
+    },
+    {
+     "term": "default deny",
+     "meaning": "Everything is blocked unless a rule allows it."
+    },
+    {
+     "term": "RBAC",
+     "meaning": "Role-based access control: access based on a person’s role."
+    },
+    {
+     "term": "ABAC",
+     "meaning": "Attribute-based access control: access based on facts about the person, device or request."
+    },
+    {
+     "term": "ReBAC",
+     "meaning": "Relationship-based access control: access based on relationships, such as owner or member."
+    },
+    {
+     "term": "role explosion",
+     "meaning": "When a company creates so many special roles that nobody can understand them."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read Tailscale’s ACL page up to the first full example.",
+     "minutes": 20,
+     "resourceId": "w5-ts-acls"
+    },
+    {
+     "text": "Read about grants and compare one grant with the same rule written as an ACL.",
+     "minutes": 20,
+     "resourceId": "c5-ts-grants"
+    },
+    {
+     "text": "Read the access control chapter of the IDPro Body of Knowledge index and pick the RBAC and ABAC articles.",
+     "minutes": 25,
+     "resourceId": "w3-idpro"
+    },
+    {
+     "text": "Look at two example Cedar policies to see how another language writes the same ideas.",
+     "minutes": 15,
+     "resourceId": "w3-cedar"
+    },
+    {
+     "text": "Translate three plain-language rules for a fictional company into Tailscale-style rules on paper: “designers can reach the design server”, “only on-call engineers can reach production”, “contractors can reach nothing but the wiki”.",
+     "minutes": 30,
+     "resourceId": null
+    },
+    {
+     "text": "Write down two places where these rules could confuse an admin, and one idea for each.",
+     "minutes": 10,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip the advanced grant capabilities, autoApprovers and SSH rules. Sources, destinations, groups and tags are enough for today.",
+   "checkYourself": [
+    "What are the three parts of an access rule?",
+    "Why are rules about tags and groups easier to maintain than rules about named people or IP addresses?",
+    "Give one example each of RBAC, ABAC and ReBAC.",
+    "What is role explosion, and why is it a design problem?"
+   ],
+   "lookFor": [
+    "A source (who is asking: a user, group or tagged machine), a destination (what they want to reach) and what is allowed (ports, protocols or app permissions).",
+    "People and addresses change all the time. Groups and tags describe purpose, so when someone joins a team or a new server is added, the rule still works without editing it.",
+    "RBAC: “engineers may reach staging”. ABAC: “engineers may reach production only from a managed laptop”. ReBAC: “the owner of a document may share it with others”.",
+    "It is when special cases create hundreds of roles that nobody understands. It is a design problem because admins need ways to see, compare and clean up roles, not only to create them."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w3-d17",
+   "week": 3,
+   "day": 17,
+   "date": "2026-11-18",
+   "title": "Exercise 6: write and test an access policy",
+   "level": "intermediate",
+   "inOneSentence": "You will write a real access policy for a fictional 20-person startup in your tailnet, and write tests that prove it does what you meant.",
+   "youCanNow": "Write an access policy rule from a stated requirement and test that it produces the intended allow/deny result.",
+   "whyItMattersToADesigner": "Admins fear changing access rules because a mistake can lock people out or open production to everyone. Tests that run before a change goes live are one of the best answers, and they are a strong idea for your case study 1 design.",
+   "keyIdeas": [
+    "Policy file: in Tailscale, all rules live in one text file (in a format called HuJSON). Admins edit it in the console or keep it in git.",
+    "Groups are defined once (“group:eng”: [list of people]) and then used in rules. Tag owners say who may apply a tag to a machine.",
+    "Tests are statements like “alice can reach tag:prod:22” and “bob cannot reach tag:prod:22”. If a change breaks a test, Tailscale refuses to save it.",
+    "A test is a promise written down: it turns “I think contractors can’t reach production” into something the system checks every time.",
+    "Write rules from the company’s point of view first, in plain words, then translate. The gap between the two is exactly where the design opportunity is."
+   ],
+   "words": [
+    {
+     "term": "policy file",
+     "meaning": "The single file that holds all of a tailnet’s access rules."
+    },
+    {
+     "term": "HuJSON",
+     "meaning": "A version of JSON that allows comments and trailing commas, used by Tailscale."
+    },
+    {
+     "term": "tag owner",
+     "meaning": "The person or group allowed to apply a tag to machines."
+    },
+    {
+     "term": "ACL test",
+     "meaning": "A check, saved with the policy, that a given user can or cannot reach something."
+    },
+    {
+     "term": "regression",
+     "meaning": "A change that breaks something that used to work."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Design the fictional company on paper: 20 people in 4 groups (eng, design, sales, contractors) and 4 kinds of machine (prod, staging, wiki, design files).",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Use the syntax reference to write groups, tag owners and rules for that company in your tailnet’s policy file.",
+     "minutes": 40,
+     "resourceId": "c5-ts-policy-syntax"
+    },
+    {
+     "text": "Write at least six tests: three “can reach” and three “cannot reach”. Save, then change one rule to make a test fail and read the error.",
+     "minutes": 30,
+     "resourceId": "w5-ts-tags"
+    },
+    {
+     "text": "Write notes as a designer: what was hard to read, what the error said, and what you wished the editor showed you before saving.",
+     "minutes": 30,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip SSH rules, auto approvers and posture conditions today. Exercise 7 covers posture.",
+   "checkYourself": [
+    "What does an ACL test protect against?",
+    "What was the most confusing moment of writing the policy, and what would have helped?"
+   ],
+   "lookFor": [
+    "Against accidental changes that open or close access by mistake. The test fails before the change is saved, so the admin finds out in the editor, not from an angry colleague or an attacker.",
+    "A good answer names a concrete moment, such as not knowing who a group contains or not seeing what a rule would change, and an idea such as a preview of who can reach what."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w3-d18",
+   "week": 3,
+   "day": 18,
+   "date": "2026-11-19",
+   "title": "Exercise 7: SSO sign-in and device posture",
+   "level": "intermediate",
+   "inOneSentence": "You will see how a company’s identity provider and device checks feed into network access decisions.",
+   "youCanNow": "Walk through an SSO sign-in with a device-posture check and describe what the product evaluated before granting access.",
+   "whyItMattersToADesigner": "In real companies, access depends on two things at once: the person (from the identity provider) and the device (from posture checks). Designers must explain both when someone is blocked, and help admins understand which signal caused a decision.",
+   "keyIdeas": [
+    "Single sign-on means one company account opens many apps. Tailscale does not store passwords; it trusts an identity provider such as Google Workspace, Microsoft Entra or Okta.",
+    "When someone leaves and their identity provider account is disabled, they lose network access too. Identity and network are now one system.",
+    "Device posture is what the system knows about the device: operating system version, whether it is managed by the company, whether its disk is encrypted.",
+    "A posture rule example: “only devices running a supported macOS version with the company’s management tool may reach production”.",
+    "The design challenge: a blocked employee needs to know which check failed and how to fix it, in plain words. “Access denied” alone creates a support ticket."
+   ],
+   "words": [
+    {
+     "term": "single sign-on (SSO)",
+     "meaning": "One sign-in with a company account opens many apps."
+    },
+    {
+     "term": "managed device",
+     "meaning": "A device controlled by the company’s IT tools."
+    },
+    {
+     "term": "MDM",
+     "meaning": "Mobile device management: tools that manage and check company devices."
+    },
+    {
+     "term": "posture check",
+     "meaning": "A rule that looks at the device’s state before allowing access."
+    },
+    {
+     "term": "signal",
+     "meaning": "A piece of information used in an access decision, such as user group or OS version."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read which identity providers Tailscale supports and how sign-in works with each.",
+     "minutes": 15,
+     "resourceId": "w3-tailscale-sso"
+    },
+    {
+     "text": "Read device posture management up to the examples.",
+     "minutes": 25,
+     "resourceId": "w5-ts-posture"
+    },
+    {
+     "text": "In your tailnet, add a posture attribute or condition to one rule (for example operating system) and test it with your two devices.",
+     "minutes": 40,
+     "resourceId": null
+    },
+    {
+     "text": "Write the message an employee should see when blocked by your rule, and the screen an admin needs to understand why.",
+     "minutes": 25,
+     "resourceId": null
+    },
+    {
+     "text": "Add a “who, what, which device” column to your notes from Exercise 6.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Skip setting up a full MDM integration. Understanding the signals and the blocked-user moment is the goal.",
+   "checkYourself": [
+    "What happens to network access when someone’s identity provider account is disabled?",
+    "Give two posture signals and a rule that uses them.",
+    "Write a helpful “you are blocked” message for a failed posture check."
+   ],
+   "lookFor": [
+    "They lose it, because access depends on the identity provider. This is why SSO plus provisioning is a big part of offboarding safely.",
+    "For example, operating system version and whether the device is company-managed. Rule: “only managed devices on a supported OS version may reach production”.",
+    "It says which check failed and what to do, without blame. For example: “Your Mac needs the latest macOS update before you can reach production. Update in System Settings, then try again.”"
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w3-d19",
+   "week": 3,
+   "day": 19,
+   "date": "2026-11-20",
+   "title": "Case study 1 kickoff: why access policies go wrong",
+   "level": "intermediate",
+   "inOneSentence": "You will start your first portfolio case study by researching a real problem: admins writing access rules that are too open, too tight, or impossible to understand.",
+   "youCanNow": "Research a real access-policy failure and frame it as a specific, scoped product opportunity.",
+   "whyItMattersToADesigner": "Hiring managers in this domain want to see that you can find a real problem with evidence, not just make screens. This day turns your Exercise 6 experience into research: public evidence, competitor patterns and the first conversations with real admins.",
+   "keyIdeas": [
+    "A case study starts with a problem, not a solution. Your working question: “How might we help admins change access rules confidently, knowing who will be able to reach what?”",
+    "Public evidence is everywhere: product docs that warn about mistakes, community forums, GitHub issues and public incident write-ups.",
+    "Compare how products let admins write and review rules: Tailscale (a policy file and a visual editor), Twingate (resources and groups), Cloudflare (application policies).",
+    "Talk to real people: 20 minutes with an IT admin or platform engineer is worth hours of reading. Ask about the last time they changed access and what worried them.",
+    "Keep a research log: every quote, screenshot and link, with where it came from. You will need it for the write-up."
+   ],
+   "words": [
+    {
+     "term": "case study",
+     "meaning": "A portfolio story of a real problem, your process, your design and its result."
+    },
+    {
+     "term": "how might we",
+     "meaning": "A way to phrase a design problem as an open question."
+    },
+    {
+     "term": "evidence",
+     "meaning": "Facts that show a problem is real: quotes, data, observations."
+    },
+    {
+     "term": "competitive analysis",
+     "meaning": "Comparing how other products solve the same problem."
+    },
+    {
+     "term": "research log",
+     "meaning": "A running list of what you learned and where it came from."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read user interviews 101 and write five open questions for an admin.",
+     "minutes": 15,
+     "resourceId": "c5-nng-interviews"
+    },
+    {
+     "text": "Read how Twingate works and sketch its access model next to Tailscale’s.",
+     "minutes": 15,
+     "resourceId": "c5-twingate-how"
+    },
+    {
+     "text": "Search Tailscale’s community forums and GitHub issues for problems with ACLs and policies. Save at least eight real examples in your research log.",
+     "minutes": 35,
+     "resourceId": null
+    },
+    {
+     "text": "Contact three admins or platform engineers from your network for a 20-minute chat in the next two weeks.",
+     "minutes": 15,
+     "resourceId": null
+    },
+    {
+     "text": "Write down your three strongest observations so far, each with evidence.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "List what you still do not know and how you will find out.",
+     "minutes": 20,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not open Figma for screens today. Research and evidence first.",
+   "checkYourself": [
+    "What is your case study 1 question, in one “How might we” sentence?",
+    "Name two kinds of public evidence about access-policy problems."
+   ],
+   "lookFor": [
+    "For example: “How might we help admins change access rules confidently, knowing who will be able to reach what before they save?” A good question names the user, the task and the outcome.",
+    "Community forum posts, GitHub issues, product documentation warnings and public incident write-ups. Interviews add private evidence."
+   ],
+   "plannedMinutes": 120
+  },
+  {
+   "id": "w3-d20",
+   "week": 3,
+   "day": 20,
+   "date": "2026-11-21",
+   "title": "Case study 1 problem statement: write it up and share",
+   "level": "intermediate",
+   "inOneSentence": "You will write a clear problem statement for case study 1: who has the problem, what it is, the evidence, and what better would look like.",
+   "youCanNow": "Turn research findings into a defensible, evidence-backed problem statement.",
+   "whyItMattersToADesigner": "A strong problem statement makes the rest of the case study easy to follow. It shows a hiring manager you understand the users and the business, and it gives you something to share with practitioners for early feedback.",
+   "keyIdeas": [
+    "A problem statement has four parts: the user (IT admin at a 50–500 person company), the problem (changing access rules is risky and hard to check), the evidence, and the impact (outages, over-exposed production, support load).",
+    "Write what better means as measurable outcomes: fewer access-related tickets, faster safe changes, admins able to answer “who can reach production?” in seconds.",
+    "Name your constraints: rules can be written in a file or a visual editor; many companies keep them in git; you cannot see real customer data.",
+    "Look at how bigger platforms package zero trust (Cloudflare One, Microsoft Global Secure Access) for context on what buyers expect.",
+    "Share a short version publicly or with one practitioner, and ask: “Does this match your experience?”"
+   ],
+   "words": [
+    {
+     "term": "problem statement",
+     "meaning": "A short description of the user, their problem, the evidence and why it matters."
+    },
+    {
+     "term": "outcome",
+     "meaning": "The change in the world you want, such as fewer mistakes, not a feature."
+    },
+    {
+     "term": "constraint",
+     "meaning": "A limit your design must respect."
+    },
+    {
+     "term": "success metric",
+     "meaning": "A number that shows whether the outcome is happening."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Read about problem statements and use the structure.",
+     "minutes": 10,
+     "resourceId": "c5-nng-problem"
+    },
+    {
+     "text": "Skim the Cloudflare One overview to see how a large platform describes access.",
+     "minutes": 15,
+     "resourceId": "w5-cf-one"
+    },
+    {
+     "text": "Skim Microsoft Global Secure Access for the same.",
+     "minutes": 10,
+     "resourceId": "w5-entra-gsa"
+    },
+    {
+     "text": "Write the problem statement (300–500 words): user, problem, evidence, impact, constraints and success metrics.",
+     "minutes": 50,
+     "resourceId": null
+    },
+    {
+     "text": "Make one diagram: the admin’s current journey of changing an access rule, with the risky moments marked.",
+     "minutes": 20,
+     "resourceId": null
+    },
+    {
+     "text": "Share it with one practitioner or post a short version, and note the reply.",
+     "minutes": 15,
+     "resourceId": null
+    }
+   ],
+   "skipOrSkim": "Do not propose a solution yet. A good problem statement is neutral about the answer.",
+   "checkYourself": [
+    "What are the four parts of your problem statement?",
+    "Write one success metric for case study 1."
+   ],
+   "lookFor": [
+    "The user, the problem, the evidence and the impact. Constraints and success metrics make it stronger.",
+    "For example: “An admin can answer ‘who can reach production?’ in under a minute” or “fewer support tickets after access changes”. A good metric is measurable and tied to the problem."
+   ],
+   "plannedMinutes": 120
+  }
+ ]
+}

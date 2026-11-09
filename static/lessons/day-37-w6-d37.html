@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detection and incident response in plain words · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Detection and incident response in plain words</h1>
+<p class="eyebrow">Day 37 · Week 6 · Intermediate · about 120 min</p>
+<p>Detection is spotting an attack in your data, and incident response is the organised way a team handles it, from first alert to lessons learned.</p>
+<p><strong>By the end, you can:</strong> Explain what MITRE ATT&amp;CK is (a knowledge base of techniques, not an incident-response process) and outline the stages of incident response separately.</p>
+<h2>Why it matters to a designer</h2>
+<p>Incidents are where security products prove their worth. Designers who know how analysts think, and how incidents unfold, can design investigation views, timelines and handoffs that save time when it matters most.</p>
+<h2>Key ideas</h2>
+<ul><li>MITRE ATT&amp;CK is a shared catalogue of what attackers do, grouped by goal: getting in, staying in, stealing credentials, moving around, taking data. Teams use it as a common language.</li><li>Credential access (TA0006) is the group of techniques for stealing passwords and tokens, for example phishing or dumping saved passwords. Identity products defend here.</li><li>The incident-response lifecycle (NIST SP 800-61): prepare, detect and analyse, contain, eradicate and recover, then learn lessons. The newer revision links these to the NIST Cybersecurity Framework.</li><li>Roles in an incident: an incident commander who coordinates, responders who investigate, and someone who communicates with leaders and customers.</li><li>From Day 11: many incidents start with broken access control, such as BOLA (changing an id to reach someone else&#x27;s data). Its cousin BFLA, broken function level authorization, is a normal user calling an admin-only action. Both show up in detection as odd access patterns, not failed sign-ins.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>detection</strong></td><td>Finding signs of an attack in data.</td></tr><tr><td><strong>MITRE ATT&amp;CK</strong></td><td>A public catalogue of attacker tactics and techniques.</td></tr><tr><td><strong>tactic</strong></td><td>An attacker’s goal, such as credential access.</td></tr><tr><td><strong>technique</strong></td><td>A way of achieving a tactic, such as phishing.</td></tr><tr><td><strong>incident</strong></td><td>A security event that needs an organised response.</td></tr><tr><td><strong>containment</strong></td><td>Stopping an attack from spreading, for example disabling an account.</td></tr><tr><td><strong>postmortem</strong></td><td>A blameless review after an incident, to learn and improve.</td></tr><tr><td><strong>BFLA</strong></td><td>Broken function level authorization: doing actions you should not be allowed to do.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Look at the MITRE ATT&amp;CK matrix and open two techniques. &mdash; <a href="https://attack.mitre.org/">MITRE ATT&amp;CK</a> (MITRE)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the Credential Access tactic page and pick three techniques you could explain to a friend. &mdash; <a href="https://attack.mitre.org/tactics/TA0006/">ATT&amp;CK Credential Access (TA0006)</a> (MITRE)</p><span class="step__min">15 min</span></div><div class="step"><p>Read the summary of NIST SP 800-61 Rev. 3 and its lifecycle. &mdash; <a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final">NIST SP 800-61 Rev. 3: Incident Response Recommendations</a> (NIST)</p><span class="step__min">20 min</span></div><div class="step"><p>Read PagerDuty’s incident response overview and the roles. &mdash; <a href="https://response.pagerduty.com/">PagerDuty Incident Response Documentation</a> (PagerDuty)</p><span class="step__min">20 min</span></div><div class="step"><p>Write an incident as a story in six steps for “a contractor’s password was phished”: what is detected, by whom, what is contained, and what is learned.</p><span class="step__min">25 min</span></div>
+<h2>Skip or skim</h2><p>Skip detection rule languages and forensics. Understand the language, the roles and the lifecycle.</p>
+<h2>Check yourself</h2><ul><li>What is MITRE ATT&amp;CK used for?</li><li>Name the phases of the incident-response lifecycle.</li><li>Explain BOLA with an example.</li></ul>
+<h2>What a good answer looks like</h2><ul><li>It gives teams a shared language for attacker behaviour, grouped by goal (tactics) and method (techniques), so they can plan detections and describe incidents consistently.</li><li>Preparation; detection and analysis; containment, eradication and recovery; and post-incident activity (lessons learned). Rev. 3 frames them around the CSF functions.</li><li>Broken object level authorization: an app checks that you are signed in but not that the object is yours. Changing /orders/123 to /orders/124 shows someone else’s order.</li></ul>
+<p><a href="../../index.html#lesson/37">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercise 5: redesign a networking product onboarding · Atlas</title>
+<meta name="robots" content="index,follow">
+<style>
+body{font:16px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px 20px 80px;color:#1b1f23;background:#fff}
+a{color:#2b5a87}
+h1{font-size:1.6rem;margin-bottom:.2em}
+h2{font-size:1.15rem;margin-top:2em}
+.eyebrow{color:#5b6572;font-size:.9rem;margin:0 0 1.2em}
+.banner{background:#f0f4f8;border:1px solid #d7e1ea;border-radius:8px;padding:12px 16px;font-size:.92rem;margin-bottom:1.6em}
+ul{padding-left:1.3em}
+li{margin-bottom:.5em}
+.step{border-top:1px solid #e6e9ec;padding:.8em 0}
+.step__min{color:#5b6572;font-size:.85rem}
+table{border-collapse:collapse;width:100%;margin:1em 0}
+td,th{border-bottom:1px solid #e6e9ec;padding:.4em .6em;text-align:left;font-size:.95rem}
+nav.top a{margin-right:1em}
+footer{margin-top:3em;color:#5b6572;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="top"><a href="../../static/index.html">Course mirror home</a><a href="../../static/lessons/index.html">All lessons</a><a href="../../static/pathways/index.html">Pathways</a><a href="../../index.html">Open Atlas (interactive)</a></nav>
+<div class="banner">This is a plain-text mirror of Atlas's course content, generated for search engines and AI tools that can't run the app's JavaScript. For the real, interactive course — progress tracking, flashcards, offline use — <a href="../../index.html">open Atlas</a>.</div>
+
+<h1>Exercise 5: redesign a networking product onboarding</h1>
+<p class="eyebrow">Day 12 · Week 2 · Basics · about 120 min</p>
+<p>Using your Day 10 notes, you will redesign the first-run flow so that a new user reaches their first working connection faster and with more confidence.</p>
+<p><strong>By the end, you can:</strong> Redesign a flawed networking-product onboarding flow and justify the change against a usability principle.</p>
+<h2>Why it matters to a designer</h2>
+<p>Networking products are invisible when they work and confusing when they do not. The onboarding has to explain an invisible thing, guide two devices at once and handle failures clearly. This is a typical first design task for a new designer at a company like Tailscale.</p>
+<h2>Key ideas</h2>
+<ul><li>Design for the “it works” moment: show clear progress (“laptop connected, now add a second device”) and celebrate the first connection.</li><li>Networking failures have causes users cannot see. A good error says what happened, what it means and one next step. Example: “Your phone has no internet connection. Connect to Wi‑Fi and try again.”</li><li>Onboarding spans devices: the user starts on a laptop and continues on a phone. Use a QR code or a link to make the jump easy.</li><li>Help in context usually beats a long tutorial: show the explanation at the moment it is needed.</li><li>Compare competitors: list how two other products handle the same first run, and borrow what works.</li></ul>
+<h2>Key terms</h2><table><tr><td><strong>onboarding</strong></td><td>The first experience that takes a new user to their first success.</td></tr><tr><td><strong>activation</strong></td><td>The moment a new user gets real value; here, two devices connected.</td></tr><tr><td><strong>empty state</strong></td><td>What a screen shows before there is any data.</td></tr><tr><td><strong>recoverable error</strong></td><td>An error that tells the user how to fix it and lets them continue.</td></tr><tr><td><strong>contextual help</strong></td><td>Short help shown in the place and moment it is needed.</td></tr></table>
+<h2>Today's steps</h2><div class="step"><p>Read about onboarding tutorials and contextual help. &mdash; <a href="https://www.nngroup.com/articles/onboarding-tutorials/">Onboarding Tutorials vs. Contextual Help</a> (Nielsen Norman Group)</p><span class="step__min">10 min</span></div><div class="step"><p>Look at the Cloudflare One Client first-run steps and note the words it uses. &mdash; <a href="https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/warp/">About the Cloudflare One Client</a> (Cloudflare Docs)</p><span class="step__min">15 min</span></div><div class="step"><p>Look at ZeroTier’s first-run steps. &mdash; <a href="https://docs.zerotier.com/start">Create a Network</a> (ZeroTier Documentation)</p><span class="step__min">10 min</span></div><div class="step"><p>Map the current flow from your Day 10 screenshots, step by step, and mark the three worst moments.</p><span class="step__min">20 min</span></div><div class="step"><p>Sketch a redesigned flow in Figma: the progress, the cross-device jump, the first-connection moment, and two error states.</p><span class="step__min">50 min</span></div><div class="step"><p>Write why for each change, linked to a moment from your notes.</p><span class="step__min">15 min</span></div>
+<h2>Skip or skim</h2><p>Do not polish visuals. Rough frames with clear reasoning are what this exercise is about.</p>
+<h2>Check yourself</h2><ul><li>What is the activation moment for a mesh VPN, and how does your design make it obvious?</li><li>Write one error message for a common connection failure, in plain words.</li></ul>
+<h2>What a good answer looks like</h2><ul><li>Two of the user’s devices reaching each other. A good design shows progress towards it, confirms it clearly when it happens, and suggests the next useful step.</li><li>A good message says what happened, what it means and one action, without blame or jargon. For example: “Your laptop is signed out. Sign in again to reconnect.”</li></ul>
+<p><a href="../../index.html#lesson/12">Open this lesson in Atlas &rarr;</a></p>
+
+<footer><a href="index.html">&larr; Back</a></footer>
+</body>
+</html>

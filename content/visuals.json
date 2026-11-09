@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "note": "Lesson visuals, keyed by lesson id. Each one restates what its lesson already teaches. Format: js/visuals.js.",
+  "visuals": {
+    "w1-d1": [
+      {"k": "flow", "t": "The hotel picture", "s": [["You show ID at the front desk", "Identity: who you are"], ["Your key card opens your room and the gym", "Access: what you may do"], ["The hotel records each card use", "Accounting: what happened"]]},
+      {"k": "compare", "t": "The CIA triad: three things security protects", "cols": [{"h": "Confidentiality", "items": ["Only the right people can see it", "Example: only HR reads salaries", "A breach is a leak"]}, {"h": "Integrity", "items": ["It stays correct, and only the right people change it", "Example: no one quietly edits an invoice’s bank details", "A breach is tampering"]}, {"h": "Availability", "items": ["People can use it when they need it", "A breach is an outage"]}], "n": "The three pull against each other: locking an account after five wrong passwords protects confidentiality, but an attacker can use it to lock real people out."}
+    ],
+    "w1-d2": [
+      {"k": "compare", "t": "Three questions: AAA", "cols": [{"h": "Authentication", "items": ["Who are you?", "Your password, then a prompt on your phone"]}, {"h": "Authorization", "items": ["What may you do?", "View the budget sheet, but not edit it"]}, {"h": "Accounting", "items": ["What happened?", "The sheet’s history: who changed B4, and when"]}]},
+      {"k": "hub", "t": "Three kinds of proof, called factors", "c": ["Factors", "multifactor means two or more different kinds"], "s": [["Something you know", "a password"], ["Something you have", "your phone, a security key"], ["Something you are", "your face or fingerprint"]]},
+      {"k": "scale", "t": "Ask for more proof only when the risk is higher", "from": "Lower risk, less friction", "to": "Higher risk, more proof", "s": [["A familiar device", "an everyday task"], ["A new device", "ask for one more check"], ["A sensitive action", "ask for one more check"]]}
+    ],
+    "w1-d3": [
+      {"k": "hub", "t": "How Keycloak is organised", "c": ["Realm", "one company or space, such as “acme”"], "s": [["Users", "the people"], ["Groups", "people who share something: Design, Sales"], ["Roles", "what someone may do"], ["Clients", "apps that use Keycloak to sign people in"]]},
+      {"k": "flow", "t": "Give roles to groups, not to each person", "s": [["The Design group holds the roles"], ["Someone new joins Design"], ["They get Design’s access automatically", "", "good"]]}
+    ],
+    "w1-d4": [
+      {"k": "flow", "t": "Accounts over time: joiner, mover, leaver", "s": [["Joiner", "the right access on day one"], ["Mover", "new access added, old access removed", "warn"], ["Leaver", "all access ends, quickly"]], "n": "The mover is the quiet risk: over years, people who change jobs collect far more access than they need."},
+      {"k": "flow", "t": "A risk is a scenario, not a single word", "s": [["Threat", "an attacker"], ["Vulnerability", "a leaked password"], ["Asset", "customer records"], ["Risk", "fairly likely, very harmful", "warn"]], "n": "Likelihood: how plausible, given who might try and how hard it is. Impact: how much harm. The same weakness is minor on a test server and serious in production."},
+      {"k": "cycle", "t": "Threat modelling in four questions", "s": ["What are we working on?", "What can go wrong?", "What are we going to do about it?", "Did we do a good job?"], "b": "Ask again when the design changes"}
+    ],
+    "w1-d5": [
+      {"k": "hub", "t": "The people around one security product", "c": ["Your product"], "s": [["IT admin", "sets up and runs the tool"], ["Security engineer", "decides the rules, investigates"], ["Platform or DevOps engineer", "connects servers; prefers code"], ["Employee", "meets it only when it is in the way"], ["Buyer (CISO, Head of IT)", "judges risk, audits and cost"]], "n": "One design often serves two people: a rule an admin writes becomes a message an employee sees. Ask “who sees this?”"}
+    ],
+    "w1-d6": [
+      {"k": "compare", "t": "What a control does", "cols": [{"h": "Preventive: stops harm", "items": ["MFA", "A role that limits access"]}, {"h": "Detective: notices it", "items": ["Alerts", "Audit logs"]}, {"h": "Corrective: limits or undoes it", "items": ["Backups", "Revoking a session"]}], "n": "Every control has limits. Ask of each one: how does it fail, and what happens then?"},
+      {"k": "layers", "t": "Defence in depth against stolen passwords", "s": ["Phishing-resistant sign-in", "Device checks", "Least-privilege access", "Alerts on unusual sign-ins", "Quick session revocation"], "n": "If one layer fails, the next one still stands."}
+    ],
+    "w2-d8": [
+      {"k": "flow", "t": "What happens when you open a web page", "s": [["You type example.com"], ["DNS", "turns the name into an address"], ["Connect to that address", "port 443, the web server’s door"], ["HTTP request", "GET /invoices/42, with a cookie or token that says who you are"], ["Response", "a status code and, usually, the page"]]},
+      {"k": "compare", "t": "401 or 403: who you are, or what you may do", "cols": [{"h": "401", "items": ["Not signed in", "An authentication problem"]}, {"h": "403", "items": ["Signed in, but not allowed", "An authorization problem"]}]}
+    ],
+    "w2-d9": [
+      {"k": "compare", "t": "Two ways to build a VPN", "cols": [{"h": "Traditional VPN", "items": ["One central gateway: a single front door", "Everything goes through the hub, even between two people at home", "Being on it is not the same as being authorized"]}, {"h": "Mesh VPN", "items": ["Devices connect directly to each other", "A coordination server hands out keys and rules", "Feels like one private network"]}]},
+      {"k": "compare", "t": "Encryption is reversible; hashing is one-way", "cols": [{"h": "Encryption", "items": ["The right key gets the original back", "Protects data in transit (TLS) and at rest"]}, {"h": "Hashing", "items": ["You cannot get the input back", "Passwords are stored as slow, salted hashes", "At sign-in, the typed password is hashed and compared"]}], "n": "So “we will email you your password” is a red flag."}
+    ],
+    "w2-d10": [
+      {"k": "flow", "t": "Your first tailnet", "s": [["Sign in with an identity provider", "your account, not your location, decides"], ["Each device gets a 100.x address", "it works at home, in a café or on a phone network"], ["Reach one device from another", "the “aha” moment", "good"]]}
+    ],
+    "w2-d11": [
+      {"k": "flow", "t": "Broken object level authorization (BOLA)", "s": [["You open /invoices/1041", "your own invoice"], ["You change it to /invoices/1042"], ["The server checks: are you signed in?", "yes", "good"], ["It never checks: is this invoice yours?", "", "bad"], ["You see another customer’s invoice", "", "bad"]], "n": "Authentication passed; authorization was never asked."}
+    ],
+    "w2-d12": [
+      {"k": "flow", "t": "A networking error people can act on", "s": [["What happened"], ["What it means"], ["One next step", "", "good"]]}
+    ],
+    "w2-d13": [
+      {"k": "flow", "t": "A threat model, step by step", "s": [["Draw the picture", "a data-flow diagram with trust boundaries"], ["Use STRIDE at each boundary", "threats cluster there"], ["Rank roughly", "likelihood and impact; keep the top three"], ["Respond", "layered controls, safe defaults, testable requirements"]]},
+      {"k": "hub", "t": "STRIDE: six questions to ask at a trust boundary", "c": ["A trust boundary"], "s": [["Spoofing", "pretending to be someone"], ["Tampering", "changing data"], ["Repudiation", "denying an action"], ["Information disclosure", "leaks"], ["Denial of service", "outages"], ["Elevation of privilege", "gaining more access"]]}
+    ],
+    "w3-d15": [
+      {"k": "compare", "t": "The old office and the zero-trust office", "cols": [{"h": "Old office", "tone": "bad", "items": ["Badge checked at the front door", "Then every room is open", "“Inside is safe”"]}, {"h": "Zero-trust office", "tone": "good", "items": ["Badge checked at every door", "Visitors also need their sticker", "Nowhere is trusted by default"]}]},
+      {"k": "hub", "t": "Checked on every request", "c": ["Every request"], "s": [["Identity", "who"], ["Device", "a company laptop? up to date?"], ["Resource", "what you are trying to reach"]]},
+      {"k": "flow", "t": "Who decides, and who enforces", "s": [["A request"], ["Policy engine and policy administrator", "together, the decision"], ["Policy enforcement point", "lets the traffic through or blocks it"], ["The resource"]], "n": "In Tailscale, the coordination server plays the decision role and each device enforces: resembling NIST’s model, not an exact match."}
+    ],
+    "w3-d16": [
+      {"k": "flow", "t": "The three parts of an access rule", "s": [["Source", "who: group:design"], ["Destination", "what: tag:figma-proxy"], ["Allowed", "how: port 443"]]},
+      {"k": "compare", "t": "Three ways to decide access", "cols": [{"h": "RBAC: by role", "items": ["“Engineers may reach staging”"]}, {"h": "ABAC: by attributes", "items": ["“Engineers on a managed laptop during an incident”"]}, {"h": "ReBAC: by relationship", "items": ["“The owner of this document may share it”"]}], "n": "Default deny is a setting of a particular policy engine, not a universal law."}
+    ],
+    "w3-d17": [
+      {"k": "flow", "t": "A policy test is a promise written down", "s": [["Say the rule in plain words", "“contractors can’t reach production”"], ["Translate it into the policy file"], ["Write tests", "alice can reach tag:prod:22; bob cannot"], ["A change that breaks a test is refused", "", "good"]]}
+    ],
+    "w3-d18": [
+      {"k": "hub", "t": "Device posture: what the system knows about a device", "c": ["Device posture"], "s": [["Operating system version"], ["Managed by the company?"], ["Disk encrypted?"]]},
+      {"k": "compare", "t": "When posture blocks someone", "cols": [{"h": "Unhelpful", "tone": "bad", "items": ["“Access denied”"]}, {"h": "Helpful", "tone": "good", "items": ["Which check failed", "How to fix it, in plain words"]}], "n": "With single sign-on, disabling someone in the identity provider also ends their network access."}
+    ],
+    "w3-d19": [
+      {"k": "hub", "t": "Where the evidence comes from", "c": ["Your working question", "how might we help admins change access rules confidently?"], "s": [["Product docs", "that warn about mistakes"], ["Community forums"], ["GitHub issues"], ["Public incident write-ups"], ["20 minutes with an IT admin", "worth hours of reading"]], "n": "Log every quote, screenshot and link with its source."}
+    ],
+    "w3-d20": [
+      {"k": "flow", "t": "A problem statement in four parts", "s": [["The user", "an IT admin at a 50–500 person company"], ["The problem", "changing access rules is risky and hard to check"], ["The evidence"], ["The impact", "outages, over-exposed production, support load"]]}
+    ],
+    "w4-d22": [
+      {"k": "flow", "t": "The authorization code flow, with PKCE", "s": [["The app sends you to the sign-in page"], ["You sign in and approve"], ["The app gets a short code"], ["Behind the scenes, it swaps the code for tokens", "PKCE’s one-time secret makes a stolen code useless", "good"]]},
+      {"k": "compare", "t": "Three tokens, three jobs", "cols": [{"h": "Access token", "items": ["The key for the API", "Short-lived"]}, {"h": "ID token", "items": ["Who you are", "Added by OpenID Connect"]}, {"h": "Refresh token", "items": ["Gets new access tokens", "Without signing in again"]}], "n": "The valet key idea: the app gets a limited key, never your password."}
+    ],
+    "w4-d23": [
+      {"k": "compare", "t": "SSO signs people in; SCIM keeps accounts in step", "cols": [{"h": "SAML or OIDC sign-in", "items": ["The identity provider tells the app who this is", "In SAML, a signed message called an assertion"]}, {"h": "SCIM provisioning", "items": ["HR adds someone: accounts appear in every connected app", "They leave: those accounts are deactivated"]}]},
+      {"k": "compare", "t": "Where a sign-in starts", "cols": [{"h": "SP-initiated", "tone": "good", "items": ["Starts at the app: “Sign in with SSO”", "The app asked for the answer it gets"]}, {"h": "IdP-initiated", "tone": "warn", "items": ["Starts at the identity provider’s dashboard", "Riskier: the app gets an assertion it did not ask for"]}]}
+    ],
+    "w4-d24": [
+      {"k": "flow", "t": "What you will see in the Network tab", "s": [["Redirect to Keycloak", "with client_id, scope and code_challenge"], ["You sign in"], ["Redirect back with a code"], ["A request swaps the code for tokens"]], "n": "The redirect URI must match what is registered exactly. One character off is a classic setup failure."}
+    ],
+    "w4-d25": [
+      {"k": "flow", "t": "MFA as three moments", "s": [["Enrolment"], ["Daily use", "watch for prompt bombing: number matching helps"], ["Recovery", "often the weakest point", "warn"]], "n": "If “forgot password” needs only an email, strong MFA does not matter."},
+      {"k": "compare", "t": "Two kinds of passkey", "cols": [{"h": "Synced", "items": ["Copied across your devices through a cloud account", "Easier to recover"]}, {"h": "Device-bound", "items": ["Stays on one device or a security key", "Stricter"]}]}
+    ],
+    "w4-d26": [
+      {"k": "compare", "t": "SSO setup: where it hurts, and what helps", "cols": [{"h": "Where the pain comes from", "tone": "bad", "items": ["Copying values between two products", "Not knowing if a step worked", "Errors that only appear at the end"]}, {"h": "Ideas that work", "tone": "good", "items": ["A checklist with progress", "Copy buttons", "Checking each value as it is pasted", "A “test connection” step", "A clear success state"]}]}
+    ],
+    "w5-d29": [
+      {"k": "layers", "t": "From cluster to container", "s": [["Cluster", "all the nodes together"], ["Node", "one machine"], ["Pod", "the smallest unit Kubernetes runs"], ["Container", "the app and everything it needs"]], "n": "A namespace is a separate area of the cluster, for example one per team."},
+      {"k": "compare", "t": "Two directions of traffic", "cols": [{"h": "North-south", "items": ["Users outside coming in"]}, {"h": "East-west", "tone": "warn", "items": ["Services inside talking to each other", "Where most attacks spread after getting in"]}]},
+      {"k": "compare", "t": "Shared responsibility in the cloud", "cols": [{"h": "The cloud provider secures", "items": ["The buildings", "The hardware"]}, {"h": "You secure", "items": ["Your accounts and settings", "Your data", "Who can reach what"]}]}
+    ],
+    "w5-d30": [
+      {"k": "compare", "t": "Before and after a network policy", "cols": [{"h": "No policy selects the pod", "tone": "bad", "items": ["Default allow: everything can reach it"]}, {"h": "A policy selects app=payments-db", "tone": "good", "items": ["Accepts traffic only from app=payments on port 5432", "Everything else to it is denied"]}], "n": "Policies are enforced only if the cluster’s network plugin (CNI) supports them, such as Calico. Otherwise they are accepted and silently ignored."}
+    ],
+    "w5-d31": [
+      {"k": "flow", "t": "Your practice cluster", "s": [["kind", "a whole cluster inside Docker on your laptop"], ["Install Calico", "it runs as pods and controls pod networking"], ["Deploy a small demo app", "web plus a backend"], ["kubectl get pods", "see what is running"]]}
+    ],
+    "w5-d32": [
+      {"k": "flow", "t": "Break it, then fix one connection at a time", "s": [["Apply default deny", "the app stops: that is expected", "bad"], ["Allow web → orders"], ["Allow orders → database"], ["Allow DNS", "pods must still reach the cluster’s DNS"], ["Test after each step", "does it work, and is anything still open that shouldn’t be?", "good"]]}
+    ],
+    "w5-d33": [
+      {"k": "compare", "t": "Three patterns for safer network policy", "cols": [{"h": "Recommendations", "items": ["Watch real traffic for a while", "Suggest policies that allow only what was seen"]}, {"h": "Staged policies", "items": ["Apply in “would block” mode", "See what it would have blocked, then enforce"]}, {"h": "Traffic maps", "items": ["Show which services talk", "See before you write"]}]}
+    ],
+    "w5-d34": [
+      {"k": "flow", "t": "The network policy journey", "s": [["Discover what talks to what"], ["Write a first policy"], ["Test it"], ["Roll it out"], ["Keep it right as apps change"]], "n": "On your own version, mark where people feel confident, unsure or afraid."}
+    ],
+    "w6-d36": [
+      {"k": "compare", "t": "Two kinds of log", "cols": [{"h": "Flow log: connections", "items": ["Who talked to whom, when, on which port", "Whether it was allowed", "Not the content of the conversation"]}, {"h": "Audit log: changes", "items": ["Who changed which setting, rule or user, and when", "“Alex changed the policy file at 14:02”"]}], "n": "Too many alerts and people stop trusting them. Every alert should be actionable."}
+    ],
+    "w6-d37": [
+      {"k": "cycle", "t": "The incident-response lifecycle", "s": ["Prepare", "Detect and analyse", "Contain, eradicate and recover", "Learn lessons"], "b": "Lessons feed back into preparation"},
+      {"k": "hub", "t": "MITRE ATT&CK groups attacker behaviour by goal", "c": ["What attackers do"], "s": ["Getting in", "Staying in", "Stealing credentials", "Moving around", "Taking data"]}
+    ],
+    "w6-d38": [
+      {"k": "flow", "t": "An analyst’s questions about one odd connection", "s": ["Is this normal?", "Who owns this source?", "What policy allowed it?", "Has it happened before?", "What else did this source talk to?"], "n": "Raw logs answer “what” and “when”. “Who owns it” and “should it” come from other systems."}
+    ],
+    "w6-d39": [
+      {"k": "flow", "t": "Stolen laptop, minute by minute", "s": [["Who is told"], ["The admin finds the device"], ["Remove it from the tailnet"], ["End sessions in the identity provider"], ["Rotate any secrets that were on it"], ["Check logs for use after the theft"]]}
+    ],
+    "w6-d40": [
+      {"k": "flow", "t": "Triage is sorting", "s": ["Is this real?", "How bad is it?", "Who should handle it?"], "n": "A good view answers all three in seconds."},
+      {"k": "hub", "t": "What every alert needs", "c": ["One alert"], "s": [["What happened", "in plain words"], ["Who and what is involved", "user, device, service, with owners"], ["Why it matters", "severity and context"], ["Next actions", "contain, investigate, or dismiss with a reason"]]}
+    ],
+    "w7-d43": [
+      {"k": "flow", "t": "Just-in-time access", "s": [["Request", "with a reason and a time: two hours for an incident"], ["Approved"], ["Use the access"], ["It expires on its own", "", "good"]]},
+      {"k": "compare", "t": "Two places a cloud policy can live", "cols": [{"h": "Identity-based", "items": ["Attached to a person or role", "“What can I do?”"]}, {"h": "Resource-based", "items": ["Attached to the resource", "“Who can use me?”"]}], "n": "An explicit deny always wins over any allow."}
+    ],
+    "w7-d44": [
+      {"k": "compare", "t": "Three kinds of assurance", "cols": [{"h": "SOC 2 Type 1", "items": ["Controls are designed well", "At one point in time", "An auditor’s report, not a pass or fail"]}, {"h": "SOC 2 Type 2", "items": ["Controls actually worked", "Over months", "An auditor’s report, not a pass or fail"]}, {"h": "ISO 27001", "items": ["A certification against an international standard", "Issued after an accredited audit"]}]}
+    ],
+    "w7-d45": [
+      {"k": "flow", "t": "An access policy change, through git", "s": [["Create a branch"], ["Edit the policy"], ["Open a pull request"], ["Tests run", "a failing test blocks the merge"], ["Someone reviews"], ["Merge: the change goes live", "", "good"]], "n": "Rollback is just reverting the commit."}
+    ],
+    "w7-d46": [
+      {"k": "flow", "t": "The prototype’s main flow", "s": [["Edit a rule"], ["See the effect", "“12 people in Sales will lose access to the wiki”"], ["Fix a problem"], ["Save with confidence", "", "good"]]}
+    ],
+    "w7-d47": [
+      {"k": "flow", "t": "A usability session, start to finish", "s": [["Give a realistic task", "not a tour"], ["They think aloud", "you do not help or explain"], ["Watch for trust", "would they save this change?"], ["Sort what you saw", "must fix, should fix, later"], ["Fix the must-fix issues"]]}
+    ],
+    "w7-d48": [
+      {"k": "flow", "t": "Case study structure", "s": ["The problem and why it matters", "Your role and constraints", "Research and evidence", "Concepts and the choice", "The design", "Testing and changes", "Outcome and next steps"], "n": "Busy readers decide in 30 seconds: put the problem and the result first."}
+    ],
+    "w8-d50": [
+      {"k": "scale", "t": "How a service proves who it is", "from": "Riskier", "to": "Safer", "s": [["Long-lived secret", "if it leaks, it works until someone notices", "bad"], ["Short-lived credential", "a token that expires in minutes"], ["Workload identity", "a verifiable identity with no shared secret", "good"]], "n": "A secret committed to git is leaked: revoke and replace it first, then remove it from history."}
+    ],
+    "w8-d51": [
+      {"k": "flow", "t": "An agent acting on your behalf", "s": [["You ask the agent to do something"], ["The agent uses its own identity"], ["It gets a scoped, short-lived token for one service", "never your password or a long-lived key"], ["Before a high-impact action, it stops and shows exactly what will happen", "", "warn"], ["The approval and action are logged", "with both your identity and the agent’s"]]}
+    ],
+    "w8-d52": [
+      {"k": "flow", "t": "Confirming a dangerous action", "s": [["State the consequence", "“This removes access for 240 people”"], ["Name the object"], ["For the worst actions, ask people to type its name"], ["Offer undo where possible", "", "good"]]}
+    ],
+    "w8-d53": [
+      {"k": "compare", "t": "Three concepts to compare", "cols": [{"h": "Traffic map", "items": ["Select connections to allow"]}, {"h": "Recommendations", "items": ["Listed by namespace", "With confidence"]}, {"h": "Staged-policy timeline", "items": ["Shows what would have been blocked"]}]},
+      {"k": "flow", "t": "A staged rollout", "s": [["Apply in “would block” mode"], ["Watch for a few days"], ["Review what would have been blocked"], ["Enforce", "with an easy way back", "good"]]}
+    ],
+    "w9-d59": [
+      {"k": "hub", "t": "One positioning sentence, three places", "c": ["Who you design for, and what you solve"], "s": [["Portfolio home", "the sentence, then both case studies first"], ["LinkedIn", "headline, your story, featured case studies"], ["Resume", "relevant outcomes and skills you can honestly claim"]]}
+    ],
+    "w9-d60": [
+      {"k": "flow", "t": "A live design exercise", "s": [["Ask clarifying questions", "who, what scale, what constraints"], ["Think aloud"], ["Sketch"], ["Name the trade-offs"]]}
+    ],
+    "ai-1": [
+      {"k": "hub", "t": "What surrounds the model", "c": ["The model", "predicts text; no memory or system access of its own"], "s": [["The user’s message"], ["A system prompt", "the app’s instructions"], ["Retrieved content (RAG)", "documents fetched to answer"], ["Tools", "send an email, query a database"], ["Memory", "saved across sessions"], ["Output", "shown to a person or passed on"]], "n": "The model cannot reliably tell instructions from data. Messages, documents, tool results, web pages and memory are all untrusted input to it, and its output is untrusted input to whatever comes next."},
+      {"k": "compare", "t": "AI security and AI safety", "cols": [{"h": "AI security", "items": ["Protects the system, its data and users from misuse and attack", "Leaks, unauthorised actions, poisoning"]}, {"h": "AI safety", "items": ["Broader: avoiding harmful behaviour and outputs", "Even without an attacker"]}]}
+    ],
+    "ai-2": [
+      {"k": "compare", "t": "Two ways instructions get in", "cols": [{"h": "Direct injection", "items": ["The user types instructions to override the app’s rules", "“Ignore your previous instructions…”"]}, {"h": "Indirect injection", "tone": "warn", "items": ["Instructions hide in content the model processes for someone else", "Hidden white text in a CV; a web page talking to a browsing agent"]}]},
+      {"k": "hub", "t": "Design for containment, not perfect prevention", "c": ["If the model follows a malicious instruction, what is the worst it can do?"], "s": ["Least privilege for the agent", "Untrusted content kept away from tools with side effects", "Confirmation that shows exactly what will happen", "Limits on where data can be sent", "A log of what the agent read and did"]}
+    ],
+    "ai-3": [
+      {"k": "compare", "t": "Searching company documents with AI", "cols": [{"h": "Copied into a shared index", "tone": "bad", "items": ["Permissions left behind", "A salary sheet shared with “everyone” is now one question away"]}, {"h": "Permission-aware retrieval", "tone": "good", "items": ["Only what the asking user may already open", "Checked at query time", "Deleting a file removes it from the index too"]}]},
+      {"k": "flow", "t": "How poisoning becomes persistent", "s": [["Someone plants content in a wiki or ticket"], ["The assistant retrieves it"], ["It repeats it or acts on it", "", "bad"], ["It is saved to long-term memory", "and affects future sessions", "bad"]], "n": "So people should be able to see, edit and delete what an assistant remembers."}
+    ],
+    "ai-4": [
+      {"k": "compare", "t": "Three forms of excessive agency", "cols": [{"h": "Excessive functionality", "items": ["Tools the task does not need", "A “run any shell command” tool"]}, {"h": "Excessive permissions", "items": ["A tool that can write when it only needs to read"]}, {"h": "Excessive autonomy", "items": ["Consequential actions with no check"]}]},
+      {"k": "matrix", "t": "Least privilege for tools", "x": ["Too broad", "Just enough"], "y": ["Calendar", "Email", "Tickets"], "c": [[["Full Google account", "bad"], ["Read this user’s calendar", "good"]], [["Send email", "bad"], ["Create a draft", "good"]], [["Admin API", "bad"], ["Search tickets in project X", "good"]]]}
+    ],
+    "ai-5": [
+      {"k": "flow", "t": "Model output is untrusted input", "s": [["The model writes output"], ["It goes into a web page, a database query, a shell command or an API call", "", "warn"], ["The receiving system validates it", "exactly as for user input", "good"]]},
+      {"k": "hub", "t": "What an agent’s audit trail records", "c": ["One agent run"], "s": ["The user and the agent identity", "The goal", "What was retrieved", "Each tool call, its inputs and results", "Approvals, and who gave them", "The final outcome"], "n": "Without this, an incident cannot be investigated."}
+    ],
+    "ai-6": [
+      {"k": "scale", "t": "Risk tiers for agent actions", "from": "Runs freely", "to": "Never allowed", "s": [["Read-only", "runs freely", "good"], ["Reversible changes", "run with a visible log"], ["Consequential or irreversible", "needs confirmation", "warn"], ["Some actions", "never allowed for an agent", "bad"]]},
+      {"k": "hub", "t": "Three surfaces to design", "c": ["One agent with a real job"], "s": [["Admin setup", "which tools and scopes, who may use it"], ["In-the-moment approvals", "for the user"], ["Oversight", "activity timeline, inventory, revoke"]]}
+    ],
+    "w1-1": [
+      {"k": "flow", "t": "What every computer does", "s": [["Input", "a key press, a file, a network message"], ["Process", "the CPU works on it"], ["Store", "it keeps some of it"], ["Output", "text on screen, a saved file, a reply"]]},
+      {"k": "compare", "t": "The kitchen picture", "cols": [{"h": "CPU: the cook", "items": ["Does the work, one step at a time, very quickly"]}, {"h": "RAM: the counter", "items": ["Fast and within reach", "Cleared at the end of the day: volatile"]}, {"h": "Storage: the pantry", "items": ["Slower to reach", "Contents stay when the power goes off"]}]}
+    ],
+    "w1-2": [
+      {"k": "layers", "t": "Programs ask; the operating system decides", "s": [["Applications and processes", "ask for memory, files and the network"], ["Operating system and kernel", "decides whether to allow it"], ["Hardware", "CPU, memory, storage, network card"]]},
+      {"k": "compare", "t": "Application, process, service", "cols": [{"h": "Application", "items": ["The recipe book on the shelf"]}, {"h": "Process", "items": ["The recipe being cooked right now", "Open an app twice: two processes"]}, {"h": "Service", "items": ["A process working in the background", "No one watching it"]}]}
+    ],
+    "w2-2": [
+      {"k": "compare", "t": "Two kinds of address", "cols": [{"h": "IP address", "items": ["A street address", "Where a device is on a network", "Can change when the device moves"]}, {"h": "MAC address", "items": ["A serial number on the network hardware", "Identifies the interface on the local network"]}]},
+      {"k": "compare", "t": "Private and public addresses", "cols": [{"h": "Private", "items": ["Office extensions: only work inside", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]}, {"h": "Public", "items": ["Full phone numbers", "Unique worldwide", "Reachable on the internet"]}], "n": "127.0.0.1 is loopback: the device talking to itself."}
+    ],
+    "w2-3": [
+      {"k": "compare", "t": "Same neighbourhood, or not?", "cols": [{"h": "Same subnet", "tone": "good", "items": ["192.168.1.20/24 and 192.168.1.35/24", "Network part 192.168.1 matches", "They talk directly"]}, {"h": "Different subnets", "tone": "warn", "items": ["192.168.1.20/24 and 192.168.2.7/24", "Network parts differ", "Traffic goes through a router, where it can be checked or blocked"]}], "n": "The mask (/24 here) says where the network part ends and the host part begins."}
+    ],
+    "w2-4": [
+      {"k": "flow", "t": "Joining a network and reaching a site", "s": [["DHCP", "gives you an address, a gateway and a DNS server"], ["DNS", "turns example.com into an IP address"], ["NAT", "swaps your private address for a public one"], ["Routers", "pass the packet closer, hop by hop"]]},
+      {"k": "flow", "t": "DHCP in four messages: DORA", "s": [["Discover", "“is there a DHCP server?”"], ["Offer", "“you can have this address”"], ["Request", "“I’ll take it”"], ["Acknowledge", "“it’s yours for now”"]]}
+    ],
+    "w3-2": [
+      {"k": "compare", "t": "TCP and UDP", "cols": [{"h": "TCP: a phone call", "items": ["Confirms the other side is there", "Each part is acknowledged", "Email, file transfer, most web traffic"]}, {"h": "UDP: postcards", "items": ["Quick, no confirmation", "Lost parts are not resent", "DNS lookups, voice, video, games"]}]}
+    ],
+    "w3-3": [
+      {"k": "compare", "t": "HTTP and HTTPS", "cols": [{"h": "HTTP", "tone": "bad", "items": ["A postcard", "Anyone handling it can read it"]}, {"h": "HTTPS (HTTP over TLS)", "tone": "good", "items": ["A locked box only you and the site can open", "The padlock: encrypted, and the certificate checks out"]}], "n": "The padlock does not mean the website is honest. Criminals can get certificates too."}
+    ],
+    "w3-4": [
+      {"k": "scale", "t": "Wi-Fi security, oldest to newest", "from": "Obsolete", "to": "Use this", "s": [["WEP", "do not use", "bad"], ["WPA", "do not use", "bad"], ["WPA2", "still common"], ["WPA3", "resists offline password guessing", "good"]]},
+      {"k": "flow", "t": "Troubleshooting in a logical order", "s": [["Physical link", "is it connected?"], ["An address", "does the interface have one?"], ["Ping the gateway"], ["Ping an external IP address"], ["Reach it by name", "an IP works but a name fails: suspect DNS"]], "n": "Many systems block ping, so a failed ping does not prove a host is down."}
+    ],
+    "w4-1": [
+      {"k": "matrix", "t": "chmod 750, as a grid", "x": ["Read", "Write", "Execute"], "y": ["Owner", "Group", "Others"], "c": [[["Yes", "good"], ["Yes", "good"], ["Yes", "good"]], [["Yes", "good"], ["No", "bad"], ["Yes", "good"]], [["No", "bad"], ["No", "bad"], ["No", "bad"]]], "n": "Each digit adds read (4), write (2) and execute (1): 7 = 4+2+1, 5 = 4+1, 0 = nothing."}
+    ],
+    "w4-2": [
+      {"k": "flow", "t": "Patch management", "s": [["Find available updates"], ["Test them", "an update can break other software"], ["Deploy in order of risk"], ["Verify they worked"], ["Record it all"]]},
+      {"k": "hub", "t": "What a log entry tells you", "c": ["One log entry"], "s": [["When", "accurate time from NTP links events across systems"], ["What happened", "for example event ID 4625, a failed logon"], ["Who", "usually, the account"]]}
+    ],
+    "w4-3": [
+      {"k": "flow", "t": "How a firewall reads its rules", "s": [["A connection arrives"], ["Rules are checked in order"], ["The first matching rule decides"], ["No rule matched: denied", "implicit deny", "bad"]]},
+      {"k": "hub", "t": "Hardening: shrink the attack surface", "c": ["Before the long trip"], "s": ["Remove software you don’t use", "Close ports you don’t need", "Change default credentials", "Apply patches", "Start from a secure baseline"]}
+    ],
+    "w4-4": [
+      {"k": "flow", "t": "Threat, vulnerability, risk", "s": [["Vulnerability", "an unlocked window"], ["Threat", "a burglar in the area"], ["Risk", "the chance they come through, and what it would cost", "warn"]]},
+      {"k": "compare", "t": "Where you may practise", "cols": [{"h": "Allowed", "tone": "good", "items": ["Systems you own", "Your own lab and virtual machines", "Practice environments that explicitly authorize testing"]}, {"h": "Never", "tone": "bad", "items": ["Anything you do not have written permission to test", "Scanning or probing other people’s systems"]}]}
+    ],
+    "w5-2": [
+      {"k": "compare", "t": "Category is how; type is what it aims to do", "cols": [{"h": "Category: how", "items": ["Technical", "Managerial", "Operational", "Physical"]}, {"h": "Type: aims to", "items": ["Preventive: stop it", "Deterring: discourage it", "Detective: notice it", "Corrective: fix it", "Directive: tell people what to do", "Compensating: stand in for another control"]}]},
+      {"k": "compare", "t": "One house, several controls", "cols": [{"h": "Fence", "items": ["Physical", "Preventive and deterring"]}, {"h": "Camera", "items": ["Physical or technical", "Detective"]}, {"h": "“Last person locks up”", "items": ["A rule", "Directive"]}, {"h": "Repairing a broken lock", "items": ["Corrective"]}]}
+    ],
+    "w5-3": [
+      {"k": "flow", "t": "A change, from request to record", "s": [["Request", "someone asks, with an owner"], ["Impact analysis", "what could it affect?"], ["Approval", "for example a Change Advisory Board"], ["Test", "with results recorded"], ["Schedule a maintenance window"], ["Implement", "with a backout plan ready"], ["Update diagrams, policies and documents"]]}
+    ],
+    "w6-1": [
+      {"k": "flow", "t": "From a known flaw to your priority", "s": [["A flaw is found"], ["CVE", "its catalogue number"], ["CVSS", "its severity rating"], ["Your priority", "severity plus likelihood and impact in your own setting", "warn"]]}
+    ],
+    "w6-2": [
+      {"k": "scale", "t": "Threat actors by resources and sophistication", "from": "Uses other people’s tools", "to": "Develops custom exploits", "s": [["Unskilled attacker"], ["Hacktivist"], ["Organized crime"], ["State-sponsored", "national budgets"]], "n": "Insiders can sit anywhere on this scale, and they may already have a key."},
+      {"k": "hub", "t": "What drives them", "c": ["Motivation"], "s": ["Financial gain", "Espionage", "Extortion", "Revenge", "Ideology and politics", "Notoriety", "Fear and chaos", "Ethical reasons"], "n": "Acting for ethical reasons without authorization is still illegal."}
+    ],
+    "w6-3": [
+      {"k": "hub", "t": "Ways in, part 1", "c": ["Threat vectors"], "s": [["Messages", "email, SMS, RCS, instant messaging"], ["Files", "macros, PDF, RTF"], ["Browsers", "extensions, cookies, session tokens"], ["Codes and content", "QR codes, embedded content"], ["Remote access", "remote desktop, VNC, VPN"], ["Infrastructure", "network and virtualized devices"]]}
+    ],
+    "w6-4": [
+      {"k": "hub", "t": "Ways in, part 2", "c": ["Threat vectors"], "s": [["Endpoints", "phones, laptops, servers"], ["Supply chain", "managed service, logistics and SaaS providers"], ["People", "impersonation, contractors, visitors"], ["IoT and OT", "cameras, sensors, printers, industrial systems"], ["Physical", "malicious USB, locks, access passes"], ["Signals", "Bluetooth, RF, NFC"]]}
+    ],
+    "w7-1": [
+      {"k": "compare", "t": "Three kinds of weak door", "cols": [{"h": "Unsupported product", "items": ["An old lock nobody makes keys for"]}, {"h": "Shadow IT", "items": ["A door the landlord doesn’t know exists"]}, {"h": "Hardcoded secret", "items": ["A key taped next to the lock"]}]},
+      {"k": "flow", "t": "A race condition: time of check, time of use", "s": [["Time of check", "the system checks the file is safe", "good"], {"l": "Time of use", "d": "it uses a file that is no longer what it checked", "tone": "bad", "via": "in the gap, something swaps the file", "dash": true}]}
+    ],
+    "w7-2": [
+      {"k": "hub", "t": "The phishing family", "c": ["Tricking a person"], "s": [["Phishing", "broad, by email"], ["Spear phishing", "aimed at one person"], ["Whaling", "aimed at executives"], ["Smishing", "by SMS"], ["Vishing", "by voice"], ["Quishing", "by QR code"]]}
+    ],
+    "w7-3": [
+      {"k": "compare", "t": "Brute force or password spraying", "cols": [{"h": "Brute force", "items": ["Many passwords", "Against one account", "Trips account lockout"]}, {"h": "Password spraying", "tone": "warn", "items": ["One common password", "Against many accounts", "Stays under lockout limits"]}]}
+    ],
+    "w7-4": [
+      {"k": "flow", "t": "Why prompt injection works", "s": [["Someone hides an instruction in content"], ["The model reads it, along with your request"], ["It cannot reliably tell instructions from data", "", "warn"], ["It may follow the hidden one", "", "bad"]]}
+    ],
+    "w8-1": [
+      {"k": "compare", "t": "Ways to separate systems", "cols": [{"h": "Logical segmentation", "items": ["Same hardware, separated by configuration", "For example, VLANs"]}, {"h": "Physical segmentation", "items": ["Separate hardware for each zone"]}, {"h": "Air-gapped", "items": ["No network connection to the outside at all"]}]}
+    ],
+    "w8-2": [
+      {"k": "hub", "t": "What to weigh when choosing an architecture", "c": ["The choice"], "s": ["Availability and resilience", "Ease of recovery", "Cost", "Scalability", "Data sovereignty", "Responsibility and ownership", "Power and compute", "Risk"]}
+    ],
+    "w8-4": [
+      {"k": "compare", "t": "When the lock loses power", "cols": [{"h": "Fail-closed", "items": ["Stays locked", "Safer for confidentiality", "Can block legitimate use"]}, {"h": "Fail-open", "items": ["Opens", "Keeps things available", "Lets everything through"]}]}
+    ],
+    "w9-1": [
+      {"k": "compare", "t": "Data in three states", "cols": [{"h": "At rest", "items": ["Money in the vault", "Stored on disks, databases, backups", "Full-disk, file and database encryption"]}, {"h": "In transit", "items": ["Money in the armored truck", "Moving across a network", "Transport encryption such as TLS"]}, {"h": "In use", "tone": "warn", "items": ["Money on the counter being counted", "Being processed in memory", "Hardest to protect"]}]},
+      {"k": "compare", "t": "Ways to protect a value", "cols": [{"h": "Masking", "items": ["Hide part of it: •••• 4821"]}, {"h": "Tokenization", "items": ["Swap it for a random token; the real value sits in a separate vault"]}, {"h": "Hashing", "items": ["A one-way digest"]}, {"h": "Encryption", "items": ["Needs a key to read"]}]}
+    ],
+    "w9-2": [
+      {"k": "flow", "t": "The data life cycle", "s": ["Creation", "Management", "Distribution", "Retention", "Disposal"]},
+      {"k": "compare", "t": "Who does what with data", "cols": [{"h": "Owner", "items": ["Accountable", "Decides classification"]}, {"h": "Custodian", "items": ["Implements and maintains the technical controls"]}, {"h": "Steward", "items": ["Looks after quality and proper use"]}, {"h": "Controller", "items": ["Decides why and how personal data is processed"]}]}
+    ],
+    "w9-3": [
+      {"k": "scale", "t": "Recovery sites", "from": "Cheaper, slower to use", "to": "Costlier, ready at once", "s": [["Cold", "an empty room with power and a lease"], ["Warm", "furniture, but needs setup"], ["Hot", "furnished and stocked: walk in"]]}
+    ],
+    "w9-4": [
+      {"k": "compare", "t": "Two reliability numbers", "cols": [{"h": "MTBF", "items": ["How long it tends to work before breaking", "Higher is better"]}, {"h": "MTTR", "items": ["How long it takes to fix", "Lower is better"]}]}
+    ],
+    "w10-1": [
+      {"k": "compare", "t": "Guards with different jobs", "cols": [{"h": "Firewall", "items": ["Checks addresses and ports"]}, {"h": "WAF", "items": ["Reads the content of web requests"]}, {"h": "IDS", "items": ["A camera with an alarm", "Detects and alerts"]}, {"h": "IPS", "items": ["A guard who can step in", "Detects and blocks"]}]},
+      {"k": "flow", "t": "Network access control with 802.1X", "s": [["A device connects", "the supplicant"], ["The switch or access point", "the authenticator"], ["A RADIUS server checks it", "identity and, often, posture"], ["Allowed in, or kept out", "", "good"]]}
+    ],
+    "w10-2": [
+      {"k": "scale", "t": "From known bad to suspicious behaviour", "from": "Known threats", "to": "Unknown behaviour", "s": [["Antivirus", "photos of known criminals"], ["EDR", "a detective watching behaviour, able to step in"], ["XDR", "the same, across more sources"]]},
+      {"k": "compare", "t": "Allow list or block list", "cols": [{"h": "Allow list", "tone": "good", "items": ["A guest list: not on it, not in", "Stricter"]}, {"h": "Block list", "items": ["A list of who is banned", "Anything new gets through"]}]}
+    ],
+    "w10-3": [
+      {"k": "hub", "t": "Deception: bait that only an attacker would touch", "c": ["Deception"], "s": [["Honeypot", "a decoy system"], ["Honeynet", "a decoy network"], ["Honeyfile", "a decoy file"], ["Honeytoken", "a decoy credential or record"], ["Canary account", "a decoy account"]]}
+    ],
+    "w10-4": [
+      {"k": "flow", "t": "An asset’s life", "s": [["Plan and scope"], ["Acquire"], ["Assign", "an owner is accountable"], ["Monitor and track"], ["Dispose", "sanitize, then get a certificate of destruction"]], "n": "Like clearing out the glove compartment before selling the company car."}
+    ],
+    "w11-1": [
+      {"k": "cycle", "t": "Vulnerability management", "s": [["Identify", "scan, review code, check cloud settings"], ["Prioritize", "severity plus context"], ["Remediate", "patch, reconfigure, compensate or accept"], ["Verify", "usually by rescanning"], ["Report"]], "b": "Then inspect again"},
+      {"k": "matrix", "t": "When the scanner is wrong", "x": ["A real problem", "No problem"], "y": ["Scanner flags it", "Scanner is silent"], "c": [[["True positive", "good"], ["False positive", "warn"]], [["False negative: missed", "bad"], ["True negative", "good"]]]}
+    ],
+    "w11-2": [
+      {"k": "flow", "t": "From sensors to response", "s": [["Sources", "systems, apps, network devices"], ["Log aggregation"], ["SIEM", "the security desk where everything meets"], ["Tuned alerts", "not every opened window"], ["SOAR", "runs the playbook"]]}
+    ],
+    "w11-4": [
+      {"k": "compare", "t": "Access control models", "cols": [{"h": "Role-based", "items": ["Staff uniforms: nurses get nurse access"]}, {"h": "Discretionary", "items": ["Your diary: the owner decides"]}, {"h": "Mandatory", "items": ["Military clearance: the owner cannot change it"]}, {"h": "Rule-based", "items": ["Conditions apply, like firewall rules"]}, {"h": "Just-in-time", "items": ["A key checked out for one hour"]}], "n": "Enforcement happens on the server for every request. Hiding a button changes what people see, not what they can do."}
+    ],
+    "w12-1": [
+      {"k": "compare", "t": "Automation and orchestration", "cols": [{"h": "Automation", "items": ["A dishwasher", "One job, the same way every time"]}, {"h": "Orchestration", "items": ["The kitchen manager", "Coordinates many jobs so the whole meal comes together"]}], "n": "Guardrails keep automation from doing harm quickly and at scale."}
+    ],
+    "w12-3": [
+      {"k": "hub", "t": "Reconstructing what happened", "c": ["The incident"], "s": [["Logs", "endpoint, network, application, authentication"], ["Network data", "NetFlow, packet captures"], ["Vulnerability scans"], ["Metadata", "email headers, file details"], ["Physical records", "badges, surveillance footage"], ["Security tool dashboards"]]}
+    ],
+    "w12-4": [
+      {"k": "scale", "t": "Order of volatility: collect the most fleeting first", "from": "Gone soonest", "to": "Lasts longest", "s": [["CPU registers and cache"], ["Memory", "routing and process tables"], ["Temporary files"], ["Disk"], ["Remote logs"], ["Archived media"]]},
+      {"k": "flow", "t": "Work from a copy", "s": [["Original evidence", "left untouched"], ["Bit-level copy", "hashed when made"], ["Investigate the copy"], ["Hashes still match", "the evidence was not changed", "good"]]}
+    ],
+    "w13-1": [
+      {"k": "compare", "t": "Four kinds of governance document", "cols": [{"h": "Policy", "items": ["What must happen", "All staff must wear seatbelts"]}, {"h": "Standard", "items": ["Measurable requirements", "The seatbelt must meet this rating"]}, {"h": "Procedure", "items": ["The steps", "Buckle it this way"]}, {"h": "Guideline", "items": ["Recommended advice", "Consider adjusting your seat first"]}]}
+    ],
+    "w13-2": [
+      {"k": "compare", "t": "Four ways to respond to a risk", "cols": [{"h": "Mitigate", "items": ["Lock the doors"]}, {"h": "Transfer", "items": ["Buy insurance"]}, {"h": "Avoid", "items": ["Move out of the flood zone"]}, {"h": "Accept", "items": ["Live with the small risks"]}]},
+      {"k": "flow", "t": "Annualized loss, worked through", "s": [["SLE", "each loss costs $10,000"], ["× ARO", "it happens 0.5 times a year"], ["= ALE", "$5,000 a year", "warn"]]}
+    ],
+    "w13-3": [
+      {"k": "flow", "t": "Bringing in a vendor", "s": [["Ask", "RFI for information, RFP for proposals, RFQ for quotes"], ["Due diligence", "check references and conflicts of interest"], ["Agree", "MSA, SOW, SLA, NDA"], ["Monitor", "right to audit, service-level monitoring"]]},
+      {"k": "compare", "t": "Which agreement does what", "cols": [{"h": "MSA", "items": ["The overall terms for future work"]}, {"h": "SOW", "items": ["The specific work and deliverables"]}, {"h": "SLA", "items": ["Measurable service levels"]}, {"h": "NDA", "items": ["Keep shared information secret"]}]}
+    ],
+    "w13-4": [
+      {"k": "hub", "t": "Rights people have over their data", "c": ["The data subject"], "s": ["Right to be forgotten", "Opt in or opt out", "Data correction", "Restrict processing", "Prevent processing"]},
+      {"k": "compare", "t": "Controller and processor", "cols": [{"h": "Controller", "items": ["Decides why and how personal data is processed"]}, {"h": "Processor", "items": ["Processes it on the controller’s behalf"]}]}
+    ],
+    "w13-5": [
+      {"k": "scale", "t": "How much the tester knows", "from": "Has the floor plans", "to": "Has nothing", "s": [["Known environment"], ["Partially known environment"], ["Unknown environment"]]},
+      {"k": "compare", "t": "Audit or penetration test", "cols": [{"h": "Audit", "items": ["A health check of your records", "Do the controls exist and work?"]}, {"h": "Penetration test", "items": ["A friendly burglar, hired to try the doors", "Always with written rules of engagement"]}]}
+    ],
+    "w13-6": [
+      {"k": "cycle", "t": "Awareness that sticks", "s": [["Onboarding", "when someone joins"], ["Ongoing", "regular, specific practice"], ["Measure", "metrics and reports"], ["Targeted or corrective", "for the people and topics that need it"]], "b": "Then back to ongoing practice, with feedback"}
+    ]
+  }
+}
