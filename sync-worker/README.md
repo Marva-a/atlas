@@ -8,8 +8,8 @@ It runs on Cloudflare's **free plan**. The free limits that matter (checked Nove
 
 | Limit (free plan) | Amount | What Atlas uses |
 |---|---|---|
-| Worker requests | 100,000 a day | One check a minute while Atlas is open, plus uploads |
-| D1 rows written | 100,000 a day | One per upload, at most one every 30 seconds per device |
+| Worker requests | 100,000 a day | One check every 45 seconds while Atlas is open, plus uploads and pairing |
+| D1 rows written | 100,000 a day | One per upload (at most one every 15 seconds per device), plus a few per pairing |
 | D1 row size | 2 MB | One encrypted, compressed copy per sync code (usually well under 200 KB) |
 | D1 database size | 500 MB | Enough for thousands of learners |
 
@@ -87,6 +87,10 @@ node js/sync-selftest.js                  # the app side: merging, deletions, te
   sync code; the code itself is never sent.
 - **Encrypted on your device.** AES-GCM with a 256-bit key, also worked out from the code. The service stores
   only locked data, a revision number and a SHA-256 hash of the access key.
+- **Pairing with a short code.** "Show a code" leaves a one-time public key (ECDH P-256) under a hash of
+  an 8-digit code for ten minutes; the device that types the code encrypts the sync code to that key. The
+  service only sees public keys and locked data. It does have to pass the public keys along honestly: a
+  dishonest operator could intercept a pairing. The QR code method never goes through the service.
 - **No overwriting.** Every upload says which revision it was based on. If another device uploaded first,
   the upload is refused, and Atlas downloads, merges and tries again.
 - **What it cannot protect against.** Anyone who has your sync code (or the pairing link or QR code) can read

@@ -210,6 +210,27 @@ check('Stable text: key order does not matter', stableStringify({ b: 1, a: [2, {
   check('Seal: a copy moved to another vault is refused', await fails(() => openState(sealed, { ...k1, vaultId: other.vaultId })), 'refused');
 }
 
+// ─── Pairing with an 8-digit code ────────────────────────────────────────────
+{
+  const { newPairCode, cleanPairCode, groupedPairCode, pairId, makeOffer, sealForOffer, openForOffer } = await import('./sync-pair.js');
+  const code = newPairCode();
+  check('Pair code: 8 digits', /^\d{8}$/.test(code), 'true');
+  check('Pair code: typed with a space is accepted', cleanPairCode(groupedPairCode(code)), code);
+  check('Pair code: 7 digits is refused', cleanPairCode('1234 567'), '');
+  check('Pair code: the same code finds the same pairing', (await pairId(code)) === (await pairId(code)), 'true');
+  check('Pair code: the service never sees the code itself', (await pairId(code)).includes(code), 'false');
+  const offer = await makeOffer(code);
+  const secret = 'S'.repeat(43);
+  const sealed = await sealForOffer(secret, offer.pub, code, offer.id);
+  check('Pairing: the sync code is not readable in transit', sealed.includes(secret), 'false');
+  check('Pairing: the new device unlocks the sync code', await openForOffer(sealed, offer), secret);
+  const fails = async (fn) => { try { await fn(); return 'opened'; } catch { return 'refused'; } };
+  const other = await makeOffer(code);
+  check('Pairing: another device with the same code cannot unlock it', await fails(() => openForOffer(sealed, other)), 'refused');
+  const wrongCode = await sealForOffer(secret, offer.pub, '00000000', offer.id);
+  check('Pairing: locked with a different code, it cannot be unlocked', await fails(() => openForOffer(wrongCode, offer)), 'refused');
+}
+
 export { results };
 
 if (typeof process !== 'undefined' && process.argv?.[1]?.endsWith('sync-selftest.js')) {

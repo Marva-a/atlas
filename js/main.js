@@ -43,7 +43,7 @@ import {
 import { STEPS, stepIndex, nextStep, previousStep, loadFlow, saveFlow } from './session-flow.js';
 import * as AB from './autobackup.js';
 import * as sync from './sync.js';
-import { syncPanelHtml, refreshSyncPanel, syncActions, submitSyncJoin, receivePairingLink, setSyncRefresh } from './sync-ui.js';
+import { syncPanelHtml, refreshSyncPanel, syncActions, submitSyncJoin, submitSyncEnter, receivePairingLink, setSyncRefresh } from './sync-ui.js';
 
 const mainEl = document.getElementById('main');
 const bannersEl = document.getElementById('banners');
@@ -1413,6 +1413,10 @@ mainEl.addEventListener('submit', (e) => {
   if (e.target.id === 'sync-join-form') {
     e.preventDefault();
     render({ focus: submitSyncJoin(e.target) });
+  } else if (e.target.id === 'sync-enter-form') {
+    e.preventDefault();
+    const focus = submitSyncEnter(e.target);
+    render(focus ? { focus } : {});
   } else if (e.target.id === 'log-form') {
     e.preventDefault();
     saveLog(e.target);

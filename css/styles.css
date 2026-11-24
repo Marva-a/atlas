@@ -1216,3 +1216,13 @@ main.is-entering { animation: enter 260ms var(--ease) both; }
 .sync-code { font-family: var(--font-mono); font-size: var(--text-lg); letter-spacing: 0.04em; overflow-wrap: anywhere; }
 #sync-link { width: 100%; font-family: var(--font-mono); font-size: var(--text-sm); }
 #sync-panel .field-error { display: block; color: var(--danger); font-size: var(--text-sm); margin-top: var(--s-1); }
+.sync-steps--big { font-size: var(--text-md); }
+.sync-steps--big li { margin-bottom: var(--s-1); }
+.sync-showcode { margin: var(--s-2) 0; padding: var(--s-4); background: var(--surface-2); border-radius: var(--radius); text-align: center; }
+.sync-showcode .small-label { margin: 0; }
+.sync-bigcode { font-family: var(--font-mono); font-size: clamp(2.2rem, 11vw, 3.25rem); font-weight: 650; letter-spacing: 0.08em; margin: var(--s-2) 0 var(--s-3); white-space: nowrap; }
+.sync-showcode .button-row { justify-content: center; }
+.sync-dot { display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.45rem; border-radius: 50%; background: var(--accent); vertical-align: 0.05em; animation: sync-pulse 1.4s var(--ease) infinite; }
+@keyframes sync-pulse { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .sync-dot { animation: none; } }
+.sync-code-input { font-family: var(--font-mono); font-size: var(--text-xl); letter-spacing: 0.12em; max-width: 14rem; }

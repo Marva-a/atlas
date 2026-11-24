@@ -57,6 +57,34 @@ check('After deleting: no copy', (await (await call('GET', `/v1/vaults/${ID}`)).
 const stored = env.DB.raw.prepare('SELECT COUNT(*) AS n FROM vaults').get().n;
 check('Nothing is left in the database', stored, 0);
 
+// ─── Pairing with a short code ───────────────────────────────────────────────
+const PID = 'b'.repeat(64);
+const pair = (method, { body, answer = false, id = PID } = {}) => worker.fetch(new Request(`https://sync.test/v1/pairings/${id}${answer ? '/answer' : ''}`, {
+  method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined,
+}), env);
+check('Pairing: an unknown code is "not found", not an error', (await (await pair('GET')).json()).found, false);
+check('Pairing: a bad id is refused', (await pair('GET', { id: 'xyz' })).status, 400);
+r = await pair('PUT', { body: { pub: 'PUBKEY' } });
+check('Pairing: showing a code creates it', r.status, 200);
+check('Pairing: the same code cannot be created twice', (await pair('PUT', { body: { pub: 'OTHER' } })).status, 409);
+let pr = await (await pair('GET')).json();
+check('Pairing: the other device reads the public key', pr.pub, 'PUBKEY');
+check('Pairing: no answer yet', pr.sealed, null);
+check('Pairing: an answer without "sealed" is refused', (await pair('POST', { answer: true, body: { nope: 1 } })).status, 400);
+check('Pairing: answering works once', (await pair('POST', { answer: true, body: { sealed: 'SEALED' } })).status, 200);
+check('Pairing: a second answer is refused', (await pair('POST', { answer: true, body: { sealed: 'EVIL' } })).status, 409);
+pr = await (await pair('GET')).json();
+check('Pairing: the showing device gets the first answer', pr.sealed, 'SEALED');
+check('Pairing: delete after use', (await pair('DELETE')).status, 200);
+check('Pairing: gone after delete', (await (await pair('GET')).json()).found, false);
+env.DB.raw.prepare('INSERT INTO pairings (id, pub, sealed, created_at, expires_at) VALUES (?, ?, NULL, ?, ?)').run('c'.repeat(64), 'OLD', 1, 2);
+check('Pairing: an expired code reads as not found', (await (await pair('GET', { id: 'c'.repeat(64) })).json()).found, false);
+check('Pairing: an expired code cannot be answered', (await pair('POST', { id: 'c'.repeat(64), answer: true, body: { sealed: 'S' } })).status, 404);
+await pair('PUT', { id: 'd'.repeat(64), body: { pub: 'NEW' } });
+check('Pairing: expired codes are tidied up when a new one is made', env.DB.raw.prepare('SELECT COUNT(*) AS n FROM pairings WHERE id = ?').get('c'.repeat(64)).n, 0);
+r = await worker.fetch(new Request(`https://sync.test/v1/pairings/${PID}/answer`, { method: 'OPTIONS', headers: { Origin: 'https://marva-a.github.io' } }), env);
+check('Pairing: the Atlas site may POST from a browser', /POST/.test(r.headers.get('Access-Control-Allow-Methods') ?? ''), true);
+
 for (const x of results) console.log(`${x.pass ? 'PASS' : 'FAIL'}  ${x.name}${x.pass ? '' : ` (got ${x.actual}, expected ${x.expected})`}`);
 const failed = results.filter((x) => !x.pass).length;
 console.log(`\n${results.length - failed}/${results.length} passed`);
