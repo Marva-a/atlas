@@ -42,6 +42,8 @@ import {
 } from './lessons.js';
 import { STEPS, stepIndex, nextStep, previousStep, loadFlow, saveFlow } from './session-flow.js';
 import * as AB from './autobackup.js';
+import * as sync from './sync.js';
+import { syncPanelHtml, refreshSyncPanel, syncActions, submitSyncJoin, receivePairingLink, setSyncRefresh } from './sync-ui.js';
 
 const mainEl = document.getElementById('main');
 const bannersEl = document.getElementById('banners');
@@ -870,6 +872,7 @@ function settingsView() {
         <p><strong>Ready to import.</strong> The file contains ${esc(summaryText(ui.importPreview.summary))}${ui.importPreview.summary.exportedAt ? ` (exported ${esc(when(ui.importPreview.summary.exportedAt))})` : ''}.</p>
         ${ui.importPreview.migration ? `<p><strong>This is an older file (schema ${esc(ui.importPreview.migration.fromVersion)}).</strong> It will be converted to the current format first${ui.importPreview.migration.notice ? `: ${esc(ui.importPreview.migration.notice.replace(/\.$/, ''))}` : '. Nothing in it needs converting'}. Your Progress numbers were checked and are unchanged.</p>` : ''}
         <p><strong>Importing replaces all your current data</strong> (${esc(summaryText(store.summarize(store.getData())))}). A copy of your current data is kept in this browser, and you can restore it below.</p>
+        ${sync.isOn() ? '<p><strong>Sync is on,</strong> so this file also becomes your data on your other devices: items that are not in the file are removed there too.</p>' : ''}
         <div class="button-row">
           <button type="button" class="button--danger" data-action="import-confirm">Replace my data with this file</button>
           <button type="button" data-action="import-cancel">Cancel</button>
@@ -887,11 +890,14 @@ function settingsView() {
 
   // Data and backups (first, as before), Content (course updates, resources, flashcards), Preferences.
   const dataPart = `
+    ${syncPanelHtml()}
     ${backupPanelHtml()}
 
     <section class="card" aria-labelledby="data-heading">
       <h2 id="data-heading">Your data</h2>
-      <p><strong>Local only.</strong> Your data is saved in this browser only, and nothing is sent anywhere. Clearing site data, or opening the app in another browser or at a different address, starts empty, so export now and then.</p>
+      ${sync.isOn()
+    ? '<p><strong>Synced.</strong> Your data is saved in this browser, and an encrypted copy that only your devices can unlock keeps your other devices up to date. Backup files are still a good idea now and then.</p>'
+    : '<p><strong>Local only.</strong> Your data is saved in this browser only, and nothing is sent anywhere. Clearing site data, or opening the app in another browser or at a different address, starts empty, so export now and then.</p>'}
       <p><strong>Do not put passwords, keys or confidential employer details in notes, your portfolio or People.</strong> Browser storage is not a password vault and is not encrypted.</p>
       <p class="meta">Currently saved: ${esc(summaryText(store.summarize(store.getData())))}. Last export: ${s.lastExportedAt ? esc(when(s.lastExportedAt)) : 'never'}.</p>
       ${ui.dataMessage ? `<p class="status-ok" id="data-message" tabindex="-1">${esc(ui.dataMessage)}</p>` : ''}
@@ -1021,6 +1027,7 @@ function loadProblemView(problem) {
 // ─── Render ──────────────────────────────────────────────────────────────────
 
 function render({ focus } = {}) {
+  syncRenderPending = false;
   flushResourceNotes(); // notes typed a moment ago are saved before the page redraws
   flushLessonAnswers();
   syncPlanStart(); // must run before any view reads a plan date
@@ -1390,7 +1397,8 @@ mainEl.addEventListener('click', (e) => {
   else {
     const handler = cardActions[el.dataset.action] ?? weekActions[el.dataset.action] ?? scorecardActions[el.dataset.action]
       ?? evidenceActions[el.dataset.action] ?? peopleActions[el.dataset.action] ?? resourceActions[el.dataset.action] ?? courseActions[el.dataset.action]
-      ?? lessonActions[el.dataset.action] ?? certActions[el.dataset.action] ?? pathwayActions[el.dataset.action] ?? visualActions[el.dataset.action] ?? noteActions[el.dataset.action];
+      ?? lessonActions[el.dataset.action] ?? certActions[el.dataset.action] ?? pathwayActions[el.dataset.action] ?? visualActions[el.dataset.action] ?? noteActions[el.dataset.action]
+      ?? syncActions[el.dataset.action];
     if (!handler) return;
     const focus = handler(el);
     render(focus ? { focus } : {});
@@ -1402,7 +1410,10 @@ bannersEl.addEventListener('click', (e) => {
 });
 
 mainEl.addEventListener('submit', (e) => {
-  if (e.target.id === 'log-form') {
+  if (e.target.id === 'sync-join-form') {
+    e.preventDefault();
+    render({ focus: submitSyncJoin(e.target) });
+  } else if (e.target.id === 'log-form') {
     e.preventDefault();
     saveLog(e.target);
   } else if (e.target.id === 'card-form') {
@@ -1513,6 +1524,14 @@ document.addEventListener('pointerdown', () => document.body.classList.remove('u
 
 /** Reads the address, sends an old one to its new place, and sets the place and section to show. */
 function routeFromHash() {
+  // A pairing link from another of your devices: keep the code for the confirm step, and take it out
+  // of the address bar and history straight away.
+  const pair = location.hash.match(/^#pair\/(.*)$/);
+  if (pair) {
+    receivePairingLink(pair[1]);
+    history.replaceState(null, '', '#settings/data');
+    nav.focus = '#sync-pair-confirm, #sync-heading';
+  }
   const r = resolveHash(location.hash);
   if (r.redirect) history.replaceState(null, '', r.redirect);
   section = r.section;
@@ -1534,6 +1553,24 @@ window.addEventListener('hashchange', () => {
   nav.focus = null;
   render({ focus });
   playEntrance();
+});
+
+// Changes from another device arrive in the background. Redraw to show them, but never while you are
+// typing in a field: wait until you leave it, so nothing you are writing is disturbed.
+let syncRenderPending = false;
+const EDITING = 'input, textarea, select, [contenteditable="true"]';
+function renderAfterSync() {
+  const a = document.activeElement;
+  if (a && mainEl.contains(a) && a.matches(EDITING)) { syncRenderPending = true; return; }
+  render();
+}
+mainEl.addEventListener('focusout', () => {
+  if (!syncRenderPending) return;
+  setTimeout(() => {
+    const a = document.activeElement;
+    if (!syncRenderPending || (a && mainEl.contains(a) && a.matches(EDITING))) return;
+    render();
+  }, 0);
 });
 
 /** A short fade-in of the new page (switched off when you ask for reduced motion). */
@@ -1565,13 +1602,18 @@ if (!store.getLoadProblem()) {
   AB.onStatusChange(refreshBackupUi);
   // Backups are named by the real Vancouver date, even while a test date is on.
   AB.init({ json: () => store.exportJson(), today: () => vancouverDate() });
+  sync.onStatusChange(refreshSyncPanel);
+  sync.onDataChanged(renderAfterSync);
+  setSyncRefresh((focus) => { if (route === 'settings' && section === 'data') render({ focus }); else refreshSyncPanel(); });
+  sync.start();
 }
 // Catch the timer up on anything that happened while the page was closed.
 if (activeTimer && T.advance(activeTimer).length) T.saveTimer(activeTimer);
 // If the timer ended while the page was closed, a guided session goes straight to wrap-up.
 if (activeTimer?.finished && flow && flow.date === today() && flow.step === 'focus') setFlow({ ...flow, step: 'wrapup' });
 route = routeFromHash();
-render();
+render(nav.focus ? { focus: nav.focus } : {});
+nav.focus = null;
 setInterval(tick, 1000);
 
 // Offline use and installing: register the service worker, then ask it to keep a copy of what this page loaded.

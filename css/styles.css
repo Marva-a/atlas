@@ -1205,3 +1205,14 @@ main.is-entering { animation: enter 260ms var(--ease) both; }
 .note-pop__hint { margin: var(--s-2) 0; }
 .note-pop__error { color: var(--danger); font-weight: 600; }
 .note-pop__done { font-weight: 650; color: var(--success); }
+
+/* ─── Sync across devices (Settings → Data) ───────────────────────────────── */
+.sync-pair { margin: var(--s-3) 0; padding: var(--s-3) var(--s-4); background: var(--surface-2); border-radius: var(--radius); }
+.sync-pair h3 { margin-top: 0; }
+.sync-pair__body { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: flex-start; }
+.sync-pair__body > div { flex: 1 1 14rem; min-width: 0; }
+.sync-qr { display: block; width: min(220px, 100%); height: auto; flex: none; border-radius: var(--radius-sm); }
+.sync-steps { margin: 0 0 var(--s-2); padding-left: 1.25rem; }
+.sync-code { font-family: var(--font-mono); font-size: var(--text-lg); letter-spacing: 0.04em; overflow-wrap: anywhere; }
+#sync-link { width: 100%; font-family: var(--font-mono); font-size: var(--text-sm); }
+#sync-panel .field-error { display: block; color: var(--danger); font-size: var(--text-sm); margin-top: var(--s-1); }
