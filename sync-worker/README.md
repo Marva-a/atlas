@@ -16,6 +16,15 @@ It runs on Cloudflare's **free plan**. The free limits that matter (checked Nove
 If a daily limit is used up, sync pauses until midnight UTC. Nothing is lost: each device keeps its data
 and syncs once the service answers again.
 
+## Where it runs now
+
+Deployed on 24 November 2026 to **https://atlas-sync.marva-abouei.workers.dev** (Worker `atlas-sync`, D1
+database `atlas-sync`, both on Marva's Cloudflare account). `js/sync-config.js` points Atlas there.
+Health check: https://atlas-sync.marva-abouei.workers.dev/health
+
+To update the service after changing `src/index.js`: `cd sync-worker && npx wrangler deploy`, or paste the
+new code into the Worker in the Cloudflare dashboard.
+
 ## Deploy it (once, about 15 minutes)
 
 You need a free Cloudflare account. Either way below works.

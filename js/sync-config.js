@@ -1,6 +1,6 @@
 // Where the sync service lives (see sync-worker/README.md). Empty means this copy of Atlas has no sync
 // service, and Settings says so instead of offering sync.
-export const SYNC_URL_DEFAULT = '';
+export const SYNC_URL_DEFAULT = 'https://atlas-sync.marva-abouei.workers.dev';
 
 /**
  * The address to use. On this computer (localhost) a developer can point Atlas at a test service by
