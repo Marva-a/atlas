@@ -8,3 +8,14 @@ CREATE TABLE IF NOT EXISTS vaults (
   created_at INTEGER NOT NULL,    -- milliseconds since 1970
   updated_at INTEGER NOT NULL
 );
+
+-- Short-lived pairing requests ("Show a code" on one device, "Enter a code" on another). A row lives for
+-- ten minutes at most and is deleted once used. The id is a hash of the 8-digit code; pub is the showing
+-- device's public key; sealed is the sync code, encrypted to that key by the device that entered the code.
+CREATE TABLE IF NOT EXISTS pairings (
+  id TEXT PRIMARY KEY,
+  pub TEXT NOT NULL,
+  sealed TEXT,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);

@@ -10,10 +10,19 @@
 //                           → 200 { rev } | 409 when another device uploaded first (download, merge, retry)
 //   DELETE /v1/vaults/:id   → 200 { deleted: true }
 //   GET    /health          → 200 { ok: true }
+// Pairing (connecting a new device with a short code; see js/sync-pair.js in the app):
+//   PUT    /v1/pairings/:id         body { pub }    → 200 { expiresAt } | 409 when that code is in use
+//   GET    /v1/pairings/:id         → 200 { found, pub, sealed }   (found: false once used or expired)
+//   POST   /v1/pairings/:id/answer  body { sealed } → 200 { ok: true } | 409 when already answered
+//   DELETE /v1/pairings/:id         → 200 { deleted: true }
+// :id is a SHA-256 hash of the code. A pairing expires after ten minutes and can be answered once.
 // Every vault call needs "Authorization: Bearer <access key>". The first upload sets the access key.
 
 const ID_RE = /^[0-9a-f]{32}$/;
 const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+const PAIR_ID_RE = /^[0-9a-f]{64}$/;
+export const PAIR_TTL_MS = 10 * 60 * 1000;
+const PAIR_FIELD_MAX = 1000;
 /** D1 rows can be up to 2,000,000 bytes; keep a margin for the other columns. */
 export const MAX_BLOB_CHARS = 1_900_000;
 
@@ -25,7 +34,7 @@ function corsHeaders(request, env) {
   if (!allowed.includes(origin) && !local) return {};
   return {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Authorization, Content-Type, If-Match',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
@@ -113,6 +122,52 @@ async function handleVault(request, env, id, cors) {
   return json({ error: 'Method not allowed.' }, 405, cors);
 }
 
+async function smallJson(request, field) {
+  const text = await request.text();
+  if (text.length > PAIR_FIELD_MAX * 2) return { bad: 'Too large.' };
+  let body;
+  try { body = JSON.parse(text); } catch { return { bad: 'The body must be JSON.' }; }
+  const v = body?.[field];
+  if (typeof v !== 'string' || !v || v.length > PAIR_FIELD_MAX) return { bad: `The body needs a "${field}" string.` };
+  return { value: v };
+}
+
+async function handlePairing(request, env, id, answer, cors) {
+  const now = Date.now();
+  const row = await env.DB.prepare('SELECT pub, sealed, expires_at FROM pairings WHERE id = ?').bind(id).first();
+  const live = row && row.expires_at > now;
+
+  if (answer) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed.' }, 405, cors);
+    if (!live) return json({ error: 'That code has expired or was already used.' }, 404, cors);
+    const body = await smallJson(request, 'sealed');
+    if (body.bad) return json({ error: body.bad }, 400, cors);
+    const r = await env.DB.prepare('UPDATE pairings SET sealed = ? WHERE id = ? AND sealed IS NULL AND expires_at > ?').bind(body.value, id, now).run();
+    if (!r.meta?.changes) return json({ error: 'That code was already used.' }, 409, cors);
+    return json({ ok: true }, 200, cors);
+  }
+
+  if (request.method === 'PUT') {
+    const body = await smallJson(request, 'pub');
+    if (body.bad) return json({ error: body.bad }, 400, cors);
+    await env.DB.prepare('DELETE FROM pairings WHERE expires_at <= ?').bind(now).run(); // tidy up old codes
+    const expiresAt = now + PAIR_TTL_MS;
+    const r = await env.DB.prepare('INSERT INTO pairings (id, pub, sealed, created_at, expires_at) VALUES (?, ?, NULL, ?, ?) ON CONFLICT(id) DO NOTHING')
+      .bind(id, body.value, now, expiresAt).run();
+    if (!r.meta?.changes) return json({ error: 'That code is in use. Get a new one.' }, 409, cors);
+    return json({ expiresAt }, 200, cors);
+  }
+  if (request.method === 'GET') {
+    if (!live) return json({ found: false }, 200, cors);
+    return json({ found: true, pub: row.pub, sealed: row.sealed ?? null, expiresAt: row.expires_at }, 200, cors);
+  }
+  if (request.method === 'DELETE') {
+    await env.DB.prepare('DELETE FROM pairings WHERE id = ?').bind(id).run();
+    return json({ deleted: true }, 200, cors);
+  }
+  return json({ error: 'Method not allowed.' }, 405, cors);
+}
+
 export default {
   async fetch(request, env) {
     const cors = corsHeaders(request, env);
@@ -120,6 +175,11 @@ export default {
     const { pathname } = new URL(request.url);
     try {
       if (pathname === '/health') return json({ ok: true }, 200, cors);
+      const p = pathname.match(/^\/v1\/pairings\/([^/]+?)(\/answer)?$/);
+      if (p) {
+        if (!PAIR_ID_RE.test(p[1])) return json({ error: 'Not a pairing id.' }, 400, cors);
+        return await handlePairing(request, env, p[1], Boolean(p[2]), cors);
+      }
       const m = pathname.match(/^\/v1\/vaults\/([^/]+)$/);
       if (!m) return json({ error: 'Not found.' }, 404, cors);
       if (!ID_RE.test(m[1])) return json({ error: 'Not a vault id.' }, 400, cors);

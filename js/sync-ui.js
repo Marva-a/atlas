@@ -1,7 +1,9 @@
-// Settings → Data → "Sync across your devices": turning sync on, connecting another device by QR code,
-// link or typed code, the current status, and turning it off.
+// Settings → Data → "Sync across your devices". The main way to connect is a short code: "Show a code" on
+// one device, "Enter a code" on the other (see sync-pair.js). A QR code, pairing link and the full sync
+// code are kept under "Other ways". Also: the current status, and turning sync off.
 import * as sync from './sync.js';
 import { groupedSecret, cleanSecret } from './sync-crypto.js';
+import { showCode, answerCode, cleanPairCode, groupedPairCode } from './sync-pair.js';
 import qrcode from './vendor/qrcode.mjs';
 import { esc, announce } from './ui.js';
 
@@ -9,7 +11,11 @@ const ui = {
   pendingPair: null, // a code from a pairing link, waiting for you to confirm
   joinOpen: false,
   joinProblem: '',
-  showPair: false,
+  showPair: false, // the QR code and link, under "Other ways"
+  showing: null, // { code, expiresAt, cancel } while this device shows a code
+  enterOpen: false, // the "Enter a code" form
+  enterProblem: '',
+  busy: false, // a pairing step is in progress
   confirmDelete: false,
   message: '',
   problem: '',
@@ -90,32 +96,69 @@ function pendingPairHtml() {
   </div>`;
 }
 
+function enterFormHtml() {
+  return `
+    <form id="sync-enter-form" novalidate>
+      <div class="field">
+        <label for="sync-pair-code">Code shown on your other device</label>
+        <input type="text" id="sync-pair-code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" class="sync-code-input"
+          aria-describedby="sync-pair-code-hint${ui.enterProblem ? ' sync-pair-code-error' : ''}" ${ui.enterProblem ? 'aria-invalid="true"' : ''}>
+        <span class="hint" id="sync-pair-code-hint">8 digits. On the other device: <strong>Settings → Data → Show a code</strong>.</span>
+        ${ui.enterProblem ? `<span class="field-error" id="sync-pair-code-error">${esc(ui.enterProblem)}</span>` : ''}
+      </div>
+      <div class="button-row"><button type="submit" class="button--primary" ${ui.busy ? 'disabled' : ''}>${ui.busy ? 'Connecting…' : 'Connect'}</button></div>
+    </form>`;
+}
+
+function showingHtml() {
+  const until = new Date(ui.showing.expiresAt).toLocaleTimeString('en-CA', { timeZone: 'America/Vancouver', timeStyle: 'short' });
+  return `
+    <div class="sync-showcode" id="sync-showcode" tabindex="-1" role="region" aria-labelledby="sync-showcode-label">
+      <p class="small-label" id="sync-showcode-label">Your code</p>
+      <p class="sync-bigcode" translate="no" aria-label="${esc(ui.showing.code.split('').join(' '))}">${esc(groupedPairCode(ui.showing.code))}</p>
+      <p>On your other device, open Atlas, go to <strong>Settings → Data</strong>, choose <strong>Enter a code</strong> and type these 8 digits.</p>
+      <p class="meta" aria-live="polite"><span class="sync-dot" aria-hidden="true"></span>Waiting for your other device. This screen updates by itself. The code works once and expires at ${esc(until.replace(/\.$/, ''))}.</p>
+      <div class="button-row"><button type="button" data-action="sync-show-cancel">Cancel</button></div>
+    </div>`;
+}
+
 function offHtml() {
   return `
     <p>Keep your progress the same on your phone and your computer. Lessons you complete, your answers, notes, flashcards and Security+ progress appear on every device you connect.</p>
-    <p class="meta">No account is needed. Your data is encrypted on this device before it is uploaded, so the sync service cannot read it. Course content, your theme and anything made with the test date on stay on each device.</p>
+    <ol class="sync-steps sync-steps--big">
+      <li>On your <strong>phone</strong>, choose <strong>Show a code</strong>.</li>
+      <li>On your <strong>computer</strong>, choose <strong>Enter a code</strong> and type it.</li>
+    </ol>
     <div class="button-row">
-      <button type="button" class="button--primary" data-action="sync-on">Turn on sync</button>
-      <button type="button" data-action="sync-join-toggle" aria-expanded="${ui.joinOpen}" aria-controls="sync-join-form">I already use sync on another device</button>
+      <button type="button" class="button--primary" data-action="sync-show-code" ${ui.busy ? 'disabled' : ''}>Show a code</button>
+      <button type="button" data-action="sync-enter-toggle" aria-expanded="${ui.enterOpen}" aria-controls="sync-enter-form">Enter a code</button>
     </div>
-    ${ui.joinOpen ? `
-      <form id="sync-join-form" novalidate>
-        <p>On the device that already syncs, open <strong>Settings → Data → Connect another device</strong>. Scan its QR code with this device's camera, or type the code here.</p>
-        <div class="field">
-          <label for="sync-code">Sync code or link</label>
-          <input type="text" id="sync-code" name="code" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="sync-code-hint${ui.joinProblem ? ' sync-code-error' : ''}" ${ui.joinProblem ? 'aria-invalid="true"' : ''}>
-          <span class="hint" id="sync-code-hint">43 characters. Spaces do not matter.</span>
-          ${ui.joinProblem ? `<span class="field-error" id="sync-code-error">${esc(ui.joinProblem)}</span>` : ''}
-        </div>
-        <div class="button-row"><button type="submit" class="button--primary">Connect</button></div>
-      </form>` : ''}`;
+    ${ui.enterOpen ? enterFormHtml() : ''}
+    <p class="meta">No account is needed. Your data is encrypted on this device before it is uploaded, so the sync service cannot read it. Course content, your theme and anything made with the test date on stay on each device.</p>
+    <details ${ui.joinOpen ? 'open' : ''}>
+      <summary>Other ways to connect</summary>
+      <p><strong>QR code:</strong> turn on sync here, then scan the code with your other device. The link opens in that device's default browser.</p>
+      <div class="button-row"><button type="button" data-action="sync-on">Turn on sync with a QR code</button></div>
+      <p><strong>Full sync code:</strong> if you already have the 43-character code or a pairing link from another device, enter it here.</p>
+      <div class="button-row"><button type="button" data-action="sync-join-toggle" aria-expanded="${ui.joinOpen}" aria-controls="sync-join-form">Type a sync code</button></div>
+      ${ui.joinOpen ? `
+        <form id="sync-join-form" novalidate>
+          <div class="field">
+            <label for="sync-code">Sync code or link</label>
+            <input type="text" id="sync-code" name="code" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="sync-code-hint${ui.joinProblem ? ' sync-code-error' : ''}" ${ui.joinProblem ? 'aria-invalid="true"' : ''}>
+            <span class="hint" id="sync-code-hint">43 characters. Spaces do not matter.</span>
+            ${ui.joinProblem ? `<span class="field-error" id="sync-code-error">${esc(ui.joinProblem)}</span>` : ''}
+          </div>
+          <div class="button-row"><button type="submit">Connect</button></div>
+        </form>` : ''}
+    </details>`;
 }
 
 function pairHtml() {
   const link = sync.pairingLink();
   return `
     <div class="sync-pair" id="sync-pair" tabindex="-1" role="region" aria-labelledby="sync-pair-heading">
-      <h3 id="sync-pair-heading">Connect another device</h3>
+      <h3 id="sync-pair-heading">QR code and link</h3>
       <div class="sync-pair__body">
         ${qrSvg(link)}
         <div>
@@ -124,8 +167,7 @@ function pairHtml() {
             <li>Open the link it shows. Atlas opens and asks to connect.</li>
             <li>Choose <strong>Connect this device</strong>.</li>
           </ol>
-          <p class="meta">No camera handy? Send yourself the link, or type the code in <strong>I already use sync on another device</strong>.</p>
-          <p class="meta"><strong>Atlas on your iPhone home screen?</strong> A scanned link opens in Safari, which keeps its own separate data. Open Atlas from the home screen instead and type the code there.</p>
+          <p class="meta"><strong>Note:</strong> a scanned link opens in the phone's <em>default</em> browser, which keeps its own separate data. If you use Atlas in another browser or from the home screen, use <strong>Show a code</strong> there instead.</p>
         </div>
       </div>
       <div class="field">
@@ -152,9 +194,21 @@ function onHtml() {
     </dl>
     <div class="button-row">
       <button type="button" data-action="sync-now" ${s.state === 'syncing' ? 'disabled' : ''}>Sync now</button>
-      <button type="button" data-action="sync-pair-toggle" aria-expanded="${ui.showPair}" aria-controls="sync-pair">${ui.showPair ? 'Hide the QR code' : 'Connect another device'}</button>
+      <button type="button" class="button--primary" data-action="sync-enter-toggle" aria-expanded="${ui.enterOpen}" aria-controls="sync-add">Add another device</button>
     </div>
-    ${ui.showPair ? pairHtml() : ''}
+    ${ui.enterOpen ? `
+      <div class="sync-pair" id="sync-add" tabindex="-1" role="region" aria-labelledby="sync-add-heading">
+        <h3 id="sync-add-heading">Add another device</h3>
+        <ol class="sync-steps">
+          <li>On the other device, open Atlas and go to <strong>Settings → Data</strong>.</li>
+          <li>Choose <strong>Show a code</strong>, then type the 8 digits here.</li>
+        </ol>
+        ${enterFormHtml()}
+      </div>` : ''}
+    <details ${ui.showPair ? 'open' : ''}>
+      <summary>Other ways to connect (QR code, link, full code)</summary>
+      ${pairHtml()}
+    </details>
     <details ${ui.confirmDelete ? 'open' : ''}>
       <summary>Turn off sync</summary>
       <p><strong>Turn off on this device</strong> stops syncing here. Your data on this device and on your other devices stays as it is.</p>
@@ -174,7 +228,7 @@ function onHtml() {
 export function syncPanelHtml() {
   const body = !sync.isAvailable()
     ? `<p>Sync is not set up for this copy of Atlas yet, so your data stays in this browser. To move it to another device, download a backup file below and restore it there.</p>`
-    : `${ui.pendingPair ? pendingPairHtml() : ''}${sync.isOn() ? onHtml() : offHtml()}`;
+    : ui.showing ? showingHtml() : `${ui.pendingPair ? pendingPairHtml() : ''}${sync.isOn() ? onHtml() : offHtml()}`;
   return `
     <section class="card" id="sync-panel" aria-labelledby="sync-heading">
       <h2 id="sync-heading" tabindex="-1">Sync across your devices</h2>
@@ -220,9 +274,38 @@ export const syncActions = {
     sync.syncNow().then(() => finish('Synced.'));
     return '#sync-heading';
   },
-  'sync-pair-toggle': () => {
-    ui.showPair = !ui.showPair;
-    return ui.showPair ? '#sync-pair' : '[data-action="sync-pair-toggle"]';
+  'sync-show-code': () => {
+    if (ui.busy) return null;
+    ui.busy = true; ui.message = ''; ui.problem = ''; ui.enterOpen = false;
+    showCode().then((showing) => {
+      ui.busy = false;
+      ui.showing = showing;
+      refreshAll('#sync-showcode');
+      return showing.done.then((secret) => {
+        ui.showing = null;
+        return sync.join(secret).then(() => finish('Connected. Your progress from your other device is here now, and from now on they stay in sync.'));
+      });
+    }).catch((err) => {
+      ui.busy = false;
+      ui.showing = null;
+      if (err?.message === 'Cancelled.') return;
+      ui.problem = err?.message || 'Something went wrong. Try again in a moment.';
+      ui.message = '';
+      announce(ui.problem);
+      refreshAll('#sync-problem');
+    });
+    return '#sync-heading';
+  },
+  'sync-show-cancel': () => {
+    ui.showing?.cancel();
+    ui.showing = null;
+    announce('Cancelled. The code no longer works.');
+    return '[data-action="sync-show-code"], #sync-heading';
+  },
+  'sync-enter-toggle': () => {
+    ui.enterOpen = !ui.enterOpen;
+    ui.enterProblem = '';
+    return ui.enterOpen ? '#sync-pair-code' : '[data-action="sync-enter-toggle"]';
   },
   'sync-copy-link': () => {
     const link = sync.pairingLink();
@@ -263,4 +346,40 @@ export function submitSyncJoin(form) {
   ui.message = ''; ui.problem = '';
   sync.join(code).then(() => finish('This device is connected. Your progress from your other devices is here now.'));
   return '#sync-heading';
+}
+
+/** The "Enter a code" form: turns sync on here if needed, then hands the sync code to the other device. */
+export function submitSyncEnter(form) {
+  const code = cleanPairCode(form.elements.code.value);
+  if (!code) {
+    ui.enterProblem = 'Type the 8 digits shown on your other device. Spaces do not matter.';
+    return '#sync-pair-code';
+  }
+  if (ui.busy) return null;
+  ui.busy = true; ui.enterProblem = ''; ui.message = ''; ui.problem = '';
+  (async () => {
+    if (!sync.isOn()) {
+      await sync.turnOn();
+      if (sync.getStatus().state === 'error') throw new Error(sync.getStatus().message);
+    }
+    return answerCode(code, sync.getSecret());
+  })().then((problem) => {
+    ui.busy = false;
+    if (problem) {
+      ui.enterProblem = problem;
+      announce(problem);
+      refreshAll('#sync-pair-code');
+      return;
+    }
+    ui.enterOpen = false;
+    ui.message = 'Done. Your other device finishes connecting in a few seconds, then both stay in sync.';
+    announce(ui.message);
+    refreshAll('#sync-message');
+  }).catch((err) => {
+    ui.busy = false;
+    ui.enterProblem = err?.message || 'Something went wrong. Try again in a moment.';
+    announce(ui.enterProblem);
+    refreshAll('#sync-pair-code');
+  });
+  return null;
 }

@@ -2,8 +2,8 @@
 //
 // One round: download your encrypted copy, unlock it, merge it with this device's data (sync-state.js),
 // save the result here, and upload the merged copy if it has anything new. Rounds run when Atlas opens,
-// when you come back to it, when the connection returns, every minute while it is open, and shortly
-// after you change something (no more than one upload every 30 seconds, to stay inside free limits).
+// when you come back to it, when the connection returns, every 45 seconds while it is open, and shortly
+// after you change something (no more than one upload every 15 seconds, to stay inside free limits).
 //
 // Your sync code lives only in this browser's storage. It is never sent to the service: only the vault
 // id and access key worked out from it are (see sync-crypto.js).
@@ -14,9 +14,9 @@ import { newSecret, cleanSecret, deriveKeys, sealState, openState } from './sync
 import { syncUrl } from './sync-config.js';
 
 export const CONFIG_KEY = 'identity-lab-coach:sync';
-const PUSH_GAP_MS = 30000; // at least this long between uploads
+const PUSH_GAP_MS = 15000; // at least this long between uploads
 const CHANGE_DELAY_MS = 4000; // wait this long after a change, in case more follow
-const PULL_EVERY_MS = 60000; // check for changes from other devices this often while open
+const PULL_EVERY_MS = 45000; // check for changes from other devices this often while open
 const MAX_CONFLICT_RETRIES = 3;
 
 let config = readConfig(); // { secret, since, lastSyncAt } or null
@@ -174,7 +174,7 @@ export function syncNow() {
   return running;
 }
 
-/** Called after every save: schedules an upload soon, but no sooner than 30 seconds after the last one. */
+/** Called after every save: schedules an upload soon, but no sooner than 15 seconds after the last one. */
 export function noteChanged() {
   if (!config || applying || !isAvailable()) return;
   if (running) { again = true; return; }
