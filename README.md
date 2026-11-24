@@ -121,7 +121,8 @@ Six self-paced lessons on trust boundaries in AI systems, direct and indirect pr
 
 ## Private by design
 
-- **No accounts and no tracking.** Everything you do stays in your own browser.
+- **No accounts and no tracking.** Everything you do stays in your own browser, unless you turn on sync.
+- **Optional sync between your devices.** Scan a QR code once and your progress follows you between phone and computer. Your data is encrypted on your device before it is uploaded, so the sync service cannot read it. It runs on Cloudflare's free plan; see [sync-worker/README.md](sync-worker/README.md).
 - **Works offline** and can be installed on a phone or computer like an app.
 - **Export and import** your data as a file whenever you like.
 - Course content arrives as checked content packs, added only when you select a pathway or ask for an update.
@@ -129,7 +130,7 @@ Six self-paced lessons on trust boundaries in AI systems, direct and indirect pr
 
 ## Built with
 
-Plain HTML, CSS and JavaScript modules, with no frameworks, no dependencies and no build step. Icons are [Material Symbols Rounded](https://fonts.google.com/icons) by Google (Apache License 2.0), built in so nothing is fetched from other sites.
+Plain HTML, CSS and JavaScript modules, with no frameworks, no dependencies and no build step. Icons are [Material Symbols Rounded](https://fonts.google.com/icons) by Google (Apache License 2.0), built in so nothing is fetched from other sites. Sync QR codes are drawn with [QR Code Generator](https://github.com/kazuhikoarase/qrcode-generator) by Kazuhiko Arase (MIT License), also built in (`js/vendor/qrcode.mjs`).
 
 To run it on your own computer, serve this folder with any static web server, for example:
 

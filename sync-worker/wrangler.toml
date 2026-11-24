@@ -1,0 +1,17 @@
+# Cloudflare Worker for Atlas sync. Deploy steps: sync-worker/README.md.
+name = "atlas-sync"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[vars]
+# Pages allowed to call the service from a browser (comma-separated).
+ALLOWED_ORIGINS = "https://marva-a.github.io"
+# "true" also allows http://localhost and http://127.0.0.1 pages, for trying changes on your own computer.
+# Off in production; the local test service (dev/server.mjs) always allows them.
+ALLOW_LOCALHOST = "false"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "atlas-sync"
+database_id = "875c57ba-5156-44b8-bf23-e224849473ae"

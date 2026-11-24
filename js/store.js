@@ -1,7 +1,8 @@
 // Data model and local persistence.
 //
 // Everything you create is kept in ONE versioned JSON document in this
-// browser's localStorage, under STORAGE_KEY. Nothing leaves your device.
+// browser's localStorage, under STORAGE_KEY. Nothing leaves your device unless you turn on sync
+// (sync.js), which uploads only an encrypted copy of the shared parts (see sync-state.js).
 // Export writes exactly this document to a file; import reads it back.
 //
 // The rest of the app only talks to the functions exported here, never to
@@ -186,12 +187,15 @@ import {
   validateResource, validateResourceUrl, RESOURCE_STATUSES, SUGGESTED_SKILL_TAGS, CARD_TEXT_MAX, REFERENCE_MAX,
 } from './records.js';
 import { migrate, needsMigration } from './migrate.js';
+import { viewSnapshot, stampChanges, emptyMeta, toState, applyState, canonicalCardIds } from './sync-state.js';
 import { PLAN_VERSION, renameChecks, itemIsOptional } from './plan-data.js';
 
 export { SCHEMA_VERSION };
 export const STORAGE_KEY = 'identity-lab-coach:data';
 export const BACKUP_KEY = 'identity-lab-coach:backup-before-import';
 export const MIGRATION_BACKUPS_KEY = 'identity-lab-coach:migration-backups';
+/** When each shared item last changed, and what was deleted (see sync-state.js). Kept apart from your data. */
+export const SYNC_META_KEY = 'identity-lab-coach:sync-meta';
 const APP_ID = 'identity-lab-coach';
 
 const COLLECTIONS = ['sessions', 'cards', 'cardReviews', 'tallies', 'artifacts', 'people', 'interactions', 'resources', 'reviews'];
@@ -251,6 +255,11 @@ export function newId() {
 // ─── Load and save ────────────────────────────────────────────────────────────
 
 let data = emptyData();
+// Sync bookkeeping: syncBase is the shared part of the data as text at the last save, so each save can
+// record which items changed (or were deleted) and when. It is kept even while sync is off, so turning
+// sync on later still knows what you deleted.
+let syncMeta = emptyMeta();
+let syncBase = null;
 /** False when this browser blocks storage (for example some private windows). */
 export let storageAvailable = true;
 
@@ -349,8 +358,50 @@ export function load() {
   }
   const planChanged = migratePlan();
   const seeded = seedCards();
-  if (seeded || planChanged || migrated) persist();
+  const renamed = canonicalCardIds(data);
+  syncMeta = readSyncMeta();
+  syncBase = viewSnapshot(data);
+  if (seeded || planChanged || migrated || renamed) persist();
   return data;
+}
+
+function readSyncMeta() {
+  try {
+    const m = JSON.parse(readKey(SYNC_META_KEY) ?? 'null');
+    if (m && typeof m.t === 'object' && typeof m.del === 'object') return m;
+  } catch { /* unreadable: start a fresh record */ }
+  return emptyMeta();
+}
+
+/** Records what changed since the last save. Cheap enough to run on every save. */
+function stampSync() {
+  if (!syncBase) return;
+  canonicalCardIds(data);
+  const next = viewSnapshot(data);
+  stampChanges(syncBase, next, syncMeta, Date.now());
+  syncBase = next;
+  writeKey(SYNC_META_KEY, JSON.stringify(syncMeta));
+}
+
+/** The shared part of your data, with change times and tombstones, ready to merge or upload. */
+export function getSyncState() {
+  if (loadProblem) return null;
+  stampSync();
+  return toState(data, syncMeta, SCHEMA_VERSION);
+}
+
+/**
+ * Takes in a merged state from sync. Only the shared parts change; course content, the theme, the
+ * test date and test-mode records stay as they are. Returns true if it was saved.
+ */
+export function applySyncState(state) {
+  if (loadProblem) return false;
+  data = normalize(applyState(data, state));
+  canonicalCardIds(data);
+  syncMeta = { t: JSON.parse(JSON.stringify(state.t)), del: JSON.parse(JSON.stringify(state.del)) };
+  syncBase = viewSnapshot(data);
+  writeKey(SYNC_META_KEY, JSON.stringify(syncMeta));
+  return persist();
 }
 
 /**
@@ -406,6 +457,7 @@ export function onSave(fn) {
 
 function persist() {
   if (loadProblem) return false; // never overwrite data we could not convert safely
+  stampSync();
   const ok = writeKey(STORAGE_KEY, JSON.stringify(data));
   if (ok) {
     for (const fn of saveListeners) {
