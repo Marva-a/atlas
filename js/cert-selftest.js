@@ -93,7 +93,7 @@ for (const q of allQ) {
   if (!lessonIds.has(q.l)) check(`lesson link ${q.id}`, q.l, 'a written lesson');
   if (q.a && q.a.some((a) => !a.w)) check(`explanations ${q.id}`, false, true);
 }
-check('every question was checked', total, 435);
+check('every question was checked', total, 459); // 279 in lessons (24 added with w5-6, w6-5, w7-5, w7-6) + 180 in the two mock exams
 // One pathway, two measures: neither side may move the other.
 const ex1 = { id: 'l1', crit: ['risk', 'senior'], cq: ['d1'] };
 const dc = emptyCert();

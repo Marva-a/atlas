@@ -445,3 +445,211 @@ ref: nist-ai-rmf s
 card: At what stage does poisoning happen? == During training.
 card: At what stage does evasion happen? == During use, against an already trained model.
 also: 51 | AI agents, delegated access and approvals
+
+@lesson w7-5
+title: Credentials in memory: local accounts, credential dumping, pass-the-hash and memory leaks
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.5, 2.4
+level: Advanced
+min: 110
+pre: w7-3, w5-4, w4-1
+out: Explain local authentication and how it differs from a central directory.
+out: Describe credential dumping and pass-the-hash, and why a stolen hash can be as useful as a password.
+out: Distinguish a memory leak from memory disclosure and from a buffer overflow.
+out: Name the controls that limit credential theft and lateral movement.
+why: The last lesson covered attacks that guess or trick their way to a password. This one covers what happens after an attacker gets onto one machine: they look for credentials already sitting in memory or on disk, and reuse them to move to the next machine without ever learning a password. It explains why breaches spread so quickly through some networks, and why advice such as unique local administrator passwords matters.
+plain: A password hash should be like a fingerprint of a key: useful for checking, useless for opening the door. Pass-the-hash works where a door accepts the fingerprint itself. Credential dumping is a thief photographing every fingerprint left on the counter. Shared local administrator passwords are one master key cut for every office: steal it once, open them all. A memory leak is a tap left running: nothing is stolen, but eventually the room floods.
+tech: Local authentication checks credentials stored on the device itself. Windows keeps local account password hashes in the Security Account Manager (SAM) database. Linux keeps them in /etc/shadow, salted and computed with slow algorithms such as yescrypt or SHA-512 crypt, marked by prefixes such as $y$ and $6$. A central directory, such as Active Directory or another LDAP directory, holds one account that works across many systems and can be disabled in one place. Local accounts are useful when the network is down, but they are often forgotten, rarely reviewed and sometimes share one password across many machines.
+tech: Credential dumping is extracting stored credentials from an operating system: from the memory of the process that handles sign-ins (on Windows, the Local Security Authority Subsystem Service, LSASS), from the SAM database, or from a domain controller's directory database. It usually needs administrator rights, so it typically follows privilege escalation. MITRE ATT&CK lists it as OS Credential Dumping (T1003).
+tech: Pass-the-hash reuses a stolen password hash to authenticate, without cracking it. It works against NTLM, an older Windows authentication protocol in which the client proves it knows the hash, not the password itself. Windows NT hashes are not salted, so the same password produces the same hash on every machine: if many computers share one local administrator password, one dumped hash unlocks all of them. Moving from machine to machine this way is called lateral movement. A similar attack against Kerberos reuses stolen tickets and is called pass-the-ticket. ATT&CK lists pass-the-hash as T1550.002.
+tech: Controls: give every machine a unique, regularly rotated local administrator password (Windows LAPS automates this); never sign in to ordinary workstations with domain administrator accounts; use dedicated privileged access workstations; isolate stored secrets with features such as Credential Guard, which uses virtualization-based security; restrict or disable NTLM where it is not needed; and alert on access to LSASS memory and on unusual network logons. In Windows logs, an event 4624 with logon type 3 using NTLM from an unexpected machine is a common lead.
+tech: A memory leak is a software flaw in which a program keeps memory it no longer needs, so its memory use grows until the system slows down or the program crashes. It is an availability problem: an attacker who can trigger the leak repeatedly can cause a denial of service. Memory disclosure is different: a flaw lets someone read memory they should not, which can expose secrets such as keys or session tokens. A buffer overflow writes past the end of a memory area and can corrupt data or run code.
+table: Memory flaws compared | Flaw | What goes wrong | Main impact
+| Memory leak | Memory is never released | Availability: slowdown, crash, denial of service
+| Memory disclosure | Memory is read that should not be | Confidentiality: leaked keys, tokens or data
+| Buffer overflow | Data is written past a buffer's end | Integrity and possibly code execution
+table: Credential reuse attacks | Attack | What is stolen | Works against
+| Credential stuffing | Usernames and passwords from other breaches | Sites where people reuse passwords
+| Pass-the-hash | A password hash | NTLM authentication
+| Pass-the-ticket | A Kerberos ticket | Kerberos authentication
+| Session token theft | A signed-in session cookie or token | Web applications
+term: Local authentication == Checking credentials stored on the device itself rather than in a central directory.
+term: SAM == Security Account Manager: the Windows database of local account password hashes.
+term: /etc/shadow == The Linux file holding salted password hashes for local accounts.
+term: LSASS == Local Security Authority Subsystem Service: the Windows process that handles sign-ins and holds credentials in memory.
+term: Credential dumping == Extracting stored credentials from an operating system's memory or databases.
+term: NTLM == An older Windows authentication protocol in which the hash itself serves as proof.
+term: Pass-the-hash == Authenticating with a stolen password hash instead of the password.
+term: Pass-the-ticket == Authenticating with a stolen Kerberos ticket.
+term: Lateral movement == Moving from one compromised system to others inside a network.
+term: LAPS == Local Administrator Password Solution: unique, rotated local administrator passwords for each Windows machine.
+term: Memory leak == A flaw in which a program never releases memory, so use grows until it slows or crashes.
+term: Memory disclosure == A flaw that lets someone read memory they should not, exposing data.
+eg: After phishing one employee, an attacker gains administrator rights on that laptop and dumps the local administrator's NT hash. Every laptop in the company was built from the same image with the same local administrator password, so the hash signs in to all of them over the network.
+eg: A web service's memory use climbs steadily after each malformed request and the service crashes every few hours. That is a memory leak being triggered, which is a denial-of-service risk rather than a data leak.
+walk: Investigate suspected credential theft on Windows
+- Start from the first compromised machine and the time of the first alert.
+- Look for processes that opened LSASS memory, usually reported by endpoint detection and response.
+- Search for network logons, event 4624 with logon type 3, from that machine to others shortly afterwards.
+- Note whether NTLM was used and which accounts signed in, especially local administrator accounts.
+- Treat every machine reached as compromised, and every credential used on them as exposed.
+- Reset affected passwords, rotate local administrator passwords and revoke sessions and tickets.
+lab: Salted hashes and a memory leak | 35 | Linux lab VM with sudo
+do: In your lab VM, create two test users with the same password: sudo useradd -m labuser1 and sudo useradd -m labuser2, then echo 'labuser1:Spring2026!' | sudo chpasswd and the same for labuser2.
+do: Run: sudo grep labuser /etc/shadow. Compare the two hash fields and note the algorithm prefix, such as $y$ or $6$.
+do: In one terminal run: python3 -c "import time; k=[]; [(k.append(bytearray(5_000_000)), time.sleep(0.5)) for _ in range(20)]". In a second terminal, run ps -o rss,cmd -C python3 a few times while it runs.
+do: Delete the test users: sudo userdel -r labuser1 and sudo userdel -r labuser2.
+expect: The two hashes are completely different despite the same password, and the Python process's memory (RSS) grows steadily by about 5 MB each half second until it ends.
+explain: A unique salt per user means a stolen hash cannot be matched to other accounts or reused across machines. Unsalted NT hashes are identical wherever the password is the same, which is what makes pass-the-hash spread. The script never releases what it allocates, the defining behaviour of a memory leak.
+pass: You explained why the two hashes differ.
+pass: You observed memory growing and named the impact of a real leak as availability.
+scenario: Within an hour of one laptop being compromised, alerts show the same local Administrator account signing in over the network to forty other laptops using NTLM. No passwords were changed and no one reported a phishing email after the first. What is the likely technique, why did it spread so far, and what should change?
+answer: Credential dumping on the first laptop followed by pass-the-hash: the attacker reused the local Administrator NT hash without cracking it. It spread because every laptop shared the same local administrator password, so the same hash worked everywhere. Contain the laptops, rotate every local administrator password, deploy unique rotated passwords with LAPS, restrict NTLM, and alert on LSASS access and unusual network logons.
+q 2.5 mcq m | Pass-the-hash | An attacker authenticates to file servers using a dumped NT hash, without knowing the password. What is this?
++ Pass-the-hash :: The hash itself is accepted as proof under NTLM.
+- Password spraying :: That tries common passwords against many accounts.
+- Credential stuffing :: That reuses usernames and passwords leaked from other sites.
+- Brute force :: That guesses many passwords against one account.
+q 2.5 mcq h | Lateral movement | Why does one dumped local administrator hash often unlock many Windows machines?
++ Machines built from one image often share the same local administrator password, and NT hashes are not salted :: The same password gives the same hash everywhere.
+- NTLM encrypts the hash with each machine's public key :: It does not; the hash is the proof.
+- Kerberos tickets never expire :: Tickets expire, and this attack does not use them.
+- The SAM database is shared across the network :: Each machine has its own SAM.
+q 2.5 mcq m | Defences | Which control most directly stops one stolen local administrator hash from working on other machines?
++ A unique, rotated local administrator password on every machine :: Each machine's hash is then different.
+- A longer screen-lock timeout :: This does not affect stored hashes.
+- A web application firewall :: This filters web traffic.
+- DNSSEC :: This protects DNS answers.
+q 2.4 mcq m | Memory flaws | A service slowly uses more memory with each request until it crashes. What flaw is this?
++ A memory leak :: Memory is never released, so use grows until failure.
+- Memory disclosure :: Nothing is being read that should not be.
+- A race condition :: That depends on timing between operations.
+- Directory traversal :: That uses path sequences to reach files.
+q 2.5 match m | Credential reuse | Match each stolen item to the attack that reuses it.
+= A Kerberos ticket => Pass-the-ticket
+= An NT password hash => Pass-the-hash
+= A session cookie => Session hijacking
+= Passwords from another site's breach => Credential stuffing
+why: Ask what was stolen, then where it can be presented as proof.
+q 2.5 order h | Attack chain | Put the stages of this common attack in order.
+1. Phishing gives the attacker a foothold on one workstation
+2. Privilege escalation gives administrator rights on it
+3. Credential dumping extracts hashes from memory
+4. Pass-the-hash is used for lateral movement to other machines
+why: Dumping usually needs administrator rights, and stolen hashes are then reused to move further.
+mistake: Thinking a hash is safe because it cannot be reversed. Under NTLM the hash itself is enough to authenticate.
+mistake: Calling a memory leak a data leak. A memory leak exhausts resources; memory disclosure exposes data.
+sum: Credentials stored on a device can be dumped by anyone who gains administrator rights on it.
+sum: Pass-the-hash reuses a hash without cracking it; shared local passwords let it spread.
+sum: Unique local passwords, isolated secrets, restricted NTLM and monitoring limit the damage.
+ref: comptia-objectives r
+ref: mitre-attack r
+ref: owasp-password s
+ref: ms-4624 s
+ref: cwe-org s
+card: What does pass-the-hash need instead of the password? == The password hash, accepted as proof by NTLM.
+card: Memory leak or memory disclosure: which threatens availability? == A memory leak. Disclosure threatens confidentiality.
+card: What does Windows LAPS do? == Gives each machine a unique, regularly rotated local administrator password.
+
+@lesson w7-6
+title: Wireless and switching attacks: deauthentication, WPS, evil twins and VLAN hopping
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.5, 4.1
+level: Intermediate
+min: 100
+pre: w3-4, w2-3, w7-3
+out: Explain deauthentication, WPS PIN and evil twin attacks, and the settings that prevent them.
+out: Compare WPA2 and WPA3, and EAP-TLS and PEAP, for personal and enterprise Wi-Fi.
+out: Explain switch spoofing and double tagging, and how switch configuration stops VLAN hopping.
+why: Wi-Fi and switches are the parts of a network people physically touch: anyone in range of an access point, or with a cable in a meeting-room socket, can reach them. Week 3 explained how these networks work. This lesson shows how they are attacked, and why a few configuration choices, such as switching off WPS or turning off automatic trunking, close whole classes of attack.
+plain: A deauthentication attack is someone shouting "everyone out!" in the hotel lobby in the manager's voice: guests leave, then come back in, and the attacker watches how they do it. WPS is a spare key under the mat with a four-digit lock. An evil twin is a fake hotel front desk set up across the street. VLAN hopping is slipping from the visitors' corridor into the staff corridor by finding an unlocked connecting door.
+tech: Wi-Fi management frames, such as deauthentication and disassociation, were not authenticated in older networks. In a deauthentication attack, an attacker sends forged frames that appear to come from the access point, disconnecting clients. This is a denial of service on its own, and it is also used to force clients to reconnect: the attacker captures the WPA2 four-way handshake and tries passwords against it offline, or pushes clients toward an evil twin. Protected Management Frames (PMF), defined in IEEE 802.11w, authenticate these frames, and WPA3 requires them. Wireless intrusion detection and prevention systems can detect floods of these frames.
+tech: Wi-Fi Protected Setup (WPS) lets a device join with a button press or an eight-digit PIN instead of the password. The PIN method has a design flaw: the access point checks the PIN in two halves, and the last digit is a checksum, so only about eleven thousand guesses cover every possibility. Once the PIN is found, the attacker obtains the network password. Disable WPS, especially the PIN method, and keep access point firmware updated.
+tech: A rogue access point is any unauthorized access point connected to the network, such as one an employee plugs in for convenience. An evil twin is an attacker's access point that imitates a real network's name to lure clients. WEP and the original WPA are broken. WPA2-Personal uses a pre-shared key and is open to offline guessing from a captured handshake. WPA3-Personal uses Simultaneous Authentication of Equals (SAE), which resists offline guessing, and requires PMF.
+tech: Enterprise Wi-Fi and wired network access control use IEEE 802.1X. The supplicant is the user's device, the authenticator is the access point or switch, and the authentication server is usually RADIUS. The Extensible Authentication Protocol (EAP) is a framework with several methods. EAP-TLS uses certificates on both the server and the client, so there is no password to steal; it is the strongest common method. Protected EAP (PEAP) builds a TLS tunnel using only the server's certificate, then sends a password-based method inside, often MSCHAPv2. PEAP is easier to roll out, but if devices do not check the server's certificate, an evil twin running its own RADIUS server can capture credentials.
+tech: VLAN hopping is reaching a VLAN you should not be able to reach. In switch spoofing, the attacker's device negotiates a trunk link with a switch port that is set to form trunks automatically, and then receives traffic for every VLAN. In double tagging, an attacker on the native VLAN sends a frame with two 802.1Q tags: the first switch removes the outer tag and forwards the frame, and the next switch delivers it according to the inner tag into the target VLAN. Double tagging only works in one direction, so replies do not come back. Defences: set user ports to access mode, disable automatic trunk negotiation, use an unused VLAN as the native VLAN on trunks and never assign users to it, and tag the native VLAN where the switch supports it.
+table: Wi-Fi security compared | Setting | Strength | Main weakness or note
+| WEP | Broken | Never use
+| WPA2-Personal | Acceptable with a long passphrase | Offline guessing from a captured handshake
+| WPA3-Personal | Strong | Uses SAE and requires PMF; older devices may need transition mode
+| PEAP | Good if certificates are checked | Credential capture by an evil twin if devices skip server certificate checks
+| EAP-TLS | Strongest common choice | Needs certificates issued to every device or user
+| WPS PIN | Weak | Brute force in hours; disable it
+term: Deauthentication attack == Sending forged frames that disconnect Wi-Fi clients.
+term: PMF == Protected Management Frames (IEEE 802.11w): authentication for Wi-Fi management frames.
+term: Four-way handshake == The WPA2 exchange that confirms both sides know the key; capturing it allows offline guessing.
+term: WPS == Wi-Fi Protected Setup: joining with a button or PIN; the PIN method can be brute forced.
+term: SAE == Simultaneous Authentication of Equals: the WPA3-Personal handshake that resists offline guessing.
+term: Rogue access point == An unauthorized access point connected to the network.
+term: 802.1X == Port-based network access control with a supplicant, an authenticator and an authentication server.
+term: EAP == Extensible Authentication Protocol: a framework for authentication methods used with 802.1X.
+term: EAP-TLS == An EAP method using certificates on both server and client.
+term: PEAP == Protected EAP: a TLS tunnel using the server's certificate, with a password method inside.
+term: VLAN hopping == Reaching traffic on a VLAN that should be out of reach.
+term: Switch spoofing == Negotiating a trunk with a switch to receive traffic for all VLANs.
+term: Double tagging == Sending a frame with two VLAN tags so a second switch delivers it into another VLAN.
+term: Native VLAN == The VLAN whose frames cross a trunk without a tag.
+eg: Guests on an office's visitor Wi-Fi keep being disconnected every few minutes, and the wireless controller logs a flood of deauthentication frames from one location. Turning on PMF stops forged frames from disconnecting clients that support it.
+eg: A penetration tester plugs a laptop into a meeting-room socket and the switch port forms a trunk, giving access to the finance VLAN. The fix is to set that port to access mode and switch off automatic trunking on all user ports.
+walk: Harden a small office's wireless and switches
+- Choose WPA3, or WPA2/WPA3 transition mode if older devices must connect, with a long passphrase.
+- Turn on PMF, and turn off WPS entirely.
+- For staff, use 802.1X with EAP-TLS, or PEAP with server certificate checking enforced on every device.
+- Separate guest Wi-Fi onto its own VLAN with internet access only.
+- Set every user-facing switch port to access mode and disable automatic trunk negotiation.
+- Move trunks to an unused native VLAN and enable wireless intrusion detection for rogue and evil twin access points.
+lab: Audit your own Wi-Fi and router settings | 30 | Your own laptop and home router
+do: List nearby networks with their security type. Linux: nmcli -f SSID,SECURITY device wifi list. Windows: netsh wlan show networks mode=bssid. macOS: hold Option and click the Wi-Fi icon. Do not connect to networks you do not own.
+do: On your own connection, check the security mode in use. On Windows: netsh wlan show interfaces, and read Authentication and Cipher.
+do: Sign in to your own home router's admin page. Record the security mode, whether WPS is on, and whether PMF or 802.11w is offered.
+do: If WPS is on, turn it off. If WPA3 or transition mode is available and your devices support it, switch to it, and note any device that can no longer connect.
+expect: You know whether your network uses WPA2 or WPA3, whether WPS was enabled and whether PMF is available, and you have reduced the attack surface of your own network.
+explain: These three settings decide whether the attacks in this lesson work at all: WPA3 resists offline guessing, PMF stops forged deauthentication, and disabling WPS removes a brute-force route to the password.
+pass: You recorded the security mode, WPS status and PMF availability of your own network.
+pass: You explained which attack each setting prevents.
+scenario: A company's staff Wi-Fi uses PEAP. Several laptops are set to trust any certificate. Staff report short disconnections in the lobby, then a network with the same name and a strong signal. The next week, two staff accounts show sign-ins from abroad. What happened, and what should change?
+answer: A deauthentication attack pushed devices off the real network, and an evil twin with the same name offered its own RADIUS server. Because the laptops did not check the server's certificate, they sent their PEAP credentials to it, and the attacker used them to sign in. Reset those passwords, enforce server certificate checking for PEAP on every device, turn on PMF, deploy wireless intrusion detection, and plan a move to EAP-TLS so there is no password to capture.
+q 2.5 mcq m | Deauthentication | Clients on a Wi-Fi network are repeatedly disconnected by forged frames that appear to come from the access point. Which setting most directly prevents this?
++ Protected Management Frames :: PMF authenticates management frames, so forged deauthentication frames are ignored.
+- Hiding the network name :: Hidden networks can still be found and attacked.
+- MAC address filtering :: Addresses are easy to spoof and this does not protect management frames.
+- A shorter DHCP lease :: This does not affect Wi-Fi management frames.
+q 4.1 mcq e | WPS | Why should WPS be disabled on a wireless router?
++ The PIN method can be brute forced in a few thousand guesses, revealing the network password :: The PIN is checked in two halves.
+- It makes the network invisible :: WPS does not hide networks.
+- It turns off encryption :: WPS does not disable encryption, but it gives a way to obtain the password.
+- It prevents WPA3 from working :: That is not the reason; the PIN design is the weakness.
+q 4.1 mcq m | EAP methods | Which 802.1X method removes passwords from Wi-Fi sign-in entirely?
++ EAP-TLS :: Both sides use certificates, so there is no password to capture.
+- PEAP with MSCHAPv2 :: This still sends a password-based method inside the tunnel.
+- WPA2-Personal :: This uses a shared passphrase, not 802.1X.
+- WPS :: This is a setup shortcut, not an authentication method.
+q 2.5 mcq h | Evil twin | Staff laptops using PEAP accept any server certificate. What attack does this enable?
++ An evil twin with its own RADIUS server can collect staff credentials :: Without certificate checks, devices cannot tell the real server from a fake one.
+- Double tagging into another VLAN :: That is a switching attack.
+- Pass-the-ticket :: That reuses Kerberos tickets.
+- DNS cache poisoning :: That targets resolvers, not Wi-Fi sign-in.
+q 2.5 match m | Network attacks | Match each attack to the configuration that prevents it.
+= Switch spoofing => Disable automatic trunk negotiation on user ports
+= Double tagging => Use an unused native VLAN on trunks
+= WPS PIN brute force => Turn off WPS
+= Forged deauthentication => Turn on Protected Management Frames
+why: Each attack depends on one setting being left at a weak default.
+q 2.5 multi h | VLAN hopping | Which statements about double tagging are true? Choose two.
++ The attacker must be on the native VLAN :: The first switch strips only the native VLAN's outer tag.
++ Traffic only flows one way :: Replies cannot return the same way.
+- It requires the attacker to know the Wi-Fi password :: It is a wired switching attack.
+- It works by negotiating a trunk :: That describes switch spoofing.
+mistake: Thinking a hidden network name or MAC filtering secures Wi-Fi. Both are easy to defeat; WPA3, PMF and 802.1X are real controls.
+mistake: Rolling out PEAP without enforcing server certificate checks, which hands credentials to any evil twin.
+mistake: Leaving switch ports to negotiate trunks automatically, which makes switch spoofing possible.
+sum: Forged deauthentication disconnects clients; PMF, required by WPA3, stops it.
+sum: Turn off WPS; prefer WPA3, and EAP-TLS or PEAP with certificate checks for staff.
+sum: VLAN hopping relies on automatic trunking or users on the native VLAN; configuration prevents both.
+ref: comptia-objectives r
+ref: nist-800-153 r
+ref: rfc-3748 s
+ref: rfc-2865 s
+card: Which Wi-Fi feature stops forged deauthentication frames? == Protected Management Frames (IEEE 802.11w), required by WPA3.
+card: PEAP or EAP-TLS: which needs no user password? == EAP-TLS, which uses certificates on both sides.
+card: Two kinds of VLAN hopping? == Switch spoofing (negotiating a trunk) and double tagging (two VLAN tags from the native VLAN).
