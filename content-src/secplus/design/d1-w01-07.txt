@@ -389,3 +389,81 @@ cq h | Prompt injection and agency | An AI agent reads a ticket saying "Ignore p
 - Add a system prompt telling the model never to obey tickets :: Instructions help, but they cannot be relied on as a boundary.
 - Show a banner reminding staff that AI can make mistakes :: A general reminder does not constrain any action.
 - Restrict the model to shorter replies for all ticket types :: Reply length does not limit what the agent can do.
+
+@d w5-6 direct
+sector: Collaboration and email tools
+product: Signatures only protect people if the interface makes them meaningful. Mail and messaging products decide whether a valid signature is shown at all, how a broken or missing one is shown, and whether a lookalike sender with a valid signature from the wrong organization looks trustworthy. Badges that appear on everything teach people to ignore them.
+ask eng: Which signature checks do we run, and what states can a result be in: valid, invalid, expired, untrusted issuer, or no signature?
+ask sec: Which messages should require a valid signature, such as payment changes, and what happens when one fails?
+ask prod: Where do people make decisions based on who sent a message, and what do they look at today?
+ex: Design a trustworthy signed-message indicator | 45
+scenario: A business email product is adding S/MIME support for finance and legal teams. Customers want staff to notice when a payment instruction is not signed by the real sender, without every message gaining a badge that people stop reading.
+problem: Today the product shows a small padlock for any message that arrived over TLS, which users read as "this sender is genuine", including on forged messages from lookalike domains.
+task: Define each signature state, from valid by a trusted colleague to invalid or missing, and decide what is shown for each.
+task: Design how the sender's verified identity is shown next to the claimed display name, including the case where they differ.
+task: Design the interruption when a message that policy says must be signed arrives unsigned or with a broken signature.
+task: Remove or rename the misleading transport padlock.
+constraint: Positive indicators must be rare and specific, so they keep their meaning.
+constraint: Every state must be understandable without colour alone and announced by screen readers.
+constraint: Users cannot be asked to inspect certificates to make a decision.
+need: Finance staff need to know, at the moment of acting, whether a payment request is genuinely from the named colleague.
+need: Administrators need to set which senders or message types require a valid signature.
+deliver: A signature state table, the message header design for each state, and the interruption flow for a required signature that fails.
+crit constraints: States are distinguishable without colour, and no state requires reading a certificate.
+crit risk: A lookalike sender with a valid signature from another organization is not shown as trusted.
+crit quality: The indicator appears only where it changes a decision, so it is not ignored.
+crit senior: The design retires the misleading padlock and explains the change to existing users.
+senior: Start from the decisions people make, such as paying an invoice, and place the signal there rather than on every message.
+senior: Treat a missing signature on a message that should be signed as more alarming than an ordinary unsigned message.
+cq m | Trust indicators | Which design best helps staff spot a forged payment request?
++ Show the verified signer's identity beside the display name, and interrupt when a payment request that must be signed is not :: The signal appears where the decision is made, and absence is treated as a warning.
+- Show a padlock on every message that arrived encrypted in transit :: Transport encryption says nothing about who wrote the message.
+- Put a green tick on all internal messages :: Constant positive badges stop carrying meaning.
+- Add a link to view the raw certificate details :: Users should not need to inspect certificates to decide.
+
+@d w6-5 direct
+sector: Collaboration tools
+product: Every product that shows links decides how much of the real destination people can see. Link previews, shortened display text and long subdomains can hide a lookalike domain, while too many warnings teach people to click through. The design question is how to make the registered domain legible at the moment of clicking.
+ask eng: Can we resolve redirects and show the registered domain of the final destination before the click?
+ask sec: Which signals do we have for risky domains, such as reputation, newly registered or mixed-script names?
+ask prod: How often do people click links in our product, and how many warnings would that create?
+ex: Design a link warning people trust | 45
+scenario: A workplace chat product has seen several phishing waves using combosquatted and homoglyph domains. Messages show links as text chosen by the sender, and previews display the page's own title and logo.
+problem: Attackers control both the link text and the preview, so a fake sign-in page looks exactly like the real one, and the real domain is hidden.
+task: Redesign how a link and its preview show the destination, with the registered domain made prominent.
+task: Design how mixed-script and newly registered domains are shown, including punycode where useful.
+task: Design a proportionate warning for high-risk links, with a clear way to report them.
+task: Decide when no warning is shown, so warnings stay rare.
+constraint: The registered domain must be readable without hovering, which does not work on touch screens.
+constraint: Warnings must not block legitimate links from trusted domains used every day.
+constraint: The design must work with screen readers and at large text sizes.
+need: People need to see where a link really goes before they click.
+need: Security teams need reports of suspicious links to reach them quickly.
+deliver: Link and preview designs for normal, unfamiliar and high-risk destinations, the warning screen, and the report flow.
+crit constraints: The registered domain is visible without hovering, on mobile and with assistive technology.
+crit risk: Attacker-controlled text and previews can no longer hide the real destination.
+crit quality: Warnings appear for a small share of links and give a clear next step.
+crit senior: The design proposes measuring click-through on warnings and adjusting thresholds.
+senior: Separate what the sender controls, such as link text and preview content, from what the product verifies, and style them differently.
+senior: Pair the interface change with platform controls such as passkeys, which defeat lookalike sign-in pages regardless of what people notice.
+cq m | Link display | Which link presentation best protects people from a lookalike domain?
++ Show the registered domain prominently, separate from sender-chosen text, and show punycode for mixed-script names :: People see the real destination, which attackers cannot fake.
+- Show the page title and logo from the preview :: The attacker controls both.
+- Show the full URL only on hover :: Hover is unavailable on touch screens and is rarely used.
+- Warn on every external link :: Constant warnings teach people to ignore them.
+
+@d w7-5 professional
+sector: Enterprise IT and identity
+product: Credential theft and lateral movement show up in products as admin consoles: where local administrator passwords are rotated, where privileged sign-ins are reviewed and where sessions are revoked after a compromise. Products that run on customers' machines also decide what credentials they leave behind in memory and on disk.
+ask eng: Does our software store or cache credentials on devices, and could a local administrator extract them?
+ask sec: Which of our features would help an attacker move from one compromised machine to others?
+ask prod: When a customer finds a compromised machine, can they see which accounts signed in to it and revoke them?
+noex: The account compromise investigation exercise in Week 12 applies this: tracing where stolen credentials were used and recovering every affected account.
+
+@d w7-6 professional
+sector: Network and security management
+product: Wireless and switch security is mostly configuration, so it reaches products through management consoles and onboarding: how a Wi-Fi network is set up, whether weak defaults such as WPS are on, and how devices are told to trust a network's certificate. Prompts that ask people to accept an unknown certificate are where evil twin attacks succeed.
+ask eng: Which insecure defaults ship enabled in our devices or templates, such as WPS or automatic trunking?
+ask sec: How do we push certificate trust to managed devices, so users are never asked to accept a certificate themselves?
+ask prod: Where in onboarding do people choose a security mode, and do they understand the choice?
+noex: The monitoring dashboard exercise in Week 11 applies this, including alerts such as rogue access points and floods of deauthentication frames.

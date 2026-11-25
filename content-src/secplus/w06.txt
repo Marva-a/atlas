@@ -382,3 +382,102 @@ ref: nist-ir-8259a s
 ref: cisa-ot s
 card: What is a watering hole attack? == Compromising a website that the targets are known to visit.
 card: What is an access vestibule? == A controlled two-door space that admits people one at a time.
+
+@lesson w6-5
+title: Lookalike domains, drive-by downloads and everyday lures
+domain: Domain 2: Threats, Vulnerabilities, and Attacks
+obj: 2.3, 4.1
+level: Intermediate
+min: 100
+pre: w6-3, w6-4, w2-4
+out: Explain typosquatting, combosquatting and homoglyph domains, and how they are used.
+out: Describe drive-by downloads, spam, spim and dumpster diving, and tell them apart from similar attacks.
+out: Explain how DNS filtering, DNS sinkholes and patching reduce these risks.
+why: Most attacks still begin with a person reaching somewhere they did not mean to go: a domain one letter off, a web page that installs something silently, a message in a chat app, a printout in a recycling bin. These lures are cheap for attackers and easy to miss, and they are where product decisions about how links, names and warnings are shown make a real difference.
+plain: A lookalike domain is a fake shop sign with one letter changed, hung on the next street. A drive-by download is a booby-trapped doorway: you only have to walk through. Spam is junk mail in the letterbox; spim is the same junk pushed through your chat apps. Dumpster diving is reading the documents someone threw away. A DNS sinkhole is a city directory that quietly sends anyone looking for a known scammer to the police station instead.
+tech: Typosquatting is registering a domain that people reach by mistake, such as a misspelling (exmaple.com), a doubled or missing letter, or a different top-level domain (example.co instead of example.com). Combosquatting adds words to a real brand, such as example-login.com or example-support.net, and needs no typo at all. Homoglyph or IDN homograph domains use characters from other alphabets that look identical, such as a Cyrillic а in place of a Latin a. Browsers and DNS store these internationalized names in an encoded form beginning with xn--, called punycode, and many browsers show that form when scripts are mixed. Attackers use all three for phishing pages, credential harvesting, malware delivery and brand impersonation.
+tech: A drive-by download installs malware when someone simply visits a page, without choosing to download anything. It exploits an unpatched weakness in the browser, a plugin or the operating system. The page may be the attacker's own, a legitimate site that was compromised, or an ordinary site showing a malicious advertisement, which is called malvertising. A watering hole attack, from the last lesson, is about which site is chosen, one the target group visits; a drive-by download is one way that site can then infect visitors.
+tech: Spam is unsolicited bulk email. Spim is unsolicited messages sent through instant messaging and chat platforms, where people tend to trust messages more and filters are often weaker. Both carry phishing links, malware and scams. Dumpster diving is searching discarded material, such as printouts, sticky notes, old drives and packaging, for information that helps an attack, from names and org charts to passwords. Defences are cross-cut shredding, locked disposal bins and media sanitization before devices leave the organization.
+tech: Controls: DNS filtering, sometimes called protective DNS, refuses to resolve domains known to be malicious or newly registered lookalikes. A DNS sinkhole goes a step further: for chosen domains, the resolver returns an address that defenders control instead of the real one. Malware that tries to reach its command server connects to the sinkhole, which stops the connection and shows defenders which machines are infected. Organizations also register likely lookalikes of their own domains, monitor new registrations that resemble their brand, keep browsers and plugins patched and remove unneeded plugins. Password managers and passkeys help directly, because they are tied to the exact domain and will not fill in or sign in on a lookalike.
+table: Lures compared | Lure | What the attacker relies on | Typical defence
+| Typosquatting | A slip of the finger or eye | Defensive registration, DNS filtering, password managers
+| Combosquatting | A plausible brand plus a word | Brand monitoring, user awareness, passkeys
+| Homoglyph domain | Characters that look identical | Showing punycode for mixed scripts, DNS filtering
+| Drive-by download | An unpatched browser or plugin | Patching, removing plugins, browser isolation
+| Spim | Trust in chat messages | Link scanning in chat tools, awareness
+| Dumpster diving | Careless disposal | Shredding, locked bins, media sanitization
+term: Typosquatting == Registering misspelled or slightly different domains to catch mistaken visits.
+term: Combosquatting == Registering a real brand name combined with extra words, such as example-login.com.
+term: Homoglyph == A character that looks the same as another, used to build lookalike domains.
+term: Punycode == The xn-- encoding used to store internationalized domain names.
+term: Drive-by download == Malware installed just by visiting a page, through an unpatched weakness.
+term: Malvertising == Malicious code delivered through online advertisements.
+term: Spam == Unsolicited bulk email.
+term: Spim == Unsolicited messages sent through instant messaging or chat platforms.
+term: Dumpster diving == Searching discarded material for useful information.
+term: DNS filtering == Refusing to resolve domains known or suspected to be malicious.
+term: DNS sinkhole == Answering lookups for malicious domains with an address defenders control.
+eg: A colleague receives a chat message linking to a sign-in page at examp1e-support.com. The password manager does not offer to fill in the password, which is the clue that the domain is not the real one.
+eg: Several laptops on the network keep trying to reach the same unusual domain at regular intervals. The security team adds it to the DNS sinkhole, and the sinkhole's logs list exactly which laptops are infected.
+walk: Investigate a suspicious link
+- Read the domain from right to left: the top-level domain first, then the registered name directly before it.
+- Ignore everything to the left of the registered name; example.com.account-check.net belongs to account-check.net.
+- Check for swapped, doubled or substituted characters, and for added words such as login or support.
+- If the browser shows xn--, the name contains characters from another alphabet.
+- Note whether your password manager offers to fill in, since it matches the exact domain.
+- Report it rather than testing it, and let security block or sinkhole it if it is malicious.
+lab: Spot lookalike domains safely | 30 | Python 3 and dig in your lab VM
+do: In your lab VM, run: python3 -c "print('аpple.com'.encode('idna'))". The first letter is a Cyrillic а. Note that the result starts with xn--, while the Latin version does not change.
+do: Choose a domain you own or your school's or employer's main domain. Write eight lookalikes by hand: two misspellings, a doubled letter, a missing letter, two other top-level domains and two combosquats with words such as login or support.
+do: For each lookalike, run: dig +short followed by the domain. This only asks DNS whether the name exists; do not visit the sites.
+do: Record which lookalikes resolve and which do not, and write one line on what an organization could do about each that resolves.
+expect: The Cyrillic name encodes to an xn-- form, and at least some lookalikes of a well-known domain already resolve, some registered defensively by the owner and some by others.
+explain: Lookalikes are cheap to register and easy to miss. Encoding exposes homoglyphs, and simple DNS lookups show how crowded the space around a brand already is, without touching any site.
+pass: You produced the xn-- form of the Cyrillic domain.
+pass: You checked eight lookalikes with DNS only and proposed a response for those that resolve.
+scenario: Staff at a company report that a chat message pointed them to a page that looked exactly like the company's single sign-on page, at a domain spelled with a Cyrillic letter. Two people entered their passwords. The next day, endpoint alerts show three laptops contacting an unknown domain every five minutes. What happened, and which controls apply?
+answer: The chat message was spim carrying a homoglyph phishing domain, which harvested two passwords: reset them and revoke their sessions. The regular outbound connections suggest malware calling home, so the domain should be sinkholed to stop the traffic and identify every infected host. Longer term: DNS filtering of newly registered lookalikes, showing punycode for mixed-script names, and passkeys, which will not sign in on a lookalike domain.
+q 2.3 mcq e | Typosquatting | An attacker registers exmaple.com to catch people who mistype example.com. What is this?
++ Typosquatting :: It relies on a slip in typing or reading.
+- Combosquatting :: That adds words to a correctly spelled brand.
+- A DNS sinkhole :: That is a defensive control.
+- Dumpster diving :: That involves discarded material.
+q 2.3 mcq m | Drive-by download | A user visits a news site, clicks nothing, and malware is installed through an unpatched browser plugin. What is this?
++ A drive-by download :: Visiting the page was enough, because of an unpatched weakness.
+- Typosquatting :: The user reached the intended site.
+- Spim :: No instant message was involved.
+- Vishing :: No phone call was involved.
+q 2.3 mcq m | Lure types | Unsolicited bulk messages arrive through a workplace chat platform instead of email. What is this called?
++ Spim :: Spim is spam sent through instant messaging and chat.
+- Spam :: Spam refers to email.
+- Smishing :: Smishing uses SMS text messages.
+- Whaling :: Whaling targets senior executives.
+q 4.1 mcq h | DNS sinkhole | A security team configures its resolver so that lookups for a known command-and-control domain return an internal server's address. What is the main benefit?
++ Infected hosts are cut off and identified when they connect to the sinkhole :: The connections are stopped and logged, revealing which machines are compromised.
+- The domain is permanently removed from the internet :: Only this organization's resolver gives the false answer.
+- DNS answers become encrypted :: That is the role of DoH or DoT.
+- Users can no longer mistype domains :: Sinkholes do nothing to prevent typing errors.
+q 2.3 match m | Lookalikes | Match each domain to the technique it uses, where the real brand is example.com.
+= exampel.com => Typosquatting
+= example-login.com => Combosquatting
+= xn--xample-2of.com => Homoglyph domain
+= example.com.verify-now.net => Subdomain trick, registered name is verify-now.net
+why: Read the registered name, directly before the top-level domain, and compare it character by character.
+q 2.3 multi m | Dumpster diving | Which controls reduce the risk of dumpster diving? Choose two.
++ Cross-cut shredding of printed documents :: Shredded paper is very hard to reconstruct.
++ Sanitizing drives before disposal :: Media sanitization removes recoverable data.
+- DNS filtering :: This blocks malicious domains, not physical searching.
+- Disabling spam filters :: This would increase risk elsewhere and does not affect discarded material.
+mistake: Reading a domain from left to right. The registered name is the part directly before the top-level domain; anything earlier is a subdomain the attacker controls.
+mistake: Treating a watering hole and a drive-by download as the same thing. One is about which site is chosen; the other is a way of infecting visitors.
+sum: Lookalike domains come in three kinds: typos, added words and lookalike characters.
+sum: Drive-by downloads need only a visit and an unpatched browser or plugin.
+sum: DNS filtering blocks known bad domains; sinkholes also reveal infected hosts.
+ref: comptia-objectives r
+ref: cisa-phishing r
+ref: mdn-domain s
+ref: nist-800-88 s
+ref: mitre-attack s
+card: Spam or spim? == Spam is unsolicited bulk email; spim is the same through instant messaging or chat.
+card: What does a DNS sinkhole do? == It answers lookups for malicious domains with an address defenders control, blocking connections and revealing infected hosts.
+card: Which part of example.com.verify-now.net is the registered name? == verify-now.net. Everything to its left is a subdomain.

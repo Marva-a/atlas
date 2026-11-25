@@ -291,6 +291,10 @@
      "id": "w5-5"
     },
     {
+     "type": "lesson",
+     "id": "w5-6"
+    },
+    {
      "type": "review",
      "title": "Week 5 review and cumulative check",
      "min": 30,
@@ -321,6 +325,10 @@
      "id": "w6-4"
     },
     {
+     "type": "lesson",
+     "id": "w6-5"
+    },
+    {
      "type": "review",
      "title": "Week 6 review and cumulative check",
      "min": 45,
@@ -345,6 +353,14 @@
     {
      "type": "lesson",
      "id": "w7-3"
+    },
+    {
+     "type": "lesson",
+     "id": "w7-5"
+    },
+    {
+     "type": "lesson",
+     "id": "w7-6"
     },
     {
      "type": "lesson",

@@ -504,3 +504,100 @@ ref: rfc-6960 s
 ref: openssl-docs s
 card: What is the difference between CRL and OCSP? == A CRL is a downloaded list, and OCSP is a real-time query about one certificate.
 card: Is a private key included in a CSR? == No. A CSR contains the public key and identity details.
+
+@lesson w5-6
+title: Signing and encrypting email, DNS and calls: S/MIME, DNSSEC and SRTP
+domain: Domain 1: General Security Concepts
+obj: 1.3
+level: Intermediate
+min: 100
+pre: w5-5, w3-3, w2-4
+out: Explain what S/MIME, DNSSEC and SRTP each protect, and what each leaves unprotected.
+out: Tell DNSSEC apart from encrypted DNS, and S/MIME apart from SPF, DKIM and DMARC.
+out: Choose the right secure protocol for an email, DNS or voice and video scenario.
+why: TLS protects traffic while it moves between two machines. Some data needs protection that travels with it: an email that must prove who wrote it after it lands in an inbox, a DNS answer that must be genuine, a call that must stay private. These three protocols apply the signatures and certificates from the last two lessons to exactly those cases, and they come up in exam questions that ask you to pick the secure replacement for an insecure protocol.
+plain: TLS is an armoured truck: the letter is safe on the road, but once delivered it is just a letter again. S/MIME is a wax seal and a locked envelope on the letter itself, so it stays sealed in the mailbox. DNSSEC is a notary stamp on the phone book: anyone can read the entry, but you can tell if someone changed it. SRTP is a scrambler on a phone line, so a listener hears noise.
+tech: Secure/Multipurpose Internet Mail Extensions (S/MIME) signs and encrypts email using X.509 certificates. To sign, the sender uses their private key, and any recipient checks the signature with the sender's certificate: this gives integrity, authentication of the sender and non-repudiation. To encrypt, the sender uses each recipient's public key, so only holders of the matching private keys can read the body and attachments. Both people need certificates, usually issued by an organization's certificate authority. Message headers such as the subject line are often not protected. Pretty Good Privacy (PGP) offers the same kind of protection with a web of trust between users instead of certificate authorities.
+tech: S/MIME is end to end: it protects one message from sender to recipient. SPF, DKIM and DMARC, from Week 10, are domain-level checks done by mail servers. They tell a receiving server whether mail really came from a domain's approved systems, but they do not encrypt anything, and they say nothing about which person wrote the message.
+tech: Domain Name System Security Extensions (DNSSEC) adds digital signatures to DNS records. A zone signs its records, and each signature is published as an RRSIG record. The zone's public key is published as a DNSKEY record, and the parent zone vouches for that key with a DS (delegation signer) record. A validating resolver follows this chain of trust from the root down, and rejects answers whose signatures do not check out. DNSSEC gives integrity and origin authentication, which defeats cache poisoning. It does not give confidentiality: anyone watching can still see which names you look up. Encrypted DNS, such as DNS over HTTPS (DoH) and DNS over TLS (DoT), hides lookups from observers but does not prove that the answer is genuine. The two solve different problems and can be used together.
+tech: Secure Real-time Transport Protocol (SRTP) protects the media of voice and video calls carried by RTP. It encrypts the audio or video, authenticates each packet and protects against replay of captured packets. The call setup, usually done with the Session Initiation Protocol (SIP), is protected separately, for example with SIP over TLS, and the keys for SRTP are exchanged during that setup. Browser-based calling commonly negotiates SRTP keys using DTLS, a version of TLS for datagrams.
+table: Secure protocols compared | Protocol | Protects | Gives | Does not give
+| S/MIME | One email message, end to end | Signature, integrity, non-repudiation, optional encryption | Protection for most headers, such as the subject
+| DNSSEC | DNS records | Integrity and proof of origin for answers | Privacy of which names are looked up
+| DoH or DoT | The DNS query on the wire | Privacy of lookups from observers | Proof that the answer is genuine
+| SRTP | Voice and video media | Encryption, packet authentication, replay protection | Protection of call setup, which needs SIP over TLS
+| SPF, DKIM, DMARC | A sending domain's mail | Domain-level authentication checked by servers | Encryption or proof of the individual author
+term: S/MIME == Secure/Multipurpose Internet Mail Extensions: signing and encrypting email with X.509 certificates.
+term: PGP == Pretty Good Privacy: email signing and encryption based on a web of trust between users.
+term: DNSSEC == DNS Security Extensions: digital signatures on DNS records, checked by validating resolvers.
+term: RRSIG == A DNSSEC record holding the signature over a set of DNS records.
+term: DNSKEY == A DNSSEC record holding a zone's public key.
+term: DS record == Delegation signer: a parent zone's record that vouches for a child zone's key.
+term: Chain of trust == A series of signatures, each vouching for the next, ending at a trusted root.
+term: DoH == DNS over HTTPS: encrypting DNS queries inside HTTPS.
+term: DoT == DNS over TLS: encrypting DNS queries inside TLS.
+term: SRTP == Secure Real-time Transport Protocol: encryption and authentication for voice and video media.
+term: SIP == Session Initiation Protocol: sets up, changes and ends voice and video calls.
+eg: A finance team requires that payment instructions arrive signed with S/MIME. A forged request from a lookalike address has no valid signature, so the mail client shows no trusted signature mark, and the team does not act on it.
+eg: A resolver that validates DNSSEC receives an answer for a bank's domain whose signature does not match the published key. It returns an error instead of the forged address, so the user never reaches the attacker's server.
+walk: Choose the secure protocol for a scenario
+- Name what must be protected: one message, a name lookup, or live media.
+- Ask whether the need is privacy, proof of authenticity, or both.
+- Email that must prove its author or stay private in the mailbox: S/MIME, or PGP.
+- DNS answers that must be genuine: DNSSEC. DNS lookups that must be private: DoH or DoT.
+- Voice or video media: SRTP, with call setup protected by SIP over TLS.
+- Check what the choice leaves exposed, such as the subject line or which names are looked up.
+lab: See DNSSEC signatures and a failed validation | 30 | dig in your lab VM
+do: In your lab VM, run: dig ietf.org +dnssec. Find the RRSIG record in the answer section and note the algorithm number and the signer's name.
+do: Run: dig ietf.org DNSKEY +short and note that the zone publishes its public keys in DNS.
+do: Run: dig @1.1.1.1 ietf.org +dnssec and look for the ad flag in the header. It means the resolver validated the signatures.
+do: Run: dig @1.1.1.1 dnssec-failed.org, a test domain that is deliberately signed incorrectly. Note the SERVFAIL status. Then run the same query with +cd, which asks the resolver to skip checking, and compare.
+expect: You see RRSIG and DNSKEY records for a signed zone, the ad flag from a validating resolver, and SERVFAIL for the broken test domain until checking is disabled.
+explain: The signatures are public, like the records themselves, so DNSSEC hides nothing. Its value shows in the last step: a validating resolver refuses an answer it cannot verify, instead of passing a possibly forged address to the user.
+pass: You identified an RRSIG record and its signer.
+pass: You explained why dnssec-failed.org returns SERVFAIL, and what +cd changed.
+scenario: An organization wants three things: lawyers must be able to prove that a contract email came from them and was not altered, staff on hotel Wi-Fi should not reveal which websites they look up, and internal calls must not be readable by anyone capturing network traffic. Which protocol meets each need?
+answer: S/MIME signing for the contract emails, since it gives integrity and non-repudiation that stay with the message. DNS over HTTPS or DNS over TLS for private lookups, since DNSSEC proves answers but does not hide them. SRTP for the call media, with SIP over TLS protecting call setup.
+q 1.3 mcq e | S/MIME | A user must prove that an email came from them and was not changed, even after it is forwarded. What should they use?
++ An S/MIME digital signature :: The signature travels with the message and can be checked by anyone with the sender's certificate.
+- TLS between mail servers :: TLS protects the message only while it moves between two servers.
+- An SPF record :: SPF tells servers which systems may send for a domain. It does not prove who wrote a message.
+- DNS over HTTPS :: This protects DNS lookups, not email.
+q 1.3 mcq m | DNSSEC | What does DNSSEC provide?
++ Integrity and proof of origin for DNS answers :: Resolvers verify signatures, so forged or altered answers are rejected.
+- Encryption of DNS queries :: DNSSEC does not encrypt anything. DoH and DoT do that.
+- Encryption of web traffic :: That is the role of TLS.
+- Authentication of email senders :: That is the role of S/MIME, and of SPF, DKIM and DMARC at the domain level.
+q 1.3 mcq m | Secure protocols | Which protocol protects the audio of a voice call from being read by someone capturing traffic?
++ SRTP :: It encrypts and authenticates the media packets.
+- SIP over TLS :: This protects call setup, not the audio itself.
+- DNSSEC :: This protects DNS answers.
+- S/MIME :: This protects email.
+q 1.3 tf m | DNSSEC and privacy | True or false: turning on DNSSEC stops a network observer from seeing which websites a user looks up.
++ False :: DNSSEC signs answers but does not encrypt them. Encrypted DNS such as DoH or DoT hides lookups.
+- True :: Signing does not hide the content.
+q 1.3 match m | Protocol purposes | Match each need to the protocol that meets it.
+= Prove a DNS answer is genuine => DNSSEC
+= Keep DNS lookups private on public Wi-Fi => DNS over HTTPS
+= Encrypt and sign one email end to end => S/MIME
+= Encrypt voice and video media => SRTP
+why: Decide first what is protected, then whether the need is privacy or authenticity.
+q 1.3 mcq h | DNSSEC records | A validating resolver checks a zone's DNSKEY against a record published by the parent zone. Which record is that?
++ DS :: The delegation signer record links the parent's trust to the child's key.
+- RRSIG :: This holds the signature over a set of records in the zone itself.
+- MX :: This names mail servers.
+- TXT :: This holds free text, such as SPF policies.
+mistake: Thinking DNSSEC encrypts DNS. It signs answers. Privacy needs DNS over HTTPS or DNS over TLS.
+mistake: Treating SPF, DKIM and DMARC as email encryption. They are domain checks done by servers; S/MIME protects the message itself.
+mistake: Assuming SRTP protects the whole call. Call setup with SIP needs its own protection, such as TLS.
+sum: S/MIME seals one email: signature for proof, encryption for privacy, with certificates on both sides.
+sum: DNSSEC proves DNS answers are genuine; DoH and DoT keep lookups private. They solve different problems.
+sum: SRTP protects call media; SIP over TLS protects call setup.
+ref: comptia-objectives r
+ref: nist-800-177 r
+ref: rfc-4033 s
+ref: rfc-5280 s
+ref: cf-dns-poison s
+card: Does DNSSEC encrypt DNS queries? == No. It signs answers so they can be verified. DoH and DoT encrypt queries.
+card: Which protocol encrypts voice and video media? == SRTP. Call setup is protected separately, for example with SIP over TLS.
+card: What does an S/MIME signature give that SPF, DKIM and DMARC do not? == Proof of the individual sender and integrity that stays with the message, end to end.
