@@ -205,6 +205,8 @@ function onHtml() {
         </ol>
         ${enterFormHtml()}
       </div>` : ''}
+    <p class="meta sync-switch">Is your other device already syncing on its own? Choose <strong>Show a code</strong> here and enter it there, or the other way round. Progress from both is combined; nothing is lost.</p>
+    <div class="button-row"><button type="button" data-action="sync-show-code" ${ui.busy ? 'disabled' : ''}>Show a code</button></div>
     <details ${ui.showPair ? 'open' : ''}>
       <summary>Other ways to connect (QR code, link, full code)</summary>
       ${pairHtml()}

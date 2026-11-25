@@ -179,9 +179,37 @@ function isEmptyValue(v) {
   return false;
 }
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const earlier = (a, b) => (a <= b ? a : b);
+
+/**
+ * Settings with no recorded change time on either side (both set before sync was switched on) where a
+ * plain tie-break would be wrong. The course start decides which week the calendar shows, so the
+ * earliest one wins: it is the day you really began, and a later one is usually Start pressed again on
+ * a second device. Pathway start and finish dates are combined, keeping the earliest date for each.
+ * Returns the chosen version, or null to fall back to the general rule.
+ */
+function settingsTie(key, x, y) {
+  if (key === 'courseStart' && DATE_RE.test(x.value ?? '') && DATE_RE.test(y.value ?? '')) {
+    return x.value <= y.value ? x : y;
+  }
+  if ((key === 'pathwayStarted' || key === 'pathwayFinished') && isObj(x.value) && isObj(y.value)) {
+    const value = { ...x.value };
+    for (const [id, date] of Object.entries(y.value)) {
+      value[id] = typeof value[id] === 'string' && typeof date === 'string' ? earlier(value[id], date) : (value[id] ?? date);
+    }
+    return { value, time: x.time, text: stableStringify(value) };
+  }
+  return null;
+}
+
 /** Picks between two versions of the same item. Same answer on every device, whichever is "local". */
-function pick(x, y) {
+function pick(x, y, path, key) {
   if (x.time !== y.time) return x.time > y.time ? x : y;
+  if (path === 'settings') {
+    const settled = settingsTie(key, x, y);
+    if (settled) return settled;
+  }
   const ex = isEmptyValue(x.value);
   const ey = isEmptyValue(y.value);
   if (ex !== ey) return ex ? y : x;
@@ -216,7 +244,7 @@ export function mergeStates(a, b, now = Date.now()) {
       const da = a?.del?.[path]?.[k];
       const db = b?.del?.[path]?.[k];
       const deletedAt = Math.max(typeof da === 'number' ? da : -1, typeof db === 'number' ? db : -1);
-      const win = x && y ? pick(x, y) : (x ?? y);
+      const win = x && y ? pick(x, y, path, k) : (x ?? y);
       if (win && win.time > deletedAt) {
         out.entries[path][k] = win.value;
         if (win.time > 0) out.t[path][k] = win.time;
