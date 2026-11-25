@@ -131,6 +131,29 @@ function sync(dev, cloud, now) {
   check('Re-add: ticking again after an un-tick wins', 'item1' in browser.doc.weekChecks, 'true');
 }
 
+// ─── Which week: the course start date ──────────────────────────────────────
+{
+  // The phone started the course a week before the laptop pressed Start, both before sync existed.
+  const cloud = {};
+  const laptop = device(doc({ settings: { ...doc().settings, courseStart: '2026-11-23', pathwayStarted: { 'ai-security': '2026-11-24' } } }));
+  const phone = device(doc({ settings: { ...doc().settings, courseStart: '2026-11-16', pathwayStarted: { 'ai-security': '2026-11-20', 'secplus-801': '2026-11-18' } } }));
+  sync(laptop, cloud, T0);
+  sync(phone, cloud, T0 + 10);
+  sync(laptop, cloud, T0 + 20);
+  check('Week: the earliest course start wins when neither has a change time (phone)', phone.doc.settings.courseStart, '2026-11-16');
+  check('Week: and the laptop moves to it too', laptop.doc.settings.courseStart, '2026-11-16');
+  check('Week: pathway start dates are combined, earliest each', phone.doc.settings.pathwayStarted, { 'ai-security': '2026-11-20', 'secplus-801': '2026-11-18' });
+  check('Week: both devices agree on pathway dates', laptop.doc.settings.pathwayStarted, phone.doc.settings.pathwayStarted);
+  const ab = mergeStates(laptop.state(), phone.state(), T0);
+  check('Week: the rule gives the same answer in either order', sameState(ab, mergeStates(phone.state(), laptop.state(), T0)), 'true');
+  // Restarting the course on purpose later is a recorded change, and wins.
+  laptop.doc.settings.courseStart = '2026-11-25';
+  laptop.save(T0 + 100);
+  sync(laptop, cloud, T0 + 110);
+  sync(phone, cloud, T0 + 120);
+  check('Week: a deliberate new start date wins over the earlier one', phone.doc.settings.courseStart, '2026-11-25');
+}
+
 // ─── Merge laws: order does not matter, and merging twice changes nothing ────
 {
   const a = device(doc({ sessions: [{ id: 'x', minutes: 1, updatedAt: '2026-11-01T00:00:00Z' }] }));

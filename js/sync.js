@@ -196,6 +196,10 @@ export async function turnOn() {
 export async function join(input) {
   const secret = cleanSecret(input);
   if (!secret) return 'That code is not complete. It has 43 letters, numbers, dashes or underscores; spaces do not matter.';
+  // Switching from another sync: let a round in progress finish with its own keys first.
+  clearTimeout(changeTimer);
+  changeTimer = null;
+  if (running) await running.catch(() => {});
   config = { secret, since: new Date().toISOString(), lastSyncAt: null };
   keys = null;
   writeConfig();
